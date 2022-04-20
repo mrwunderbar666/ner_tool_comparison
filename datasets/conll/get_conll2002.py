@@ -7,7 +7,7 @@ import requests
 import tarfile
 import gzip
 from pathlib import Path
-from nltk.corpus.reader import ConllCorpusReader, ConllChunkCorpusReader
+from nltk.corpus.reader import ConllChunkCorpusReader
 import pandas as pd
 
 url = "http://www.cnts.ua.ac.be/conll2002/ner.tgz"
