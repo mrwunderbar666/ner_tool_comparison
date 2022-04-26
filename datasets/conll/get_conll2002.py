@@ -8,6 +8,7 @@ import tarfile
 import gzip
 from pathlib import Path
 from nltk.corpus.reader import ConllChunkCorpusReader
+from nltk.tokenize.treebank import TreebankWordDetokenizer
 import pandas as pd
 
 url = "http://www.cnts.ua.ac.be/conll2002/ner.tgz"
@@ -42,6 +43,7 @@ for gz in tmp.glob('ner/data/*.gz'):
         decompressed = gzip.decompress(f_in.read())
     with open(tmp / gz.name.replace('.gz', '.txt'), 'wb') as f_out:
         f_out.write(decompressed)
+
 print('ok')
 
 
@@ -52,6 +54,7 @@ for txt in tmp.glob('esp*.txt'):
     corp = ConllChunkCorpusReader(f'{tmp}', [txt.name], ['words', 'ne'], encoding='latin-1')
     esp_corps[txt.name.replace('.txt', '')] = corp
 
+twd = TreebankWordDetokenizer()
 
 for k, corp in esp_corps.items():
     ll = []
@@ -61,6 +64,9 @@ for k, corp in esp_corps.items():
     df = pd.DataFrame(ll)
     df.to_feather(p / (k + '.feather'), compression='uncompressed')
     print(f"processed {k} and saved to {p / (k + '.feather')}")
+    sentences = df.groupby('sentence').token.apply(lambda x: twd.detokenize(x))
+    with open(p / (k + '.txt'), 'w') as txt:
+        txt.write("\n".join(sentences.to_list())) 
 
 print('Processing Dutch corpus...')
 # split dutch corp files into documents
@@ -90,12 +96,16 @@ for k, corp in dutch_corps.items():
     for i, sent in enumerate(corp.iob_sents(), start=1):
         for j, token in enumerate(sent, start=1):
             ll.append({'dataset': 'conll2002', 'language': 'nl', 'corpus': k.split('-')[0], 'doc': k.split('-')[1], 'sentence': i, 'token_id': j, 'token': token[0], 'POS': token[1], 'IOB2': token[2]})
+    tmp_df = pd.DataFrame(ll)
+    sentences = tmp_df.groupby('sentence').token.apply(lambda x: twd.detokenize(x))
+    with open(p / (k.split('-')[0] + '.txt'), 'w') as txt:
+        txt.write("\n".join(sentences.to_list())) 
     dfs.append(pd.DataFrame(ll))
-
 
 df = pd.concat(dfs, ignore_index=True)
 
 df.to_feather(p / 'ned.feather', compression='uncompressed')
+
 print(f"Sucess! Saved to {p / 'ned.feather'}")
 
 print(f'deleting temporary files...')
