@@ -1,17 +1,10 @@
+import sys
 import requests
 from pathlib import Path
 import pandas as pd
-import shutil
-from tqdm import tqdm
 
-def downloader(response, destination):
-    total_size = int(response.headers.get('content-length', 0))
-    with open(destination, 'wb') as f:
-        with tqdm(total=total_size) as pbar:
-            for chunk in response.iter_content(chunk_size=1024):
-                b = f.write(chunk)
-                pbar.update(b)
-
+sys.path.append(str(Path.cwd()))
+from utils.downloader import downloader
 
 p = Path.cwd() / 'corpora' / 'germeval2014'
 tmp = p / 'tmp'
@@ -25,14 +18,11 @@ train = "1Jjhbal535VVz2ap4v4r_rN1UEHTdLK5P"
 
 api = "https://drive.google.com/uc"
 
-r = requests.get(api, params={'id': dev}, stream=True)
-downloader(r, tmp / 'NER-de-dev.tsv')
+downloader(api, tmp / 'NER-de-dev.tsv', params={'id': dev})
 
-r = requests.get(api, params={'id': test}, stream=True)
-downloader(r, tmp / 'NER-de-test.tsv')
+downloader(api, tmp / 'NER-de-test.tsv', params={'id': test})
 
-r = requests.get(api, params={'id': train}, stream=True)
-downloader(r, tmp / 'NER-de-train.tsv')
+downloader(api, tmp / 'NER-de-train.tsv', params={'id': train})
 
 
 print('parsing raw tsv files into dataframes ...')
@@ -64,10 +54,15 @@ for tsv in tmp.glob('*.tsv'):
                             'BIO': line[2].strip(),
                             'BIO_nested': line[3].strip()})
         df = pd.DataFrame(corp)
+
+        # add CoNLL IOB2 Format
+        df['CoNLL_IOB2'] = df.BIO.str.extract(r'([BI]-[A-Z]{3})')
+        df['CoNLL_IOB2'] = df.CoNLL_IOB2.str.replace('OTH', 'MISC')
+        df.loc[df.CoNLL_IOB2.isna(), 'CoNLL_IOB2'] = 'O'
+
         print('successfully parsed!')
         df.to_feather(p / (corp_id + '.feather'), compression='uncompressed')
         print(f"saved to: {p / (corp_id + '.feather')}")
             
         
-shutil.rmtree(tmp)
 print('Done!')
