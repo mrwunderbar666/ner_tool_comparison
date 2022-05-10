@@ -2,7 +2,8 @@
 # Introduction to the CoNLL-2002 Shared Task: Language-Independent Named Entity Recognition (Tjong Kim Sang, 2002)
 # https://aclanthology.org/W02-2024/
 
-import shutil
+import sys
+import os
 import requests
 import tarfile
 import gzip
@@ -11,6 +12,9 @@ from nltk.corpus.reader import ConllChunkCorpusReader
 from nltk.tokenize.treebank import TreebankWordDetokenizer
 import pandas as pd
 
+sys.path.append(str(Path.cwd()))
+from utils.downloader import downloader
+
 url = "http://www.cnts.ua.ac.be/conll2002/ner.tgz"
 
 cwd = Path.cwd()
@@ -18,23 +22,25 @@ cwd = Path.cwd()
 p = cwd / 'corpora/' / 'conll'
 tmp = p / 'tmp'
 
+if not tmp.exists():
+    tmp.mkdir()
 
-f_name =  p / 'conll2002.tgz'
+f_name =  tmp / 'conll2002.tgz'
 
-if not f_name.exists():
-    print(f'Downloading CoNLL-2002 Dataset from: {url}...')
-
-    r = requests.get(url)
-
-    with open(f_name, 'wb') as f:
-        f.write(r.content)
-    
-    print(f'Success! Saved to: {f_name}')
+print(f'Downloading CoNLL-2002 Dataset from: {url}...')
+downloader(url, f_name)
 
 print('Extracting archive...')
-tar = tarfile.open(f_name)
-tar.extractall(path=tmp)
-tar.close()
+with tarfile.open(f_name, 'r:gz', errorlevel=1) as tar:
+    for f in tar:
+        try:
+            tar.extract(f, path=tmp)
+        except IOError as e:
+            os.remove(tmp / f.name)
+            tar.extract(f, path=tmp)
+        finally:
+            os.chmod(tmp / f.name, f.mode)
+
 print('ok')
 
 print('Deflating data...')
@@ -108,6 +114,4 @@ df.to_feather(p / 'ned.feather', compression='uncompressed')
 
 print(f"Sucess! Saved to {p / 'ned.feather'}")
 
-print(f'deleting temporary files...')
-shutil.rmtree(tmp)
 print(f'Done!')
