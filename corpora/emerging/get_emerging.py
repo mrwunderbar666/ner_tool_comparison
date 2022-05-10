@@ -4,11 +4,13 @@
 # in Proceedings of the 3rd Workshop on Noisy, User-generated Text.
 # https://noisy-text.github.io/2017/emerging-rare-entities.html
 
-import requests
+import sys
 from pathlib import Path
 import pandas as pd
 from nltk.corpus.reader import ConllChunkCorpusReader
-import shutil
+
+sys.path.append(str(Path.cwd()))
+from utils.downloader import downloader
 
 p = Path.cwd() / 'corpora' / 'emerging'
 tmp = p / 'tmp'
@@ -23,20 +25,10 @@ test_url = "https://noisy-text.github.io/2017/files/emerging.test"
 test_with_tags = "https://noisy-text.github.io/2017/files/emerging.test.annotated"
 
 print(f'Downloading Emerging Entities Training Data from: {training_url}...')
-r = requests.get(training_url, stream=True)
-with open(tmp / 'wnut17train.conll', 'wb') as f:
-    for chunk in r.iter_content(chunk_size=1024):
-        f.write(chunk)
-
-print('ok')
+downloader(training_url, tmp / 'wnut17train.conll')
 
 print(f'Downloading Emerging Entities Dev Data from: {dev_url}...')
-r = requests.get(dev_url, stream=True)
-with open(tmp / 'emerging.dev.conll', 'wb') as f:
-    for chunk in r.iter_content(chunk_size=1024):
-        f.write(chunk)
-
-print('ok')
+downloader(dev_url, tmp / 'emerging.dev.conll')
 
 with open(tmp / 'emerging.dev.conll', 'r') as f_in:
     l = f_in.readlines()
@@ -45,13 +37,7 @@ with open(tmp / 'emerging.dev.conll', 'w') as f_out:
     f_out.writelines(l[:-1])
 
 print(f'Downloading Emerging Entities Test Data from: {test_with_tags}...')
-r = requests.get(test_with_tags, stream=True)
-with open(tmp / 'emerging.test.annotated.conll', 'wb') as f:
-    for chunk in r.iter_content(chunk_size=1024):
-        f.write(chunk)
-
-print('ok')
-
+downloader(test_with_tags, tmp / 'emerging.test.annotated.conll')
 
 corps = {}
 
@@ -61,15 +47,22 @@ for txt in tmp.glob('*.conll'):
 
 print('Processing...')
 
+# map to conll iob2 format
+emerging2conll = {'person': 'PER', 
+                    'creative-work': 'MISC', 
+                    'group': 'ORG', 
+                    'location': 'LOC', 
+                    'product': 'MISC', 
+                    'corporation': 'ORG'}
+
 for k, corp in corps.items():
     ll = []
     for i, sent in enumerate(corp.tagged_sents(), start=1):
         for j, token in enumerate(sent, start=1):
             ll.append({'dataset': 'emerging_entities', 'language': 'en', 'corpus': k, 'sentence': i, 'token_id': j, 'token': token[0], 'IOB2': token[1]})
     df = pd.DataFrame(ll)
+    df['CoNLL_IOB2'] = df.IOB2.replace(emerging2conll, regex=True)
     df.to_feather(p / (k + '.feather'), compression='uncompressed')
     print(f"processed {k} and saved to {p / (k + '.feather')}")
-
-shutil.rmtree(tmp)
 
 print('Done!')
