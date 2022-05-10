@@ -3,6 +3,7 @@
 # https://aclanthology.org/L16-1689/
 # https://github.com/EuropeanaNewspapers/ner-corpora
 
+import sys
 import requests
 from pathlib import Path
 import pandas as pd
@@ -10,11 +11,13 @@ import zipfile
 import io
 import patch
 from nltk.corpus.reader import ConllChunkCorpusReader
-import shutil
+
+sys.path.append(str(Path.cwd()))
+from utils.downloader import downloader
 
 p = Path.cwd() / 'corpora' / 'europeana'
 tmp = p / 'tmp'
-repository = p / 'ner-corpora-master'
+repository = tmp / 'ner-corpora-master'
 
 if not tmp.exists():
     tmp.mkdir()
@@ -23,11 +26,11 @@ repo = "https://github.com/EuropeanaNewspapers/ner-corpora/archive/refs/heads/ma
 
 print(f'Downloading Europeana Dataset from: {repo}...')
 r = requests.get(repo)
-print('Success!')
+downloader(repo, tmp / 'master.zip')
 
 print('Extracting archive...')
-z = zipfile.ZipFile(io.BytesIO(r.content), mode='r')
-z.extractall(path=p)
+z = zipfile.ZipFile(tmp / 'master.zip', mode='r')
+z.extractall(path=tmp)
 print('ok')
 
 # Apply patch
@@ -66,15 +69,17 @@ for txt in tmp.glob('*.txt'):
 
 
 for k, corp in corps.items():
+    print('Parsing', k, 'to dataframe')
     ll = []
     for i, sent in enumerate(corp.tagged_sents(), start=1):
         for j, token in enumerate(sent, start=1):
             ll.append({'dataset': 'europeana', 'language': k.split('_')[-1].split('.')[0].lower(), 'corpus': k, 'sentence': i, 'token_id': j, 'token': token[0], 'IOB2': token[1]})
+
     df = pd.DataFrame(ll)
+    # fixing wrong tags
+    df.IOB2 = df.IOB2.replace({'B-BER': 'B-PER'})
     df.to_feather(p / (k + '.feather'), compression='uncompressed')
     print(f"processed {k} and saved to {p / (k + '.feather')}")
 
 
-shutil.rmtree(tmp)
-shutil.rmtree(p / 'ner-corpora-master')
 print('Done!')
