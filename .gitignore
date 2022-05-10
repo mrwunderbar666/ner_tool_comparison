@@ -131,3 +131,14 @@ dmypy.json
 
 # third party code
 utils/conll2003.py
+
+# datasets
+*.feather
+
+corpora/conll/*.txt
+corpora/europeana/enp_DE.sbb.bio.fixed
+results/
+
+# datafiles
+*.tgz
+*.tsv
