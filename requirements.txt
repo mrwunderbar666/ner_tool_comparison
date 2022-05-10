@@ -3,3 +3,5 @@ nltk
 pandas==1.4.2
 patch
 datasets
+bs4
+lxml
