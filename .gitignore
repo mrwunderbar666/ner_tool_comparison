@@ -142,3 +142,5 @@ results/
 # datafiles
 *.tgz
 *.tsv
+
+corpora/wikiann/tmp/*
