@@ -6,3 +6,9 @@ URL: https://drive.google.com/drive/folders/1Q-xdT99SeaCghihGa7nRkcXGwRGUIsKN
 Huggingface Dataset: https://huggingface.co/datasets/wikiann
 Automatic Dataset Creation: https://github.com/panx27/wikiann
 
+# Instructions
+
+1. Go to his Google Drive Folder: https://drive.google.com/drive/folders/1aSpKIvRJUiOO3oPSY8A-5R2vI4eg6X96
+2. Right-click on the folder `name_tagging` and click download
+3. Copy the .zip file into the wikiann folder
+4. run the script `get_wikiann.py`
