@@ -6,36 +6,38 @@ import zipfile
 import tarfile
 import os 
 import gc
+import shutil
+
 p = Path.cwd() / 'corpora' / 'wikiann'
 tmp = p / 'tmp'
 
 if not tmp.exists():
     tmp.mkdir()
 
-# z_files = list(p.glob('*.zip'))
+z_files = list(p.glob('*.zip'))
 
-# assert len(z_files) > 0, 'Could not find zip file!'
+assert len(z_files) > 0, 'Could not find zip file!'
 
+print('Extracting zip archive')
+z = zipfile.ZipFile(z_files[0], mode='r')
+z.extractall(path=tmp)
 
-# z = zipfile.ZipFile(z_files[0], mode='r')
-# z.extractall(path=tmp)
+gz_files = list(tmp.glob('name_tagging/*.gz'))
 
-# gz_files = list(tmp.glob('name_tagging/*.gz'))
-
-# with tqdm(total=len(gz_files), unit='tar.gz') as pbar:
-#     for gz in gz_files:
-#         with tarfile.open(gz, 'r:gz', errorlevel=1) as tar:
-#             for f in tar:
-#                 if f.name.lower() == 'readme.txt': continue
-#                 try:
-#                     tar.extract(f, path=tmp)
-#                 except IOError as e:
-#                     os.remove(tmp / f.name)
-#                     tar.extract(f, path=tmp)
-#                 finally:
-#                     os.chmod(tmp / f.name, f.mode)
-#         pbar.update(1)
-
+print(f'found {len(gz_files)} corpus files. Deflating...')
+with tqdm(total=len(gz_files), unit='tar.gz') as pbar:
+    for gz in gz_files:
+        with tarfile.open(gz, 'r:gz', errorlevel=1) as tar:
+            for f in tar:
+                if f.name.lower() == 'readme.txt': continue
+                try:
+                    tar.extract(f, path=tmp)
+                except IOError as e:
+                    os.remove(tmp / f.name)
+                    tar.extract(f, path=tmp)
+                finally:
+                    os.chmod(tmp / f.name, f.mode)
+        pbar.update(1)
 
 bio_files = list(tmp.glob('*.bio'))
 
@@ -93,13 +95,6 @@ for raw in bio_files:
     parse_bio(raw)
 
 
-# from concurrent.futures import ThreadPoolExecutor, as_completed
+shutil.rmtree(tmp)
 
-
-
-# with tqdm(total=len(results['files']), unit='file') as pbar:
-#     with ThreadPoolExecutor(max_workers=4) as executor:
-#         futures = {executor.submit(download_gdrive_file, gfile, tmp): gfile for gfile in results['files']}
-#         for future in as_completed(futures):
-#             print(future.result())
-#             pbar.update(1)
+print('Done!')
