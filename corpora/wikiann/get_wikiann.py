@@ -7,6 +7,9 @@ import tarfile
 import os 
 import gc
 import shutil
+from sklearn.model_selection import train_test_split
+
+seed = 5618
 
 p = Path.cwd() / 'corpora' / 'wikiann'
 tmp = p / 'tmp'
@@ -75,11 +78,10 @@ def parse_bio(bio):
         print("Rejoining partitioned datafile...")
         tmp_files = list(p.glob(f"tmp/{bio.name.replace('.bio', '.feather')}*"))
         tmp_dfs = [pd.read_feather(tmp_f) for tmp_f in tmp_files]
+        tmp_dfs.append(pd.DataFrame(output))
         df = pd.concat(tmp_dfs)
         del tmp_dfs
         df = df.sort_values(by=['sentence', 'token'])
-        df = df.reset_index(drop=True)
-        df.to_feather(p / bio.name.replace('.bio', '.feather'), compression='uncompressed')
         print('success!')
         for tmp_f in tmp_files:
             os.remove(tmp_f)
@@ -87,14 +89,44 @@ def parse_bio(bio):
     elif len(output) > 0:
         print('storing dataset with', len(output), 'tokens')
         df = pd.DataFrame(output)
+        
+
+    if len(output) > 0:
         df.reset_index(drop=True, inplace=True)
-        df.to_feather(p / bio.name.replace('.bio', '.feather'), compression='uncompressed')
+        # split into train (70%), test (15%), validate (15%)
+        sentence_index = df.sentence.unique().tolist()
+        train, test_val = train_test_split(sentence_index, test_size=0.3, random_state=seed)
+        test, val = train_test_split(test_val, test_size=0.5, random_state=seed)
+        df_train = df.loc[df.sentence.isin(train), ]
+        df_test = df.loc[df.sentence.isin(test), ]
+        df_val = df.loc[df.sentence.isin(val), ]
+
+        df_train.reset_index(inplace=True, drop=True)
+        df_test.reset_index(inplace=True, drop=True)
+        df_val.reset_index(inplace=True, drop=True)
+
+        df_train.to_feather(p / bio.name.replace('.bio', '_train.feather'), compression='uncompressed')
+        df_test.to_feather(p / bio.name.replace('.bio', '_test.feather'), compression='uncompressed')
+        df_val.to_feather(p / bio.name.replace('.bio', '_validation.feather'), compression='uncompressed')
+
+
+err = []
 
 for raw in bio_files:
     print('Parsing:', raw)
-    parse_bio(raw)
+    try:
+        parse_bio(raw)
+    except Exception as e:
+        print('parsing failed!', e)
+        err.append((raw, e))
 
 
 shutil.rmtree(tmp)
 
 print('Done!')
+
+if len(err) > 0:
+    print('Following datasets could not be parsed successfully:')
+    for e in err:
+        print('Dataset:', e[0])
+        print('Error:', e[1])
