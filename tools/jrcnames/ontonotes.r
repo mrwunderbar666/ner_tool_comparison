@@ -12,7 +12,8 @@ results <- data.frame(
   precision = NULL,
   recall = NULL,
   specificity = NULL,
-  f1 = NULL
+  f1 = NULL,
+  validation_duration = NULL
 )
 
 source('tools/jrcnames/utils.r')

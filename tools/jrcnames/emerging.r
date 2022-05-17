@@ -12,7 +12,8 @@ results <- data.frame(
   precision = NULL,
   recall = NULL,
   specificity = NULL,
-  f1 = NULL
+  f1 = NULL,
+  validation_duration = NULL
 )
 
 source('tools/jrcnames/utils.r')
@@ -32,7 +33,9 @@ emerging <- recode_iob(emerging, colname = 'CoNLL_IOB2')
 tc_emerging <- corpustools::tokens_to_tcorpus(emerging, doc_col = 'sentence', token_id_col = 'token_id', token_col = 'token')
 
 # Run Dictionary over Corpus
+start_time <- Sys.time()
 tc_emerging$code_dictionary(jrc_dict, case_sensitive = T, token_col = 'token', string_col = 'keyword', sep = ' ', use_wildcards = F)
+end_time <- Sys.time()
 
 # Recode Dictionary Results
 codings_emerging <- recode_results(tc_emerging$tokens)
@@ -41,21 +44,10 @@ codings_emerging <- recode_results(tc_emerging$tokens)
 cm_emerging <- caret::confusionMatrix(codings_emerging$JRC_NE, reference=codings_emerging$NE, mode = "everything")
 
 r <- cm2df(cm_emerging, 'Emerging-Entities-Test', 'en')
+r$evaluation_time <-
+  as.double(difftime(end_time, start_time, units = "secs"))
 
 results <- rbind(results, r)
-
-cm_emerging <- caret::confusionMatrix(as.factor(codings_emerging$JRC_any_NE), reference=as.factor(codings_emerging$any_NE), mode = "everything")
-
-results <- rbind(results, data.frame(
-  corpus = 'Emerging-Entities-Test', 
-  lang = 'en', 
-  task = 'any_NE', 
-  precision = cm_emerging$byClass['Precision'],
-  recall = cm_emerging$byClass['Recall'],
-  specificity = cm_emerging$byClass['Specificity'],
-  f1 = cm_emerging$byClass['F1']
-))
-
 
 # Save results
 

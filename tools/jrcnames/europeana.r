@@ -12,7 +12,8 @@ results <- data.frame(
   precision = NULL,
   recall = NULL,
   specificity = NULL,
-  f1 = NULL
+  f1 = NULL,
+  validation_duration = NULL
 )
 
 source('tools/jrcnames/utils.r')
@@ -23,17 +24,19 @@ jrc_dict <- arrow::read_feather('tools/jrcnames/jrcnames.feather')
 # Pre-process: replace token separator '+' with ' '
 jrc_dict$keyword <- stringi::stri_replace_all(jrc_dict$keyword, fixed = '+', ' ')
 
-corpora <- Sys.glob('corpora/europeana/*.feather')
+corpora <- Sys.glob('corpora/europeana/*_validation.feather')
 
 for (corpus in corpora) {
+  
+  print(corpus)
   
   # Load corpus
   df <- arrow::read_feather(corpus)
   
-  df <- recode_iob(df, colname = 'CoNLL_IOB2')
+  df <- recode_iob(df, colname = 'IOB2')
   
   # Transform raw corpus to tcorpus obect
-  tc <- corpustools::tokens_to_tcorpus(df, doc_col = 'doc_id', token_id_col = 'token_id', token_col = 'token')
+  tc <- corpustools::tokens_to_tcorpus(df, doc_col = 'sentence', token_id_col = 'token_id', token_col = 'token')
   
   # Run Dictionary over Corpus
   tc$code_dictionary(jrc_dict, case_sensitive = T, token_col = 'token', string_col = 'keyword', sep = ' ', use_wildcards = F)
@@ -59,7 +62,7 @@ for (corpus in corpora) {
     specificity = cm$byClass['Specificity'],
     f1 = cm$byClass['F1']
   ))
-
+# 
 }
 
 # Save results

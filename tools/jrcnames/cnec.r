@@ -12,7 +12,8 @@ results <- data.frame(
   precision = NULL,
   recall = NULL,
   specificity = NULL,
-  f1 = NULL
+  f1 = NULL,
+  validation_duration = NULL
 )
 
 source('tools/jrcnames/utils.r')
@@ -35,7 +36,9 @@ cnec$token_id <- NULL
 tc_cnec <- corpustools::tokens_to_tcorpus(cnec, doc_col = 'sentence', token_id_col = 'position', token_col = 'token')
 
 # Run Dictionary over Corpus
+start_time <- Sys.time()
 tc_cnec$code_dictionary(jrc_dict, case_sensitive = T, token_col = 'token', string_col = 'keyword', sep = ' ', use_wildcards = F)
+end_time <- Sys.time()
 
 # Recode Dictionary Results
 codings_cnec <- recode_results(tc_cnec$tokens)
@@ -44,20 +47,8 @@ codings_cnec <- recode_results(tc_cnec$tokens)
 cm_cnec <- caret::confusionMatrix(codings_cnec$JRC_NE, reference=codings_cnec$NE, mode = "everything")
 
 r <- cm2df(cm_cnec, 'CNEC-DTest', 'cz')
-
+r$validation_duration <- as.double(difftime(t2, t1, units="secs"))
 results <- rbind(results, r)
-
-cm_cnec <- caret::confusionMatrix(as.factor(codings_cnec$JRC_any_NE), reference=as.factor(codings_cnec$any_NE), mode = "everything")
-
-results <- rbind(results, data.frame(
-  corpus = 'CNEC-DTest', 
-  lang = 'cz', 
-  task = 'any_NE', 
-  precision = cm_cnec$byClass['Precision'],
-  recall = cm_cnec$byClass['Recall'],
-  specificity = cm_cnec$byClass['Specificity'],
-  f1 = cm_cnec$byClass['F1']
-))
 
 
 # Save results
