@@ -66,11 +66,11 @@ for k, corp in esp_corps.items():
     ll = []
     for i, sent in enumerate(corp.tagged_sents(), start=1):
         for j, token in enumerate(sent, start=1):
-            ll.append({'dataset': 'conll2002', 'language': 'es', 'corpus': k, 'sentence': i, 'token_id': j, 'token': token[0], 'IOB2': token[1]})
+            ll.append({'dataset': 'conll2002', 'language': 'es', 'corpus': k, 'sentence_id': i, 'token_id': j, 'token': token[0], 'IOB2': token[1]})
     df = pd.DataFrame(ll)
     df.to_feather(p / (k + '.feather'), compression='uncompressed')
     print(f"processed {k} and saved to {p / (k + '.feather')}")
-    sentences = df.groupby('sentence').token.apply(lambda x: twd.detokenize(x))
+    sentences = df.groupby('sentence_id').token.apply(lambda x: twd.detokenize(x))
     with open(p / (k + '.txt'), 'w') as txt:
         txt.write("\n".join(sentences.to_list())) 
 
@@ -101,17 +101,21 @@ for k, corp in dutch_corps.items():
     ll = []
     for i, sent in enumerate(corp.iob_sents(), start=1):
         for j, token in enumerate(sent, start=1):
-            ll.append({'dataset': 'conll2002', 'language': 'nl', 'corpus': k.split('-')[0], 'doc': k.split('-')[1], 'sentence': i, 'token_id': j, 'token': token[0], 'POS': token[1], 'IOB2': token[2]})
+            ll.append({'dataset': 'conll2002', 'language': 'nl', 'corpus': k.split('-')[0], 'doc': k.split('-')[1], 'sentence_id': i, 'token_id': j, 'token': token[0], 'POS': token[1], 'IOB2': token[2]})
     tmp_df = pd.DataFrame(ll)
-    sentences = tmp_df.groupby('sentence').token.apply(lambda x: twd.detokenize(x))
+    sentences = tmp_df.groupby('sentence_id').token.apply(lambda x: twd.detokenize(x))
     with open(p / (k.split('-')[0] + '.txt'), 'w') as txt:
         txt.write("\n".join(sentences.to_list())) 
     dfs.append(pd.DataFrame(ll))
 
 df = pd.concat(dfs, ignore_index=True)
 
-df.to_feather(p / 'ned.feather', compression='uncompressed')
+for corpus in df.corpus.unique():
+    tmp_df = df.loc[df.corpus == corpus, :]
+    tmp_df = tmp_df.reset_index(drop=True)
+    f_name = p / f'{corpus}.feather'
+    tmp_df.to_feather(f_name, compression='uncompressed')
 
-print(f"Sucess! Saved to {p / 'ned.feather'}")
+    print(f"Sucess! Saved to {f_name}")
 
 print(f'Done!')
