@@ -12,6 +12,10 @@ import io
 import patch
 from nltk.corpus.reader import ConllChunkCorpusReader
 
+from sklearn.model_selection import train_test_split
+
+seed = 5618
+
 sys.path.append(str(Path.cwd()))
 from utils.downloader import downloader
 
@@ -78,7 +82,21 @@ for k, corp in corps.items():
     df = pd.DataFrame(ll)
     # fixing wrong tags
     df.IOB2 = df.IOB2.replace({'B-BER': 'B-PER'})
-    df.to_feather(p / (k + '.feather'), compression='uncompressed')
+    df.IOB2 = df.IOB2.replace({'P': 'O'})
+    sentence_index = df.sentence.unique().tolist()
+    train, test_val = train_test_split(sentence_index, test_size=0.3, random_state=seed)
+    test, val = train_test_split(test_val, test_size=0.5, random_state=seed)
+    df_train = df.loc[df.sentence.isin(train), ]
+    df_test = df.loc[df.sentence.isin(test), ]
+    df_val = df.loc[df.sentence.isin(val), ]
+
+    df_train.reset_index(inplace=True, drop=True)
+    df_test.reset_index(inplace=True, drop=True)
+    df_val.reset_index(inplace=True, drop=True)
+
+    df_train.to_feather(p / (k + '_train.feather'), compression='uncompressed')
+    df_test.to_feather(p / (k + '_test.feather'), compression='uncompressed')
+    df_val.to_feather(p / (k + '_validation.feather'), compression='uncompressed')
     print(f"processed {k} and saved to {p / (k + '.feather')}")
 
 
