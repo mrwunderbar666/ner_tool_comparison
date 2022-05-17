@@ -158,3 +158,7 @@ for language, validation_set in tokenized_validation_sets.items():
 results_df = pd.concat(evaluations)
 
 results_df.to_csv(results_path, index=False)
+
+import shutil
+
+shutil.rmtree(model_dir)
