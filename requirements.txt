@@ -5,3 +5,6 @@ patch
 datasets
 bs4
 lxml
+transformers
+torch
+numpy
