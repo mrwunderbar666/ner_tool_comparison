@@ -34,21 +34,21 @@ features = Features({'text': Sequence(Value(dtype="string")), 'labels': Sequence
 
 df_train['CoNLL_IOB2'] = df_train['CoNLL_IOB2'].replace(labels_dict)
 
-df_train = df_train.groupby('sentence')[['token', 'CoNLL_IOB2']].agg(list)
+df_train = df_train.groupby('sentence_id')[['token', 'CoNLL_IOB2']].agg(list)
 df_train = df_train.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})
 
 dataset_train = Dataset.from_pandas(df_train, features=features)
 
 df_test['CoNLL_IOB2'] = df_test['CoNLL_IOB2'].replace(labels_dict)
 
-df_test = df_test.groupby('sentence')[['token', 'CoNLL_IOB2']].agg(list)
+df_test = df_test.groupby('sentence_id')[['token', 'CoNLL_IOB2']].agg(list)
 df_test = df_test.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})
 
 dataset_test = Dataset.from_pandas(df_test, features=features)
 
 df_validation['CoNLL_IOB2'] = df_validation['CoNLL_IOB2'].replace(labels_dict)
 
-df_validation = df_validation.groupby('sentence')[['token', 'CoNLL_IOB2']].agg(list)
+df_validation = df_validation.groupby('sentence_id')[['token', 'CoNLL_IOB2']].agg(list)
 df_validation = df_validation.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})
 
 dataset_validation = Dataset.from_pandas(df_validation, features=features)
@@ -94,8 +94,6 @@ def compute_metrics(p):
 
 roberta = AutoModelForTokenClassification.from_pretrained("xlm-roberta-base", num_labels=len(label_list))
 roberta.to(device)
-model_dir = Path.cwd() / 'tools' / 'xlmroberta' / 'emerging'
-
 
 training_args = TrainingArguments(
     output_dir=model_dir,
@@ -152,3 +150,8 @@ r['training_duration'] = training_time.total_seconds()
 r['validation_duration'] = validation_time.total_seconds()
 
 r.to_csv(results_path)
+
+
+import shutil
+
+shutil.rmtree(model_dir)

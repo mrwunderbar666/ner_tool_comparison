@@ -34,14 +34,14 @@ features = Features({'text': Sequence(Value(dtype="string")), 'labels': Sequence
 
 df_train['IOB2'] = df_train['IOB2'].replace(labels_dict)
 
-df_train = df_train.groupby(['corpus', 'sentence'])[['token', 'IOB2']].agg(list)
+df_train = df_train.groupby(['corpus', 'sentence_id'])[['token', 'IOB2']].agg(list)
 df_train = df_train.rename(columns={'token': 'text', 'IOB2': 'labels'})
 
 dataset_train = Dataset.from_pandas(df_train, features=features)
 
 df_test['IOB2'] = df_test['IOB2'].replace(labels_dict)
 
-df_test = df_test.groupby(['corpus', 'sentence'])[['token', 'IOB2']].agg(list)
+df_test = df_test.groupby(['corpus', 'sentence_id'])[['token', 'IOB2']].agg(list)
 df_test = df_test.rename(columns={'token': 'text', 'IOB2': 'labels'})
 
 dataset_test = Dataset.from_pandas(df_test, features=features)
@@ -52,7 +52,7 @@ validation_sets = {}
 
 for language in df_validation.language.unique():
     tmp_df = df_validation.loc[df_validation.language == language, ]
-    tmp_df = tmp_df.groupby(['corpus', 'sentence'])[['token', 'IOB2']].agg(list)
+    tmp_df = tmp_df.groupby(['corpus', 'sentence_id'])[['token', 'IOB2']].agg(list)
     tmp_df = tmp_df.rename(columns={'token': 'text', 'IOB2': 'labels'})
     validation_sets[language] = Dataset.from_pandas(tmp_df, features=features)
 
@@ -158,3 +158,8 @@ for language, validation_set in tokenized_validation_sets.items():
 results_df = pd.concat(evaluations)
 
 results_df.to_csv(results_path, index=False)
+
+
+import shutil
+
+shutil.rmtree(model_dir)

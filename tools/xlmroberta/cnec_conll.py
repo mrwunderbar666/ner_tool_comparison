@@ -148,3 +148,8 @@ r['language'] = 'cz'
 r['training_duration'] = training_time.total_seconds()
 r['validation_duration'] = validation_time.total_seconds()
 r.to_csv(results_path, index=False)
+
+
+import shutil
+
+shutil.rmtree(model_dir)

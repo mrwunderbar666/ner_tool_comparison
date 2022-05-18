@@ -104,6 +104,7 @@ training_args = TrainingArguments(
     per_device_eval_batch_size=batch_size,
     num_train_epochs=epochs,
     weight_decay=0.01,
+    save_steps=20000
 )
 
 

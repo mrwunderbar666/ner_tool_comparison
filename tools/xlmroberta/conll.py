@@ -25,15 +25,17 @@ model_dir = Path.cwd() / 'tools' / 'xlmroberta' / 'tmp' / corpus
 # Load and prepare data
 
 df_train_esp = pd.read_feather(p_corpus / 'esp.train.feather')
-df_ned = pd.read_feather(p_corpus / 'ned.feather')
-df_train_ned = df_ned.loc[df_ned.corpus == 'ned.train', :]
+df_train_ned = pd.read_feather(p_corpus / 'ned.train.feather')
+df_train_ned.sentence_id = df_train_ned.doc + '_' + df_train_ned.sentence_id.astype(str)
 df_train_en = pd.read_feather(p_corpus / 'conll2003_en_train_iob.feather')
 
 df_train = pd.concat([df_train_esp, df_train_en, df_train_ned])
 df_train = df_train.loc[~df_train.token.isna(), ]
 
 df_test_esp = pd.read_feather(p_corpus / 'esp.testa.feather')
-df_test_ned = df_ned.loc[df_ned.corpus == 'ned.testa', :]
+df_test_ned = pd.read_feather(p_corpus / 'ned.testa.feather')
+df_test_ned.sentence_id = df_test_ned.doc + '_' + df_test_ned.sentence_id.astype(str)
+
 df_test_en = pd.read_feather(p_corpus / 'conll2003_en_test_iob.feather')
 
 df_test = pd.concat([df_test_esp, df_test_ned, df_test_en])
@@ -41,7 +43,9 @@ df_test = df_test.loc[~df_test.token.isna(), ]
 
 
 df_validation_esp = pd.read_feather(p_corpus / 'esp.testb.feather')
-df_validation_ned = df_ned.loc[df_ned.corpus == 'ned.testb', :]
+df_validation_ned = pd.read_feather(p_corpus / 'ned.testb.feather')
+df_validation_ned.sentence_id = df_validation_ned.doc + '_' + df_validation_ned.sentence_id.astype(str)
+
 df_validation_en = pd.read_feather(p_corpus / 'conll2003_en_validation_iob.feather')
 
 df_validation = pd.concat([df_validation_esp, df_validation_ned, df_validation_en])
@@ -55,14 +59,14 @@ features = Features({'text': Sequence(Value(dtype="string")), 'labels': Sequence
 
 df_train['IOB2'] = df_train['IOB2'].replace(labels_dict)
 
-df_train = df_train.groupby(['language', 'sentence'])[['token', 'IOB2']].agg(list)
+df_train = df_train.groupby(['language', 'sentence_id'])[['token', 'IOB2']].agg(list)
 df_train = df_train.rename(columns={'token': 'text', 'IOB2': 'labels'})
 
 dataset_train = Dataset.from_pandas(df_train, features=features)
 
 df_test['IOB2'] = df_test['IOB2'].replace(labels_dict)
 
-df_test = df_test.groupby(['language', 'sentence'])[['token', 'IOB2']].agg(list)
+df_test = df_test.groupby(['language', 'sentence_id'])[['token', 'IOB2']].agg(list)
 df_test = df_test.rename(columns={'token': 'text', 'IOB2': 'labels'})
 
 dataset_test = Dataset.from_pandas(df_test, features=features)
@@ -74,7 +78,7 @@ validation_sets = {}
 
 for language in df_validation.language.unique():
     tmp_df = df_validation.loc[df_validation.language == language, ]
-    tmp_df = tmp_df.groupby(['corpus', 'sentence'])[['token', 'IOB2']].agg(list)
+    tmp_df = tmp_df.groupby(['corpus', 'sentence_id'])[['token', 'IOB2']].agg(list)
     tmp_df = tmp_df.rename(columns={'token': 'text', 'IOB2': 'labels'})
     validation_sets[language] = Dataset.from_pandas(tmp_df, features=features)
 
@@ -206,3 +210,8 @@ for language, validation_set in tokenized_validation_sets.items():
 results_df = pd.concat(evaluations)
 
 results_df.to_csv(results_path, index=False)
+
+
+import shutil
+
+shutil.rmtree(model_dir)
