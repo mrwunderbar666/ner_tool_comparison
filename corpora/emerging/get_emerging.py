@@ -59,7 +59,7 @@ for k, corp in corps.items():
     ll = []
     for i, sent in enumerate(corp.tagged_sents(), start=1):
         for j, token in enumerate(sent, start=1):
-            ll.append({'dataset': 'emerging_entities', 'language': 'en', 'corpus': k, 'sentence': i, 'token_id': j, 'token': token[0], 'IOB2': token[1]})
+            ll.append({'dataset': 'emerging_entities', 'language': 'en', 'corpus': k, 'sentence_id': i, 'token_id': j, 'token': token[0], 'IOB2': token[1]})
     df = pd.DataFrame(ll)
     df['CoNLL_IOB2'] = df.IOB2.replace(emerging2conll, regex=True)
     df.to_feather(p / (k + '.feather'), compression='uncompressed')

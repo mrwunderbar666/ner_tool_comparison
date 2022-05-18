@@ -77,18 +77,18 @@ for k, corp in corps.items():
     ll = []
     for i, sent in enumerate(corp.tagged_sents(), start=1):
         for j, token in enumerate(sent, start=1):
-            ll.append({'dataset': 'europeana', 'language': k.split('_')[-1].split('.')[0].lower(), 'corpus': k, 'sentence': i, 'token_id': j, 'token': token[0], 'IOB2': token[1]})
+            ll.append({'dataset': 'europeana', 'language': k.split('_')[-1].split('.')[0].lower(), 'corpus': k, 'sentence_id': i, 'token_id': j, 'token': token[0], 'IOB2': token[1]})
 
     df = pd.DataFrame(ll)
     # fixing wrong tags
     df.IOB2 = df.IOB2.replace({'B-BER': 'B-PER'})
     df.IOB2 = df.IOB2.replace({'P': 'O'})
-    sentence_index = df.sentence.unique().tolist()
+    sentence_index = df.sentence_id.unique().tolist()
     train, test_val = train_test_split(sentence_index, test_size=0.3, random_state=seed)
     test, val = train_test_split(test_val, test_size=0.5, random_state=seed)
-    df_train = df.loc[df.sentence.isin(train), ]
-    df_test = df.loc[df.sentence.isin(test), ]
-    df_val = df.loc[df.sentence.isin(val), ]
+    df_train = df.loc[df.sentence_id.isin(train), ]
+    df_test = df.loc[df.sentence_id.isin(test), ]
+    df_val = df.loc[df.sentence_id.isin(val), ]
 
     df_train.reset_index(inplace=True, drop=True)
     df_test.reset_index(inplace=True, drop=True)

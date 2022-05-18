@@ -59,7 +59,7 @@ def parse_bio(bio):
             l = l.split()
             output.append({'corpus': 'wikiann',
                             'language': language,
-                            'sentence': sentence,
+                            'sentence_id': sentence,
                             'token_id': token_id,
                             'token': l[0],
                             'IOB2': l[-1]})
@@ -81,7 +81,7 @@ def parse_bio(bio):
         tmp_dfs.append(pd.DataFrame(output))
         df = pd.concat(tmp_dfs)
         del tmp_dfs
-        df = df.sort_values(by=['sentence', 'token'])
+        df = df.sort_values(by=['sentence_id', 'token_id'])
         print('success!')
         for tmp_f in tmp_files:
             os.remove(tmp_f)
@@ -94,17 +94,18 @@ def parse_bio(bio):
     if len(output) > 0:
         df.reset_index(drop=True, inplace=True)
         # split into train (70%), test (15%), validate (15%)
-        sentence_index = df.sentence.unique().tolist()
+        sentence_index = df.sentence_id.unique().tolist()
         train, test_val = train_test_split(sentence_index, test_size=0.3, random_state=seed)
         test, val = train_test_split(test_val, test_size=0.5, random_state=seed)
-        df_train = df.loc[df.sentence.isin(train), ]
-        df_test = df.loc[df.sentence.isin(test), ]
-        df_val = df.loc[df.sentence.isin(val), ]
+        df_train = df.loc[df.sentence_id.isin(train), ]
+        df_test = df.loc[df.sentence_id.isin(test), ]
+        df_val = df.loc[df.sentence_id.isin(val), ]
 
         df_train.reset_index(inplace=True, drop=True)
         df_test.reset_index(inplace=True, drop=True)
         df_val.reset_index(inplace=True, drop=True)
 
+        df_train.sort_values(['sentence_id', 'token_id'])
         df_train.to_feather(p / bio.name.replace('.bio', '_train.feather'), compression='uncompressed')
         df_test.to_feather(p / bio.name.replace('.bio', '_test.feather'), compression='uncompressed')
         df_val.to_feather(p / bio.name.replace('.bio', '_validation.feather'), compression='uncompressed')

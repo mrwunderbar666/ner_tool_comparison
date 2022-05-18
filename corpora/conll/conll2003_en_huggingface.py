@@ -29,6 +29,7 @@ for split in conll.keys():
     df['IOB2'] = df.ner_tags.replace(ner_tags)
     df['sentence_id'] = df.id
     df['token_id'] = df.groupby('sentence_id').cumcount()
+    df['token_id'] = df['token_id'] + 1
     df['token'] = df.tokens
     df['dataset'] = 'conll2003'
     df['language'] = 'en'

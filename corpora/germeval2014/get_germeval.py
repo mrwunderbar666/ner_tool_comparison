@@ -48,8 +48,8 @@ for tsv in tmp.glob('*.tsv'):
                             'corpus': corp_id, 
                             'sentence_source': sentence_source,
                             'sentence_date': sentence_date,
-                            'sentence': sentence_id, 
-                            'token_id': line[0].strip(), 
+                            'sentence_id': sentence_id, 
+                            'token_id': int(line[0].strip()), 
                             'token': line[1].strip(), 
                             'BIO': line[2].strip(),
                             'BIO_nested': line[3].strip()})
