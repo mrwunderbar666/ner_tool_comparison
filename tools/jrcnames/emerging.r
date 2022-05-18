@@ -3,7 +3,6 @@ library(arrow)
 library(stringi)
 library(caret)
 
-
 # Initialize final results table
 results <- data.frame(
   corpus = NULL,
@@ -30,7 +29,7 @@ emerging <- arrow::read_feather('corpora/emerging/emerging.test.annotated.feathe
 emerging <- recode_iob(emerging, colname = 'CoNLL_IOB2')
 
 # Transform raw corpus to tcorpus obect
-tc_emerging <- corpustools::tokens_to_tcorpus(emerging, doc_col = 'sentence', token_id_col = 'token_id', token_col = 'token')
+tc_emerging <- corpustools::tokens_to_tcorpus(emerging, doc_col = 'sentence_id', token_id_col = 'token_id', token_col = 'token')
 
 # Run Dictionary over Corpus
 start_time <- Sys.time()

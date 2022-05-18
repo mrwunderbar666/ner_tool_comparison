@@ -3,7 +3,6 @@ library(arrow)
 library(stringi)
 library(caret)
 
-
 # Initialize final results table
 results <- data.frame(
   corpus = NULL,
@@ -36,10 +35,12 @@ for (corpus in corpora) {
   df <- recode_iob(df, colname = 'IOB2')
   
   # Transform raw corpus to tcorpus obect
-  tc <- corpustools::tokens_to_tcorpus(df, doc_col = 'sentence', token_id_col = 'token_id', token_col = 'token')
+  tc <- corpustools::tokens_to_tcorpus(df, doc_col = 'sentence_id', token_id_col = 'token_id', token_col = 'token')
   
   # Run Dictionary over Corpus
+  start_time <- Sys.time()
   tc$code_dictionary(jrc_dict, case_sensitive = T, token_col = 'token', string_col = 'keyword', sep = ' ', use_wildcards = F)
+  end_time <- Sys.time()
   
   # Recode Dictionary Results
   codings <- recode_results(tc$tokens)
@@ -48,21 +49,11 @@ for (corpus in corpora) {
   cm <- caret::confusionMatrix(codings$JRC_NE, reference=codings$NE, mode = "everything")
   
   r <- cm2df(cm, df$corpus[1], df$language[1])
+  r$evaluation_time <-
+    as.double(difftime(end_time, start_time, units = "secs"))
   
   results <- rbind(results, r)
   
-  cm <- caret::confusionMatrix(as.factor(codings$JRC_any_NE), reference=as.factor(codings$any_NE), mode = "everything")
-  
-  results <- rbind(results, data.frame(
-    corpus = df$corpus[1],
-    lang = df$language[1], 
-    task = 'any_NE', 
-    precision = cm$byClass['Precision'],
-    recall = cm$byClass['Recall'],
-    specificity = cm$byClass['Specificity'],
-    f1 = cm$byClass['F1']
-  ))
-# 
 }
 
 # Save results
