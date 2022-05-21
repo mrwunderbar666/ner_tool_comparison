@@ -15,3 +15,7 @@ https://noisy-text.github.io/2017/files/wnuteval.py
 # Conclusion
 
 - older tools tend to perform worse on newer copora: but there is a lack of "fresh" data for many languages
+
+# Other Tools
+
+- https://sites.google.com/site/rmyeid/projects/polylgot-ner
