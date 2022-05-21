@@ -139,6 +139,10 @@ corpora/conll/*.txt
 corpora/europeana/enp_DE.sbb.bio.fixed
 results/
 
+tools/opennlp/apache-*
+tools/opennlp/tmp
+tools/opennlp/models
+
 # datafiles
 *.tgz
 *.tsv
