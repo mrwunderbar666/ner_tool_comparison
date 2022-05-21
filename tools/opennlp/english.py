@@ -8,7 +8,7 @@ from datetime import timedelta
 import nltk
 
 sys.path.append(str(Path.cwd()))
-from tools.opennlp.utils import annotate, apache2conll
+from tools.opennlp.opennlp import annotate, apache2conll
 
 language = 'en'
 p = Path.cwd() / 'tools' / 'opennlp'

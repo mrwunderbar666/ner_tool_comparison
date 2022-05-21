@@ -5,7 +5,6 @@ import tarfile
 sys.path.append(str(Path.cwd()))
 from utils.downloader import downloader
 
-
 p = Path.cwd() / 'tools' / 'opennlp'
 
 tmp = p / 'tmp'
