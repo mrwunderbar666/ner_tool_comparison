@@ -44,7 +44,7 @@ for corpus, path_corpus in corpora.items():
         df = df.sort_values(['sentence_id', 'token_id'])
 
     # ensure consistent order of sentences
-    df.sentence_id = df.sentence_id.astype(str).str.zfill(4)
+    df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
 
     start_validation = timer()
     print('Annotating...', corpus)
