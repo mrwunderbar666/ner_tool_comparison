@@ -22,7 +22,7 @@ models = {'person': p / 'models' / f'{language}-ner-person.bin',
 results_path = Path.cwd() / 'results' / f'opennlp_{language}.csv'
 
 corpora = {'ned.testb': Path.cwd() / 'corpora' / 'conll' / 'ned.testb.feather',
-           'enp_NL.kb': Path.cwd() / 'corpora' / 'europeana' / 'enp_NL_validation.feather',
+           'enp_NL.kb': Path.cwd() / 'corpora' / 'europeana' / 'enp_NL.kb_validation.feather',
            #'wikiann': Path.cwd() / 'corpora' / 'wikiann' / 'wikiann-en_validation.feather'
            }
 
