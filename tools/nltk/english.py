@@ -1,11 +1,9 @@
 import sys
 from pathlib import Path
 import pandas as pd
-import requests
 from datasets import load_metric
 from timeit import default_timer as timer
 from datetime import timedelta
-from time import sleep
 
 import nltk
 
