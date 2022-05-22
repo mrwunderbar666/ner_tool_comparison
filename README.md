@@ -19,3 +19,5 @@ https://noisy-text.github.io/2017/files/wnuteval.py
 # Other Tools
 
 - https://sites.google.com/site/rmyeid/projects/polylgot-ner
+- Stanza
+- Flair

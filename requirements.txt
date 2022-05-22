@@ -10,3 +10,4 @@ torch
 numpy
 scikit-learn
 psutil
+spacy
