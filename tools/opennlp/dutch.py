@@ -50,6 +50,9 @@ for corpus, path_corpus in corpora.items():
     # ensure consistent order of sentences
     df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
 
+    if corpus == 'ned.testb':
+            df.sentence_id = df.doc + '_' + df.sentence_id
+
     start_validation = timer()
     print('Annotating...', corpus)
         
