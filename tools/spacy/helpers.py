@@ -6,7 +6,7 @@ spacy2conll = {
         'B-DATE': 'O', 'I-DATE': 'O', 
         'B-WORK_OF_ART': 'B-MISC', 'I-WORK_OF_ART': 'B-MISC',
         'B-TIME': 'O', 'I-TIME': 'O',
-        'B-FAC': 'B-LOC', 'I-FAC': 'I-FAC', 
+        'B-FAC': 'B-LOC', 'I-FAC': 'I-LOC', 
         'B-ORDINAL': 'O', 'I-ORDINAL': 'O', 
         'B-LANGUAGE': 'B-MISC', 'I-LANGUAGE': 'I-MISC',
         'B-PRODUCT': 'B-MISC', 'I-PRODUCT': 'I-MISC', 

@@ -14,19 +14,14 @@ from tqdm import tqdm
 sys.path.append(str(Path.cwd()))
 from tools.spacy.helpers import spacy2conll
 
-language = 'en'
+language = 'zh'
 p = Path.cwd() / 'tools' / 'spacy'
-
-
-
 results_path = Path.cwd() / 'results' / f'spacy_{language}.csv'
 
-models = ['en_core_web_lg', "en_core_web_trf"]
+models = ['zh_core_web_lg', 'zh_core_web_trf']
 
-corpora = {'conll': Path.cwd() / 'corpora' / 'conll' / 'conll2003_en_validation_iob.feather',
-           'emerging': Path.cwd() / 'corpora' / 'emerging' / 'emerging.test.annotated.feather',
-           'ontonotes': Path.cwd() / 'corpora' / 'ontonotes' / 'english_VALIDATION.feather',
-           #'wikiann': Path.cwd() / 'corpora' / 'wikiann' / 'wikiann-en_validation.feather'
+corpora = {'ontonotes': Path.cwd() / 'corpora' / 'ontonotes' / 'chinese_VALIDATION.feather',
+           #'wikiann': Path.cwd() / 'corpora' / 'wikiann' / 'wikiann-zh_validation.feather'
            }
 
 metric = load_metric("seqeval")
@@ -62,8 +57,13 @@ for model in models:
         # ensure consistent order of sentences
         df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
 
+        if corpus == 'ned.testb':
+            df.sentence_id = df.doc + '_' + df.sentence_id
+            df = df.sort_values(['sentence_id', 'token_id'])
+
+        # re-arrange corpus into sentences    
         sentences = df.groupby('sentence_id')['token'].agg(list)
-            
+
         start_validation = timer()
         print('Annotating...', corpus)
         with tqdm(total=len(sentences), unit='sentence') as pbar:
@@ -78,7 +78,9 @@ for model in models:
 
         end_validation = timer()
         validation_time = timedelta(seconds=end_validation-start_validation)
+        assert all(sentences.explode().index == df.sentence_id), 'IDs of annotations and dataframe do not match!'
 
+        # rejoin annotations with dataframe
         df['spacy_ner'] = sentences.explode().values
 
         df['spacy_ner'] = df.spacy_ner.replace(spacy2conll)

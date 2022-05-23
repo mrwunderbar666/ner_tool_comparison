@@ -14,19 +14,24 @@ from tqdm import tqdm
 sys.path.append(str(Path.cwd()))
 from tools.spacy.helpers import spacy2conll
 
-language = 'en'
+language = 'xl'
 p = Path.cwd() / 'tools' / 'spacy'
-
-
-
 results_path = Path.cwd() / 'results' / f'spacy_{language}.csv'
 
-models = ['en_core_web_lg', "en_core_web_trf"]
+models = ['xx_ent_wiki_sm']
 
-corpora = {'conll': Path.cwd() / 'corpora' / 'conll' / 'conll2003_en_validation_iob.feather',
+corpora = {'enp_DE.lft': Path.cwd() / 'corpora' / 'europeana' / 'enp_DE.lft_validation.feather',
+           'enp_DE.onb': Path.cwd() / 'corpora' / 'europeana' / 'enp_DE.onb_validation.feather',
+           'enp_DE.sbb': Path.cwd() / 'corpora' / 'europeana' / 'enp_DE.sbb_validation.feather',
+           'enp_NL.kb': Path.cwd() / 'corpora' / 'europeana' / 'enp_NL.kb_validation.feather',
+           'enp_FR.bnf': Path.cwd() / 'corpora' / 'europeana' / 'enp_FR.bnf_validation.feather',
+           'germeval2014': Path.cwd() / 'corpora' / 'germeval2014' / 'NER-de-test.feather',
+           'ontonotes': Path.cwd() / 'corpora' / 'ontonotes' / 'VALIDATION.feather',
+           'cnec': Path.cwd() / 'corpora' / 'cnec' / 'named_ent_etest.feather',
+           'conll2003_en': Path.cwd() / 'corpora' / 'conll' / 'conll2003_en_validation_iob.feather',
            'emerging': Path.cwd() / 'corpora' / 'emerging' / 'emerging.test.annotated.feather',
-           'ontonotes': Path.cwd() / 'corpora' / 'ontonotes' / 'english_VALIDATION.feather',
-           #'wikiann': Path.cwd() / 'corpora' / 'wikiann' / 'wikiann-en_validation.feather'
+           'esp.testb': Path.cwd() / 'corpora' / 'conll' / 'esp.testb.feather',
+           'ned.testb': Path.cwd() / 'corpora' / 'conll' / 'ned.testb.feather',
            }
 
 metric = load_metric("seqeval")
@@ -41,7 +46,6 @@ for model in models:
     # custom tokenizer
     # conll datasets do not split hyphenated words
     nlp.tokenizer = Tokenizer(nlp.vocab, token_match=re.compile(r'\S+').match)
-
 
     for corpus, path_corpus in corpora.items():
 
@@ -60,10 +64,15 @@ for model in models:
             df = df.sort_values(['sentence_id', 'token_id'])
 
         # ensure consistent order of sentences
-        df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
+        df.sentence_id = df.sentence_id.astype(str).str.zfill(len(str(df.sentence_id.max())))
 
+        if corpus == 'ned.testb':
+            df.sentence_id = df.doc + '_' + df.sentence_id
+            df = df.sort_values(['sentence_id', 'token_id'])
+
+        # re-arrange corpus into sentences    
         sentences = df.groupby('sentence_id')['token'].agg(list)
-            
+
         start_validation = timer()
         print('Annotating...', corpus)
         with tqdm(total=len(sentences), unit='sentence') as pbar:
@@ -78,10 +87,12 @@ for model in models:
 
         end_validation = timer()
         validation_time = timedelta(seconds=end_validation-start_validation)
+        assert all(sentences.explode().index == df.sentence_id), 'IDs of annotations and dataframe do not match!'
 
+        # rejoin annotations with dataframe
         df['spacy_ner'] = sentences.explode().values
 
-        df['spacy_ner'] = df.spacy_ner.replace(spacy2conll)
+        # df['spacy_ner'] = df.spacy_ner.replace(spacy2conll)
 
         predictions = df.groupby('sentence_id')['spacy_ner'].agg(list).to_list()
 
