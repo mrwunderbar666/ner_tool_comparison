@@ -153,6 +153,7 @@ for treex in tmp.glob('cnec2.0/data/treex/*.treex'):
             "position_lvl_1", "CNEC_lvl_2", "position_lvl_2", "CNEC_lvl_3", "position_lvl_3"]
 
     df = df.loc[:, cols]
+    df.sentence_id = df.sentence_id.str.replace('s', '').astype(int)
 
     print('saving dataframe to ', p / treex.name.replace('.treex', '.feather'))
     df.to_feather(p / treex.name.replace('.treex', '.feather'), compression='uncompressed')

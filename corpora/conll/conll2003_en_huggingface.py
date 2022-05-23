@@ -27,7 +27,7 @@ for split in conll.keys():
 
     df = df.explode(['tokens', 'pos_tags', 'chunk_tags', 'ner_tags'])
     df['IOB2'] = df.ner_tags.replace(ner_tags)
-    df['sentence_id'] = df.id
+    df['sentence_id'] = df.id.astype(int)
     df['token_id'] = df.groupby('sentence_id').cumcount()
     df['token_id'] = df['token_id'] + 1
     df['token'] = df.tokens
@@ -36,9 +36,8 @@ for split in conll.keys():
     df['corpus'] = split
 
     df = df.loc[:, ['dataset', 'language', 'corpus', 'sentence_id', 'token_id', 'token', 'IOB2']]
-
+    df = df.loc[~df.token.isna(), ]
     df = df.reset_index(drop=True)
-
     df.to_feather(p / f'conll2003_en_{split}_iob.feather', compression = 'uncompressed')
 
 
