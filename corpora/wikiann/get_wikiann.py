@@ -94,8 +94,12 @@ def parse_bio(bio):
     if len(output) > 0:
         df.reset_index(drop=True, inplace=True)
         # split into train (70%), test (15%), validate (15%)
+        # BUT maximum number of test / validation sample of ~100k sentences
         sentence_index = df.sentence_id.unique().tolist()
-        train, test_val = train_test_split(sentence_index, test_size=0.3, random_state=seed)
+        if len(sentence_index) > 660000:
+            train, test_val = train_test_split(sentence_index, test_size=200000, random_state=seed)
+        else:
+            train, test_val = train_test_split(sentence_index, test_size=0.3, random_state=seed)
         test, val = train_test_split(test_val, test_size=0.5, random_state=seed)
         df_train = df.loc[df.sentence_id.isin(train), ]
         df_test = df.loc[df.sentence_id.isin(test), ]
