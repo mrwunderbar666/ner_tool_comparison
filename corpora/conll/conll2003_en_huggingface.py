@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-sys.path.append(str(Path.cwd()))
+sys.path.insert(0, str(Path.cwd()))
 from utils.conll2003 import Conll2003
 
 p = Path.cwd() / 'corpora' / 'conll' 

@@ -9,7 +9,7 @@ from pathlib import Path
 import pandas as pd
 from nltk.corpus.reader import ConllChunkCorpusReader
 
-sys.path.append(str(Path.cwd()))
+sys.path.insert(0, str(Path.cwd()))
 from utils.downloader import downloader
 
 p = Path.cwd() / 'corpora' / 'emerging'

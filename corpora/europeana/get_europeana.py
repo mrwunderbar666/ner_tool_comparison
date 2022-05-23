@@ -16,7 +16,7 @@ from sklearn.model_selection import train_test_split
 
 seed = 5618
 
-sys.path.append(str(Path.cwd()))
+sys.path.insert(0, str(Path.cwd()))
 from utils.downloader import downloader
 
 p = Path.cwd() / 'corpora' / 'europeana'

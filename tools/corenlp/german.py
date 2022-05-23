@@ -7,7 +7,7 @@ from timeit import default_timer as timer
 from datetime import timedelta
 from time import sleep
 
-sys.path.append(str(Path.cwd()))
+sys.path.insert(0, str(Path.cwd()))
 from tools.corenlp.utils import launch_server, stanford2conll, annotate
 
 
@@ -46,7 +46,7 @@ corpora = {'enp_DE.lft': Path.cwd() / 'corpora' / 'europeana' / 'enp_DE.lft_vali
            'enp_DE.onb': Path.cwd() / 'corpora' / 'europeana' / 'enp_DE.onb_validation.feather',
            'enp_DE.sbb': Path.cwd() / 'corpora' / 'europeana' / 'enp_DE.sbb_validation.feather',
            'germeval2014': Path.cwd() / 'corpora' / 'germeval2014' / 'NER-de-test.feather',
-           # 'wikiann': Path.cwd() / 'corpora' / 'wikiann' / 'wikiann-fr_validation.feather'
+           'wikiann': Path.cwd() / 'corpora' / 'wikiann' / 'wikiann-de_validation.feather'
            }
 
 metric = load_metric("seqeval")

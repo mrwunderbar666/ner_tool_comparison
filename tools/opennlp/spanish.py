@@ -7,7 +7,7 @@ from datetime import timedelta
 
 import nltk
 
-sys.path.append(str(Path.cwd()))
+sys.path.insert(0, str(Path.cwd()))
 from tools.opennlp.opennlp import annotate, apache2conll
 
 language = 'es'
@@ -24,7 +24,7 @@ models = {'person': p / 'models' / f'{language}-ner-person.bin',
 results_path = Path.cwd() / 'results' / f'opennlp_{language}.csv'
 
 corpora = {'esp.testb': Path.cwd() / 'corpora' / 'conll' / 'esp.testb.feather',
-           #'wikiann': Path.cwd() / 'corpora' / 'wikiann' / 'wikiann-en_validation.feather'
+           'wikiann': Path.cwd() / 'corpora' / 'wikiann' / 'wikiann-es_validation.feather'
            }
 
 metric = load_metric("seqeval")

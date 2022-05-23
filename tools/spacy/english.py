@@ -11,7 +11,7 @@ from datetime import timedelta
 from datasets import load_metric
 
 from tqdm import tqdm
-sys.path.append(str(Path.cwd()))
+sys.path.insert(0, str(Path.cwd()))
 from tools.spacy.helpers import spacy2conll
 
 language = 'en'
@@ -26,7 +26,7 @@ models = ['en_core_web_lg', "en_core_web_trf"]
 corpora = {'conll': Path.cwd() / 'corpora' / 'conll' / 'conll2003_en_validation_iob.feather',
            'emerging': Path.cwd() / 'corpora' / 'emerging' / 'emerging.test.annotated.feather',
            'ontonotes': Path.cwd() / 'corpora' / 'ontonotes' / 'english_VALIDATION.feather',
-           #'wikiann': Path.cwd() / 'corpora' / 'wikiann' / 'wikiann-en_validation.feather'
+           'wikiann': Path.cwd() / 'corpora' / 'wikiann' / 'wikiann-en_validation.feather'
            }
 
 metric = load_metric("seqeval")

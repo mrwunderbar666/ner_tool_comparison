@@ -1,8 +1,9 @@
 import sys
 import zipfile
 from pathlib import Path
-
-sys.path.append(str(Path.cwd()))
+print(Path.cwd())
+sys.path.insert(0, str(Path.cwd()))
+print(sys.path)
 from utils.downloader import downloader
 
 p = Path.cwd() / 'tools' / 'corenlp'

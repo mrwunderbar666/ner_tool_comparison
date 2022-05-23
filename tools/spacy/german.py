@@ -11,7 +11,7 @@ from datetime import timedelta
 from datasets import load_metric
 
 from tqdm import tqdm
-sys.path.append(str(Path.cwd()))
+sys.path.insert(0, str(Path.cwd()))
 from tools.spacy.helpers import spacy2conll
 
 language = 'de'

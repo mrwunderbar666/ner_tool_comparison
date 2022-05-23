@@ -7,7 +7,7 @@ from timeit import default_timer as timer
 from datetime import timedelta
 from time import sleep
 
-sys.path.append(str(Path.cwd()))
+sys.path.insert(0, str(Path.cwd()))
 from tools.corenlp.utils import launch_server, stanford2conll, annotate
 
 language = 'english'

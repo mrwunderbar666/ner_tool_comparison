@@ -12,7 +12,7 @@ from nltk.corpus.reader import ConllChunkCorpusReader
 from nltk.tokenize.treebank import TreebankWordDetokenizer
 import pandas as pd
 
-sys.path.append(str(Path.cwd()))
+sys.path.insert(0, str(Path.cwd()))
 from utils.downloader import downloader
 
 url = "http://www.cnts.ua.ac.be/conll2002/ner.tgz"

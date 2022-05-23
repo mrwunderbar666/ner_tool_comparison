@@ -7,7 +7,7 @@ from timeit import default_timer as timer
 from datetime import timedelta
 from time import sleep
 
-sys.path.append(str(Path.cwd()))
+sys.path.insert(0, str(Path.cwd()))
 from tools.corenlp.utils import launch_server, stanford2conll, annotate
 
 language = 'arabic'
@@ -40,7 +40,7 @@ r = requests.post(server_address, params=params, data=sentence)
 assert r.status_code == 200, 'CoreNLP Server not responding!'
 
 corpora = {'ontonotes': Path.cwd() / 'corpora' / 'ontonotes' / 'arabic_VALIDATION.feather',
-            #'wikiann': Path.cwd() / 'corpora' / 'wikiann' / 'wikiann-ar_validation.feather'
+            'wikiann': Path.cwd() / 'corpora' / 'wikiann' / 'wikiann-ar_validation.feather'
             }
 
 metric = load_metric("seqeval")
