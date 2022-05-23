@@ -44,7 +44,7 @@ j = r.json()
 corpora = {'conll': Path.cwd() / 'corpora' / 'conll' / 'conll2003_en_validation_iob.feather',
            'emerging': Path.cwd() / 'corpora' / 'emerging' / 'emerging.test.annotated.feather',
            'ontonotes': Path.cwd() / 'corpora' / 'ontonotes' / 'english_VALIDATION.feather',
-           #'wikiann': Path.cwd() / 'corpora' / 'wikiann' / 'wikiann-en_validation.feather'
+           'wikiann': Path.cwd() / 'corpora' / 'wikiann' / 'wikiann-en_validation.feather'
            }
 
 metric = load_metric("seqeval")
