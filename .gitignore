@@ -138,10 +138,14 @@ utils/conll2003.py
 corpora/conll/*.txt
 corpora/europeana/enp_DE.sbb.bio.fixed
 results/
+corpora/*/tmp
 
 tools/opennlp/apache-*
 tools/opennlp/tmp
 tools/opennlp/models
+tools/corenlp/tmp
+tools/corenlp/stanford-core*/
+wandb
 
 # datafiles
 *.tgz
