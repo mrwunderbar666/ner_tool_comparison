@@ -59,8 +59,6 @@ for corpus, path_corpus in corpora.items():
 
     df = pd.read_feather(path_corpus)
     df = df.loc[~df.token.isna(), ]
-    if corpus == 'ontonotes':
-        df.rename(columns={'doc_id': 'sentence_id'}, inplace=True)
     if 'sentence' in df.columns:
         df.rename(columns={'sentence': 'sentence_id'}, inplace=True)
         df = df.sort_values(['sentence_id', 'token_id'])

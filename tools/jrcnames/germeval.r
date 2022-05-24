@@ -30,7 +30,7 @@ germeval$token_id <- as.numeric(germeval$token_id)
 germeval <- recode_iob(germeval, colname = 'CoNLL_IOB2')
 
 # Transform raw corpus to tcorpus obect
-tc_germeval <- corpustools::tokens_to_tcorpus(germeval, doc_col = 'sentence', token_id_col = 'token_id', token_col = 'token')
+tc_germeval <- corpustools::tokens_to_tcorpus(germeval, doc_col = 'sentence_id', token_id_col = 'token_id', token_col = 'token')
 
 # Run Dictionary over Corpus
 start_time <- Sys.time()

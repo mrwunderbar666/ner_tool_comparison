@@ -36,7 +36,7 @@ for (corpus in corpora) {
   df <- recode_iob(df, colname = 'CoNLL_IOB2')
   
   # Transform raw corpus to tcorpus obect
-  tc <- corpustools::tokens_to_tcorpus(df, doc_col = 'doc_id', token_id_col = 'token_id', token_col = 'token')
+  tc <- corpustools::tokens_to_tcorpus(df, doc_col = 'sentence_id', token_id_col = 'token_id', token_col = 'token')
   
   # Run Dictionary over Corpus
   start_time <- Sys.time()

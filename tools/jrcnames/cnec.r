@@ -29,11 +29,10 @@ cnec <- arrow::read_feather('corpora/cnec/named_ent_dtest.feather')
 
 cnec <- recode_iob(cnec, colname = 'CoNLL_IOB2')
 cnec$position <- as.numeric(cnec$position)
-cnec$sentence <- as.numeric(gsub('s', '', cnec$sentence_id))
 cnec$token_id <- NULL
 
 # Transform raw corpus to tcorpus obect
-tc_cnec <- corpustools::tokens_to_tcorpus(cnec, doc_col = 'sentence', token_id_col = 'position', token_col = 'token')
+tc_cnec <- corpustools::tokens_to_tcorpus(cnec, doc_col = 'sentence_id', token_id_col = 'position', token_col = 'token')
 
 # Run Dictionary over Corpus
 start_time <- Sys.time()

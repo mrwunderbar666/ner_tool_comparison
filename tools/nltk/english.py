@@ -35,11 +35,7 @@ for corpus, path_corpus in corpora.items():
 
     df = pd.read_feather(path_corpus)
     df = df.loc[~df.token.isna(), ]
-    if corpus == 'ontonotes':
-        df.rename(columns={'doc_id': 'sentence_id'}, inplace=True)
-    if corpus == 'wikiann':
-        df.rename(columns={'sentence': 'sentence_id'}, inplace=True)
-        df = df.sort_values(['sentence_id', 'token_id'])
+
 
     # ensure consistent order of sentences
     df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
