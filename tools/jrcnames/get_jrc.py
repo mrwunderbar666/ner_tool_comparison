@@ -6,15 +6,11 @@ from pathlib import Path
 from tqdm import tqdm
 import gzip
 import pandas as pd
-import shutil
+import sys
+sys.path.insert(0, str(Path.cwd()))
+from utils.downloader import downloader
 
-def downloader(response, destination):
-    total_size = int(response.headers.get('content-length', 0))
-    with open(destination, 'wb') as f:
-        with tqdm(total=total_size) as pbar:
-            for chunk in response.iter_content(chunk_size=1024):
-                b = f.write(chunk)
-                pbar.update(b)
+print('Downloading JRC Names')
 
 p = Path.cwd() / 'tools' / 'jrcnames'
 tmp = p / 'tmp'
@@ -25,8 +21,7 @@ if not tmp.exists():
 
 url = "https://wt-public.emm4u.eu/data/entities.gzip"
 
-r = requests.get(url, stream=True)
-downloader(r, tmp / 'entities.gzip')
+downloader(url, tmp / 'entities.gzip')
 
 print('Deflating data...')
 with open(tmp / 'entities.gzip', 'rb') as f_in:
@@ -39,5 +34,3 @@ with open(p / 'entities.tsv', 'wb') as f_out:
 df = pd.read_csv(p / 'entities.tsv', skiprows=1, sep='\t', header=None)
 df.columns = ['id', 'type', 'lang', 'keyword']
 df.to_feather(p / 'jrcnames.feather', compression="uncompressed")
-
-shutil.rmtree(tmp)
