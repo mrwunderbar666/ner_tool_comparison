@@ -11,6 +11,8 @@ infos = []
 
 for c in corpora:
 
+    print('Loading', c)
+
     df = pd.read_feather(c)
 
     summary = {'path': str(c), 'file': str(c.name)}
@@ -42,3 +44,5 @@ for c in corpora:
 infos = pd.DataFrame(infos)
 
 infos.to_csv(output, index=False)
+
+print('Done!')
