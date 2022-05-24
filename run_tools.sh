@@ -37,7 +37,7 @@ python3 -m spacy download xx_ent_wiki_sm
 # python3 tools/spacy/english.py
 # python3 tools/spacy/french.py
 # python3 tools/spacy/german.py
-python3 tools/spacy/mulilingual.py
+python3 tools/spacy/multilingual.py
 python3 tools/spacy/spanish.py
 
 # xlmroberta
