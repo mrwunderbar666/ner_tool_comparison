@@ -1,3 +1,9 @@
+# Algorithm
+
+Maximum Entropy
+
+# Tools and Documentation
+
 Apache OpenNLP: https://opennlp.apache.org/download.html
 Models: https://opennlp.apache.org/models.html
 

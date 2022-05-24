@@ -1,10 +1,10 @@
 import sys
 import zipfile
 from pathlib import Path
-print(Path.cwd())
 sys.path.insert(0, str(Path.cwd()))
-print(sys.path)
 from utils.downloader import downloader
+
+print('Downloading CoreNLP...')
 
 p = Path.cwd() / 'tools' / 'corenlp'
 
@@ -36,3 +36,6 @@ for lang, url in languages.items():
     print(f'Downloading {lang}...')
     dest = url.split('/')[-1]
     downloader(url, corenlp_folder / dest)
+
+
+print('Done!')

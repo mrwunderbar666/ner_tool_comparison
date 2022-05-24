@@ -1,3 +1,7 @@
+# Algorithm
+
+- maximum entropy Markov model
+
 # Citations
 
 - (Straková et al. 2014) Straková Jana, Straka Milan and Hajič Jan. Open-Source Tools for Morphology, Lemmatization, POS Tagging and Named Entity Recognition. In Proceedings of 52nd Annual Meeting of the Association for Computational Linguistics: System Demonstrations, pages 13-18, Baltimore, Maryland, June 2014. Association for Computational Linguistics.
