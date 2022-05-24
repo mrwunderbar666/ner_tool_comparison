@@ -34,14 +34,14 @@ features = Features({'text': Sequence(Value(dtype="string")), 'labels': Sequence
 
 df_train['CoNLL_IOB2'] = df_train['CoNLL_IOB2'].replace(labels_dict)
 
-df_train = df_train.groupby(['language', 'doc_id'])[['token', 'CoNLL_IOB2']].agg(list)
+df_train = df_train.groupby(['language', 'sentence_id'])[['token', 'CoNLL_IOB2']].agg(list)
 df_train = df_train.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})
 
 dataset_train = Dataset.from_pandas(df_train, features=features)
 
 df_test['CoNLL_IOB2'] = df_test['CoNLL_IOB2'].replace(labels_dict)
 
-df_test = df_test.groupby(['language', 'doc_id'])[['token', 'CoNLL_IOB2']].agg(list)
+df_test = df_test.groupby(['language', 'sentence_id'])[['token', 'CoNLL_IOB2']].agg(list)
 df_test = df_test.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})
 
 dataset_test = Dataset.from_pandas(df_test, features=features)
@@ -52,7 +52,7 @@ validation_sets = {}
 
 for language in df_validation.language.unique():
     tmp_df = df_validation.loc[df_validation.language == language, ]
-    tmp_df = tmp_df.groupby(['language', 'doc_id'])[['token', 'CoNLL_IOB2']].agg(list)
+    tmp_df = tmp_df.groupby(['language', 'sentence_id'])[['token', 'CoNLL_IOB2']].agg(list)
     tmp_df = tmp_df.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})
     validation_sets[language] = Dataset.from_pandas(tmp_df, features=features)
 

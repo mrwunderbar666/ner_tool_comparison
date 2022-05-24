@@ -34,21 +34,21 @@ features = Features({'text': Sequence(Value(dtype="string")), 'labels': Sequence
 
 df_train['CoNLL_IOB2'] = df_train['CoNLL_IOB2'].replace(labels_dict)
 
-df_train = df_train.groupby(['corpus', 'sentence'])[['token', 'CoNLL_IOB2']].agg(list)
+df_train = df_train.groupby(['corpus', 'sentence_id'])[['token', 'CoNLL_IOB2']].agg(list)
 df_train = df_train.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})
 
 dataset_train = Dataset.from_pandas(df_train, features=features)
 
 df_test['CoNLL_IOB2'] = df_test['CoNLL_IOB2'].replace(labels_dict)
 
-df_test = df_test.groupby(['language', 'sentence'])[['token', 'CoNLL_IOB2']].agg(list)
+df_test = df_test.groupby(['language', 'sentence_id'])[['token', 'CoNLL_IOB2']].agg(list)
 df_test = df_test.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})
 
 dataset_test = Dataset.from_pandas(df_test, features=features)
 
 df_validation['CoNLL_IOB2'] = df_validation['CoNLL_IOB2'].replace(labels_dict)
 
-df_validation = df_validation.groupby(['language', 'sentence'])[['token', 'CoNLL_IOB2']].agg(list)
+df_validation = df_validation.groupby(['language', 'sentence_id'])[['token', 'CoNLL_IOB2']].agg(list)
 df_validation = df_validation.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})
 
 dataset_validation = Dataset.from_pandas(df_validation, features=features)
