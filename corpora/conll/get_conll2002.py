@@ -4,7 +4,6 @@
 
 import sys
 import os
-import requests
 import tarfile
 import gzip
 from pathlib import Path
@@ -14,6 +13,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path.cwd()))
 from utils.downloader import downloader
+from utils.registry import add_corpus
 
 url = "http://www.cnts.ua.ac.be/conll2002/ner.tgz"
 
@@ -66,13 +66,32 @@ for k, corp in esp_corps.items():
     ll = []
     for i, sent in enumerate(corp.tagged_sents(), start=1):
         for j, token in enumerate(sent, start=1):
-            ll.append({'dataset': 'conll2002', 'language': 'es', 'corpus': k, 'sentence_id': i, 'token_id': j, 'token': token[0], 'IOB2': token[1]})
+            ll.append({'dataset': 'conll2002', 'language': 'es', 'corpus': k, 'sentence_id': i, 'token_id': j, 'token': token[0], 'CoNLL_IOB2': token[1]})
     df = pd.DataFrame(ll)
-    df.to_feather(p / (k + '.feather'), compression='uncompressed')
-    print(f"processed {k} and saved to {p / (k + '.feather')}")
+    corpus_destination = p / (k + '.feather')
+    df.to_feather(corpus_destination, compression='uncompressed')
+    print(f"processed {k} and saved to {corpus_destination}")
     sentences = df.groupby('sentence_id').token.apply(lambda x: twd.detokenize(x))
     with open(p / (k + '.txt'), 'w') as txt:
-        txt.write("\n".join(sentences.to_list())) 
+        txt.write("\n".join(sentences.to_list()))
+    
+    split = ''
+    if "testb" in k:
+        split = 'validation'
+    elif "testa" in k:
+        split = 'test'
+    elif "train" in k:
+        split = "train"
+    
+    corpus_details = {'corpus': 'conll', 
+                      'subset': k, 
+                      'path': corpus_destination, 
+                      'split': split,
+                      'language': 'es', 
+                      'tokens': len(df), 
+                      'sentences': len(sentences)}
+    
+    add_corpus(corpus_details)
 
 print('Processing Dutch corpus...')
 # split dutch corp files into documents
@@ -101,20 +120,41 @@ for k, corp in dutch_corps.items():
     ll = []
     for i, sent in enumerate(corp.iob_sents(), start=1):
         for j, token in enumerate(sent, start=1):
-            ll.append({'dataset': 'conll2002', 'language': 'nl', 'corpus': k.split('-')[0], 'doc': k.split('-')[1], 'sentence_id': i, 'token_id': j, 'token': token[0], 'POS': token[1], 'IOB2': token[2]})
+            ll.append({'dataset': 'conll2002', 'language': 'nl', 'corpus': k.split('-')[0], 'doc': k.split('-')[1], 'sentence_id': i, 'token_id': j, 'token': token[0], 'POS': token[1], 'CoNLL_IOB2': token[2]})
     tmp_df = pd.DataFrame(ll)
     sentences = tmp_df.groupby('sentence_id').token.apply(lambda x: twd.detokenize(x))
-    with open(p / (k.split('-')[0] + '.txt'), 'w') as txt:
-        txt.write("\n".join(sentences.to_list())) 
+    with open(p / (k.split('-')[0] + '.txt'), 'a+') as txt:
+        txt.write("\n".join(sentences.to_list()))
     dfs.append(pd.DataFrame(ll))
 
 df = pd.concat(dfs, ignore_index=True)
 
 for corpus in df.corpus.unique():
+    
     tmp_df = df.loc[df.corpus == corpus, :]
     tmp_df = tmp_df.reset_index(drop=True)
-    f_name = p / f'{corpus}.feather'
-    tmp_df.to_feather(f_name, compression='uncompressed')
+
+    corpus_destination = p / f"{corpus}.feather"
+    tmp_df.to_feather(corpus_destination, compression='uncompressed')
+
+
+    split = ''
+    if "testb" in corpus:
+        split = 'validation'
+    elif "testa" in corpus:
+        split = 'test'
+    elif "train" in corpus:
+        split = "train"
+    
+    corpus_details = {'corpus': 'conll', 
+                      'subset': corpus, 
+                      'path': corpus_destination, 
+                      'split': split,
+                      'language': 'nl', 
+                      'tokens': len(tmp_df), 
+                      'sentences': len(tmp_df.sentence_id.unique())}
+    
+    add_corpus(corpus_details)
 
     print(f"Sucess! Saved to {f_name}")
 
