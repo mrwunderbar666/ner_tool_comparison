@@ -2,20 +2,15 @@ import requests
 import zipfile
 from pathlib import Path
 from tqdm import tqdm
-from nltk.corpus.reader import XMLCorpusReader
 from bs4 import BeautifulSoup
 import pandas as pd
+import sys
+sys.path.insert(0, str(Path.cwd()))
+from utils.registry import add_corpus
+from utils.downloader import downloader
 
 p = Path.cwd() / 'corpora' / 'cnec'
 tmp = p / 'tmp'
-
-def downloader(response, destination):
-    total_size = int(response.headers.get('content-length', 0))
-    with open(destination, 'wb') as f:
-        with tqdm(total=total_size) as pbar:
-            for chunk in response.iter_content(chunk_size=1024):
-                b = f.write(chunk)
-                pbar.update(b)
 
 if not tmp.exists():
     tmp.mkdir()
@@ -78,15 +73,17 @@ for treex in tmp.glob('cnec2.0/data/treex/*.treex'):
 
     # iterate over every sentence and extract tokens
     print('Iterating over sentences...')
-    for sentence in sentences:
-        new_tokens = {lm['id']: 
-                    {'sentence_id': sentence['id'],
-                    'token_id': lm['id'],
-                    'token': lm.form.get_text(),
-                    'position': lm.ord.get_text()} for lm in sentence.a_tree.find_all('LM', id=True)} 
-        tokens.update(new_tokens)
-        # recurse with helper function
-        tokens = recurse_children(sentence.n_tree, tokens)
+    with tqdm(total=len(sentences), unit='sentence') as pbar:
+        for sentence in sentences:
+            new_tokens = {lm['id']: 
+                        {'sentence_id': sentence['id'],
+                        'token_id': lm['id'],
+                        'token': lm.form.get_text(),
+                        'position': lm.ord.get_text()} for lm in sentence.a_tree.find_all('LM', id=True)} 
+            tokens.update(new_tokens)
+            # recurse with helper function
+            tokens = recurse_children(sentence.n_tree, tokens)
+            pbar.update()
 
     # convert to pandas data frame
     print('Converting to data frame...')
@@ -155,7 +152,29 @@ for treex in tmp.glob('cnec2.0/data/treex/*.treex'):
     df = df.loc[:, cols]
     df.sentence_id = df.sentence_id.str.replace('s', '').astype(int)
 
-    print('saving dataframe to ', p / treex.name.replace('.treex', '.feather'))
-    df.to_feather(p / treex.name.replace('.treex', '.feather'), compression='uncompressed')
+    corpus_path =  p / treex.name.replace('.treex', '.feather')
+
+    print('saving dataframe to ', corpus_path)
+    df.to_feather(corpus_path, compression='uncompressed')
+
+    split = ''
+    if 'etest' in treex.name:
+        split = 'validation'
+    elif 'dtest' in treex.name:
+        split = 'test'
+    elif 'train' in treex.name:
+        split = 'train'
+    else:
+        split = 'complete'
+
+    corpus_details = {'corpus': 'cnec2.0',
+                      'subset': treex.name.replace('.treex', ''), 
+                      'path': corpus_path, 
+                      'split': split, 
+                      'language': 'cz', 
+                      'tokens': len(df), 
+                      'sentences': len(df.sentence_id.unique())}
+
+    add_corpus(corpus_details)
 
 print('Done!')
