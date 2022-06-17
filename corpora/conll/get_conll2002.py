@@ -13,6 +13,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path.cwd()))
 from utils.downloader import downloader
+from utils.parsers import parse_conll
 from utils.registry import add_corpus
 
 url = "http://www.cnts.ua.ac.be/conll2002/ner.tgz"
@@ -54,108 +55,113 @@ print('ok')
 
 
 print('Processing Spanish corpus...')
-esp_corps = {}
+# esp_corps = {}
 
-for txt in tmp.glob('esp*.txt'):
-    corp = ConllChunkCorpusReader(f'{tmp}', [txt.name], ['words', 'ne'], encoding='latin-1')
-    esp_corps[txt.name.replace('.txt', '')] = corp
+# for txt in tmp.glob('esp*.txt'):
+#     corp = ConllChunkCorpusReader(f'{tmp}', [txt.name], ['words', 'ne'], encoding='latin-1')
+#     esp_corps[txt.name.replace('.txt', '')] = corp
 
-twd = TreebankWordDetokenizer()
+# twd = TreebankWordDetokenizer()
 
-for k, corp in esp_corps.items():
-    ll = []
-    for i, sent in enumerate(corp.tagged_sents(), start=1):
-        for j, token in enumerate(sent, start=1):
-            ll.append({'dataset': 'conll2002', 'language': 'es', 'corpus': k, 'sentence_id': i, 'token_id': j, 'token': token[0], 'CoNLL_IOB2': token[1]})
-    df = pd.DataFrame(ll)
-    corpus_destination = p / (k + '.feather')
-    df.to_feather(corpus_destination, compression='uncompressed')
-    print(f"processed {k} and saved to {corpus_destination}")
-    sentences = df.groupby('sentence_id').token.apply(lambda x: twd.detokenize(x))
-    with open(p / (k + '.txt'), 'w') as txt:
-        txt.write("\n".join(sentences.to_list()))
+# for k, corp in esp_corps.items():
+#     ll = []
+#     for i, sent in enumerate(corp.tagged_sents(), start=1):
+#         for j, token in enumerate(sent, start=1):
+#             ll.append({'dataset': 'conll2002', 'language': 'es', 'corpus': k, 'sentence_id': i, 'token_id': j, 'token': token[0], 'CoNLL_IOB2': token[1]})
+#     df = pd.DataFrame(ll)
+#     corpus_destination = p / (k + '.feather')
+#     df.to_feather(corpus_destination, compression='uncompressed')
+#     print(f"processed {k} and saved to {corpus_destination}")
+#     sentences = df.groupby('sentence_id').token.apply(lambda x: twd.detokenize(x))
+#     with open(p / (k + '.txt'), 'w') as txt:
+#         txt.write("\n".join(sentences.to_list()))
     
+#     split = ''
+#     if "testb" in k:
+#         split = 'validation'
+#     elif "testa" in k:
+#         split = 'test'
+#     elif "train" in k:
+#         split = "train"
+    
+#     corpus_details = {'corpus': 'conll', 
+#                       'subset': k, 
+#                       'path': corpus_destination, 
+#                       'split': split,
+#                       'language': 'es', 
+#                       'tokens': len(df), 
+#                       'sentences': len(sentences)}
+    
+#     add_corpus(corpus_details)
+
+spanish_corpora = [tmp / 'esp.testa.txt', tmp / 'esp.testb.txt', tmp / 'esp.train.txt']
+
+for corpus in spanish_corpora:
+    assert corpus.exists()
+    print('Converting', corpus)
+    df = parse_conll(corpus, columns=['token', 'CoNLL_IOB2'], encoding='latin-1')
+    df['dataset'] = 'conll2003'
+    df['subset'] = corpus.name
+    df['language'] = 'es'
+    df = df.drop(columns=['doc_id'])
+    df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
+    corpus_destination = p / corpus.name.replace('.txt', '.feather')
+    df.to_feather(corpus_destination)
+
     split = ''
-    if "testb" in k:
+    if "testb" in corpus.name:
         split = 'validation'
-    elif "testa" in k:
+    elif "testa" in corpus.name:
         split = 'test'
-    elif "train" in k:
+    elif "train" in corpus.name:
         split = "train"
     
     corpus_details = {'corpus': 'conll', 
-                      'subset': k, 
+                      'subset': corpus.name, 
                       'path': corpus_destination, 
                       'split': split,
                       'language': 'es', 
                       'tokens': len(df), 
-                      'sentences': len(sentences)}
+                      'sentences': len(df.sentence_id.unique())}
     
     add_corpus(corpus_details)
+    print(f"Sucess! Saved to {corpus_destination}")
 
 print('Processing Dutch corpus...')
-# split dutch corp files into documents
-for txt in tmp.glob('ned*.txt'):
-    Path.mkdir(tmp / txt.name.replace('.txt', ''), exist_ok=True)
-    with open(txt, 'rb') as f:
-        corp = f.read().decode('latin-1')
-        corp = corp.split('-DOCSTART- -DOCSTART- O')
-        for i, doc in enumerate(corp):
-            if len(doc) < 2:
-                continue
-            with open(tmp / txt.name.replace('.txt', '') / f'doc_{i:03}.txt', 'w') as f_out:
-                f_out.write(doc) 
 
+dutch_corpora = [tmp / 'ned.testa.txt', tmp / 'ned.testb.txt', tmp / 'ned.train.txt']
 
+for corpus in dutch_corpora:
+    assert corpus.exists()
+    print('Converting', corpus)
+    df = parse_conll(corpus, columns=['token', 'POS', 'CoNLL_IOB2'], encoding='latin-1')
+    df['dataset'] = 'conll2003'
+    df['subset'] = corpus.name
+    df['language'] = 'nl'
+    df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
+    df.doc_id = df.doc_id.astype(str).str.zfill(4)
+    df.sentence_id = df.doc_id + '_' + df.sentence_id
 
-dutch_corps = {}
-
-for txt in tmp.glob('ned*/*.txt'):
-    corp = ConllChunkCorpusReader(f'{txt.parent}', [txt.name], ['words', 'pos', 'ne'])
-    dutch_corps[txt.parts[-2] + '-' + txt.name.replace('.txt', '')] = corp
-
-dfs = []
-
-for k, corp in dutch_corps.items():
-    ll = []
-    for i, sent in enumerate(corp.iob_sents(), start=1):
-        for j, token in enumerate(sent, start=1):
-            ll.append({'dataset': 'conll2002', 'language': 'nl', 'corpus': k.split('-')[0], 'doc': k.split('-')[1], 'sentence_id': i, 'token_id': j, 'token': token[0], 'POS': token[1], 'CoNLL_IOB2': token[2]})
-    tmp_df = pd.DataFrame(ll)
-    sentences = tmp_df.groupby('sentence_id').token.apply(lambda x: twd.detokenize(x))
-    with open(p / (k.split('-')[0] + '.txt'), 'a+') as txt:
-        txt.write("\n".join(sentences.to_list()))
-    dfs.append(pd.DataFrame(ll))
-
-df = pd.concat(dfs, ignore_index=True)
-
-for corpus in df.corpus.unique():
-    
-    tmp_df = df.loc[df.corpus == corpus, :]
-    tmp_df = tmp_df.reset_index(drop=True)
-
-    corpus_destination = p / f"{corpus}.feather"
-    tmp_df.to_feather(corpus_destination, compression='uncompressed')
-
+    corpus_destination = p / corpus.name.replace('.txt', '.feather')
+    df.to_feather(corpus_destination)
 
     split = ''
-    if "testb" in corpus:
+    if "testb" in corpus.name:
         split = 'validation'
-    elif "testa" in corpus:
+    elif "testa" in corpus.name:
         split = 'test'
-    elif "train" in corpus:
+    elif "train" in corpus.name:
         split = "train"
     
     corpus_details = {'corpus': 'conll', 
-                      'subset': corpus, 
+                      'subset': corpus.name, 
                       'path': corpus_destination, 
                       'split': split,
-                      'language': 'nl', 
-                      'tokens': len(tmp_df), 
-                      'sentences': len(tmp_df.sentence_id.unique())}
+                      'language': 'es', 
+                      'tokens': len(df), 
+                      'sentences': sum(df.groupby('doc_id').sentence_id.unique().apply(lambda x: len(x)))}
     
     add_corpus(corpus_details)
-
-    print(f"Sucess! Saved to {f_name}")
+    print(f"Sucess! Saved to {corpus_destination}")
 
 print(f'Done!')
