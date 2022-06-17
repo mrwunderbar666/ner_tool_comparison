@@ -77,8 +77,9 @@ for treex in tmp.glob('cnec2.0/data/treex/*.treex'):
         for sentence in sentences:
             new_tokens = {lm['id']: 
                         {'sentence_id': sentence['id'],
-                        'token_id': lm['id'],
+                        'token_id': lm.ord.get_text(),
                         'token': lm.form.get_text(),
+                        'cnec_token_id': lm['id'],
                         'position': lm.ord.get_text()} for lm in sentence.a_tree.find_all('LM', id=True)} 
             tokens.update(new_tokens)
             # recurse with helper function
@@ -89,6 +90,7 @@ for treex in tmp.glob('cnec2.0/data/treex/*.treex'):
     print('Converting to data frame...')
     df = pd.DataFrame.from_dict(tokens, orient='index')
     df = df.reset_index(drop=True)
+    
 
     # map to CoNLL IOB2 annotation style
     # working from outer most to inner most tag
@@ -143,14 +145,15 @@ for treex in tmp.glob('cnec2.0/data/treex/*.treex'):
             df[col.replace('NER', 'lvl')] = df[col]
         
     df['dataset'] = 'cnec2.0'
+    df['subset'] = treex.name.replace('.treex', '')
     df['language'] = 'cz'
-    df['corpus'] = treex.name.replace('.treex', '')
 
-    cols = ["dataset", "language", "corpus", "sentence_id", "token_id", "position", "token", "CoNLL_IOB2", "CNEC_lvl_0", "position_lvl_0", "CNEC_lvl_1",  
+    cols = ["dataset", "language", "subset", "sentence_id", "token_id", "token", "CoNLL_IOB2", 'cnec_token_id', "position", "CNEC_lvl_0", "position_lvl_0", "CNEC_lvl_1",  
             "position_lvl_1", "CNEC_lvl_2", "position_lvl_2", "CNEC_lvl_3", "position_lvl_3"]
 
     df = df.loc[:, cols]
     df.sentence_id = df.sentence_id.str.replace('s', '').astype(int)
+    df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
 
     corpus_path =  p / treex.name.replace('.treex', '.feather')
 
