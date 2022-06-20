@@ -27,7 +27,7 @@ for key in available_splits:
         for i, doc in enumerate(j[key]):
             iob = doc['tokens_iob']
             # assign document id to each list of tokens    
-            iob = list(map(lambda token: dict(token, sentence_id=i, language=doc['language'], dataset='ontonoes', subset=key), iob))
+            iob = list(map(lambda token: dict(token, sentence_id=str(i).zfill(6), language=doc['language'], dataset='ontonoes', subset=key), iob))
             tokenized += iob
             pbar.update(1)
 
