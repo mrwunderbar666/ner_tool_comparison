@@ -4,13 +4,9 @@
 # https://github.com/EuropeanaNewspapers/ner-corpora
 
 import sys
-import requests
 from pathlib import Path
-import pandas as pd
 import zipfile
-import io
 import patch
-from nltk.corpus.reader import ConllChunkCorpusReader
 
 from sklearn.model_selection import train_test_split
 
@@ -18,6 +14,8 @@ seed = 5618
 
 sys.path.insert(0, str(Path.cwd()))
 from utils.downloader import downloader
+from utils.parsers import parse_conll
+from utils.registry import add_corpus
 
 p = Path.cwd() / 'corpora' / 'europeana'
 tmp = p / 'tmp'
@@ -29,7 +27,6 @@ if not tmp.exists():
 repo = "https://github.com/EuropeanaNewspapers/ner-corpora/archive/refs/heads/master.zip"
 
 print(f'Downloading Europeana Dataset from: {repo}...')
-r = requests.get(repo)
 downloader(repo, tmp / 'master.zip')
 
 print('Extracting archive...')
@@ -67,22 +64,25 @@ print('ok')
 
 corps = {}
 
-for txt in tmp.glob('*.txt'):
-    corp = ConllChunkCorpusReader(f'{tmp}', [txt.name], ['words', 'ne'])
-    corps[txt.name.replace('.txt', '')] = corp
+for corpus in tmp.glob('*.txt'):
+    df = parse_conll(corpus, columns=['token', 'CoNLL_IOB2'])
+    df['dataset'] = 'europeana'
+    df['subset'] = corpus.name.replace('.conll', '')
+    language = ''
+    if 'de' in corpus.name.lower():
+        language = 'de'
+    elif 'fr' in corpus.name.lower():
+        language = 'fr'
+    elif 'nl' in corpus.name.lower():
+        language = 'nl'
 
+    df['language'] = language
+    df = df.drop(columns=['doc_id'])
+    df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
+    # fix wrong tags
+    df.CoNLL_IOB2 = df.CoNLL_IOB2.replace({'B-BER': 'B-PER'})
+    df.CoNLL_IOB2 = df.CoNLL_IOB2.replace({'P': 'O'})
 
-for k, corp in corps.items():
-    print('Parsing', k, 'to dataframe')
-    ll = []
-    for i, sent in enumerate(corp.tagged_sents(), start=1):
-        for j, token in enumerate(sent, start=1):
-            ll.append({'dataset': 'europeana', 'language': k.split('_')[-1].split('.')[0].lower(), 'corpus': k, 'sentence_id': i, 'token_id': j, 'token': token[0], 'IOB2': token[1]})
-
-    df = pd.DataFrame(ll)
-    # fixing wrong tags
-    df.IOB2 = df.IOB2.replace({'B-BER': 'B-PER'})
-    df.IOB2 = df.IOB2.replace({'P': 'O'})
     sentence_index = df.sentence_id.unique().tolist()
     train, test_val = train_test_split(sentence_index, test_size=0.3, random_state=seed)
     test, val = train_test_split(test_val, test_size=0.5, random_state=seed)
@@ -94,10 +94,44 @@ for k, corp in corps.items():
     df_test.reset_index(inplace=True, drop=True)
     df_val.reset_index(inplace=True, drop=True)
 
-    df_train.to_feather(p / (k + '_train.feather'), compression='uncompressed')
-    df_test.to_feather(p / (k + '_test.feather'), compression='uncompressed')
-    df_val.to_feather(p / (k + '_validation.feather'), compression='uncompressed')
-    print(f"processed {k} and saved to {p / (k + '.feather')}")
+    train_destination = p / corpus.name.replace('.txt', '_train.feather')
+    test_destination = p / corpus.name.replace('.txt', '_test.feather')
+    validation_destination = p / corpus.name.replace('.txt', '_validation.feather')
+
+    df_train.to_feather(train_destination, compression='uncompressed')
+    df_test.to_feather(test_destination, compression='uncompressed')
+    df_val.to_feather(test_destination, compression='uncompressed')
+    print(f"processed {corpus} and saved to", train_destination, test_destination, validation_destination)
+
+    train_details = {'corpus': 'europeana', 
+                    'subset': corpus.name, 
+                    'path': train_destination, 
+                    'split': "train",
+                    'language': language, 
+                    'tokens': len(df_train), 
+                    'sentences': len(df_train.sentence_id.unique())}
+
+    add_corpus(train_details)
+
+    test_details = {'corpus': 'europeana', 
+                    'subset': corpus.name, 
+                    'path': test_destination, 
+                    'split': "test",
+                    'language': language, 
+                    'tokens': len(df_test), 
+                    'sentences': len(df_test.sentence_id.unique())}
+
+    add_corpus(test_details)
+
+    validation_details = {'corpus': 'europeana', 
+                    'subset': corpus.name, 
+                    'path': validation_destination, 
+                    'split': "validation",
+                    'language': language, 
+                    'tokens': len(df_val), 
+                    'sentences': len(df_val.sentence_id.unique())}
+
+    add_corpus(validation_details)
 
 
 print('Done!')
