@@ -137,6 +137,7 @@ utils/conll2003.py
 
 corpora/conll/*.txt
 corpora/europeana/enp_DE.sbb.bio.fixed
+corpora/ontonotes/ontonotes5_parsed.json
 results/
 corpora/*/tmp
 
