@@ -24,7 +24,7 @@ def parse_conll(f_path, columns=['token', 'lemma', 'pos', 'chunk', 'CoNLL_IOB2']
                 token_id = 1
                 continue
             else:
-                token = {k: v for k, v in zip(columns, l.split(separator))}
+                token = {k.strip(): v.strip() for k, v in zip(columns, l.split(separator))}
                 token['doc_id'] = doc_id
                 token['sentence_id'] = sentence_id
                 token['token_id'] = token_id
