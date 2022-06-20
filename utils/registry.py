@@ -23,9 +23,15 @@ def add_corpus(data):
     assert list(data.keys()).sort() == h.sort()
     registry = find_corpus_registry()
     df = pd.read_csv(registry)
+    data['path'] = str(data['path'])
     filt = df.path == data['path']
-    if len(df.loc[filt]) > 0:
-        df = df.loc[~filt]
+    df = df.loc[~filt]
     df = pd.concat([df, pd.DataFrame([data])], ignore_index=True)
     df.to_csv(registry, index=False)
     
+
+def load_registry():
+    r = find_corpus_registry()
+    df = pd.read_csv(r)
+    df = df.drop_duplicates()
+    return df
