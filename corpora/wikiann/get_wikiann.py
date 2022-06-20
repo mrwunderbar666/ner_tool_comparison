@@ -8,6 +8,8 @@ import os
 import gc
 import shutil
 from sklearn.model_selection import train_test_split
+sys.path.insert(0, str(Path.cwd()))
+from utils.registry import add_corpus
 
 seed = 5618
 
@@ -59,7 +61,7 @@ def parse_bio(bio):
             l = l.split()
             output.append({'corpus': 'wikiann',
                             'language': language,
-                            'sentence_id': sentence,
+                            'sentence_id': str(sentence).zfill(6),
                             'token_id': token_id,
                             'token': l[0],
                             'IOB2': l[-1]})
@@ -109,10 +111,36 @@ def parse_bio(bio):
         df_test.reset_index(inplace=True, drop=True)
         df_val.reset_index(inplace=True, drop=True)
 
+        train_destination = p / bio.name.replace('.bio', '_train.feather')
+        test_destination = p / bio.name.replace('.bio', '_test.feather')
+        val_destination = p / bio.name.replace('.bio', '_validation.feather')
+        corpus_details = {'corpus': 'wikiann',
+                      'subset': bio.name,
+                      'path': train_destination, 
+                      'split': 'train',
+                      'language': language, 
+                      'tokens': len(df_train), 
+                      'sentences': len(df_train.sentence_id.unique())}
+        add_corpus(corpus_details)
+
+        corpus_details['path'] = test_destination
+        corpus_details['split'] = 'test'
+        corpus_details['tokens'] = len(df_test)
+        corpus_details['sentences'] = len(df_test.sentence_id.unique())
+        add_corpus(corpus_details)
+
+        corpus_details['path'] = val_destination
+        corpus_details['split'] = 'validation'
+        corpus_details['tokens'] = len(df_val)
+        corpus_details['sentences'] = len(df_val.sentence_id.unique())
+        add_corpus(corpus_details)
+
         df_train.sort_values(['sentence_id', 'token_id'])
-        df_train.to_feather(p / bio.name.replace('.bio', '_train.feather'), compression='uncompressed')
-        df_test.to_feather(p / bio.name.replace('.bio', '_test.feather'), compression='uncompressed')
-        df_val.to_feather(p / bio.name.replace('.bio', '_validation.feather'), compression='uncompressed')
+        df_train.to_feather(train_destination, compression='uncompressed')
+        df_test.sort_values(['sentence_id', 'token_id'])
+        df_test.to_feather(test_destination, compression='uncompressed')
+        df_val.sort_values(['sentence_id', 'token_id'])
+        df_val.to_feather(val_destination, compression='uncompressed')
 
 
 err = []
