@@ -18,8 +18,7 @@ if not tmp.exists():
 repo = "https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11858/00-097C-0000-0023-1B22-8/Czech_Named_Entity_Corpus_2.0.zip"
 
 print(f'Downloading Czech Named Entity Corpus 2.0 from: {repo}...')
-r = requests.get(repo, stream=True)
-downloader(r, tmp / 'Czech_Named_Entity_Corpus_2.0.zip')
+downloader(repo, tmp / 'Czech_Named_Entity_Corpus_2.0.zip')
 print('Success!')
 
 z = zipfile.ZipFile(tmp / 'Czech_Named_Entity_Corpus_2.0.zip', mode='r')
