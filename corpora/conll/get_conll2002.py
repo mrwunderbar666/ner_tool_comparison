@@ -7,8 +7,6 @@ import os
 import tarfile
 import gzip
 from pathlib import Path
-from nltk.corpus.reader import ConllChunkCorpusReader
-from nltk.tokenize.treebank import TreebankWordDetokenizer
 import pandas as pd
 
 sys.path.insert(0, str(Path.cwd()))
@@ -55,44 +53,6 @@ print('ok')
 
 
 print('Processing Spanish corpus...')
-# esp_corps = {}
-
-# for txt in tmp.glob('esp*.txt'):
-#     corp = ConllChunkCorpusReader(f'{tmp}', [txt.name], ['words', 'ne'], encoding='latin-1')
-#     esp_corps[txt.name.replace('.txt', '')] = corp
-
-# twd = TreebankWordDetokenizer()
-
-# for k, corp in esp_corps.items():
-#     ll = []
-#     for i, sent in enumerate(corp.tagged_sents(), start=1):
-#         for j, token in enumerate(sent, start=1):
-#             ll.append({'dataset': 'conll2002', 'language': 'es', 'corpus': k, 'sentence_id': i, 'token_id': j, 'token': token[0], 'CoNLL_IOB2': token[1]})
-#     df = pd.DataFrame(ll)
-#     corpus_destination = p / (k + '.feather')
-#     df.to_feather(corpus_destination, compression='uncompressed')
-#     print(f"processed {k} and saved to {corpus_destination}")
-#     sentences = df.groupby('sentence_id').token.apply(lambda x: twd.detokenize(x))
-#     with open(p / (k + '.txt'), 'w') as txt:
-#         txt.write("\n".join(sentences.to_list()))
-    
-#     split = ''
-#     if "testb" in k:
-#         split = 'validation'
-#     elif "testa" in k:
-#         split = 'test'
-#     elif "train" in k:
-#         split = "train"
-    
-#     corpus_details = {'corpus': 'conll', 
-#                       'subset': k, 
-#                       'path': corpus_destination, 
-#                       'split': split,
-#                       'language': 'es', 
-#                       'tokens': len(df), 
-#                       'sentences': len(sentences)}
-    
-#     add_corpus(corpus_details)
 
 spanish_corpora = [tmp / 'esp.testa.txt', tmp / 'esp.testb.txt', tmp / 'esp.train.txt']
 
@@ -106,7 +66,7 @@ for corpus in spanish_corpora:
     df = df.drop(columns=['doc_id'])
     df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
     corpus_destination = p / corpus.name.replace('.txt', '.feather')
-    df.to_feather(corpus_destination)
+    df.to_feather(corpus_destination, compression='uncompressed')
 
     split = ''
     if "testb" in corpus.name:
@@ -157,7 +117,7 @@ for corpus in dutch_corpora:
                       'subset': corpus.name, 
                       'path': corpus_destination, 
                       'split': split,
-                      'language': 'es', 
+                      'language': 'nl', 
                       'tokens': len(df), 
                       'sentences': sum(df.groupby('doc_id').sentence_id.unique().apply(lambda x: len(x)))}
     
