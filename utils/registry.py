@@ -4,6 +4,7 @@
 
 from pathlib import Path
 import csv
+import pandas as pd
 
 corpus_headers = ['corpus', 'subset', 'path', 'split', 'language', 'tokens', 'sentences']
 
@@ -21,6 +22,10 @@ def add_corpus(data):
     h = corpus_headers.copy()
     assert list(data.keys()).sort() == h.sort()
     registry = find_corpus_registry()
-    with open(registry, 'a+') as f:
-        writer = csv.DictWriter(f, corpus_headers)
-        writer.writerow(data)
+    df = pd.read_csv(registry)
+    filt = df.path == data['path']
+    if len(df.loc[filt]) > 0:
+        df = df.loc[~filt]
+    df = pd.concat([df, pd.DataFrame([data])], ignore_index=True)
+    df.to_csv(registry, index=False)
+    
