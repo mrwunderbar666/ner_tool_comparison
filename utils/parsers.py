@@ -1,7 +1,7 @@
 import pandas as pd
 from tqdm import tqdm
 
-def parse_conll(f_path, columns=['token', 'lemma', 'pos', 'chunk', 'CoNLL_IOB2'], encoding='utf-8'):
+def parse_conll(f_path, columns=['token', 'lemma', 'pos', 'chunk', 'CoNLL_IOB2'], encoding='utf-8', separator=' '):
 
     with open(f_path, 'r', encoding=encoding) as f:
         lines = f.readlines()
@@ -24,7 +24,7 @@ def parse_conll(f_path, columns=['token', 'lemma', 'pos', 'chunk', 'CoNLL_IOB2']
                 token_id = 1
                 continue
             else:
-                token = {k: v for k, v in zip(columns, l.split())}
+                token = {k: v for k, v in zip(columns, l.split(separator))}
                 token['doc_id'] = doc_id
                 token['sentence_id'] = sentence_id
                 token['token_id'] = token_id
