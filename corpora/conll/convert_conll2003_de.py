@@ -11,7 +11,7 @@ p = Path.cwd() / 'corpora/' / 'conll'
 raw_data = [p / 'deu.testa', p / 'deu.testb', p / 'deu.train']
 
 for corpus in raw_data:
-    assert corpus.exists()
+    assert corpus.exists(), f"Could not find raw corpus data: {corpus}"
     print('Converting', corpus)
     df = parse_conll(corpus, encoding='latin-1')
     df['dataset'] = 'conll2003'
@@ -21,7 +21,7 @@ for corpus in raw_data:
     df.doc_id = df.doc_id.astype(str).str.zfill(4)
     df.sentence_id = df.doc_id + '_' + df.sentence_id
     corpus_destination = str(corpus) + '.feather'
-    df.to_feather(corpus_destination)
+    df.to_feather(corpus_destination, compression='uncompressed')
 
     split = ''
     if "testb" in corpus.name:
@@ -40,3 +40,5 @@ for corpus in raw_data:
                       'sentences': sum(df.groupby('doc_id').sentence_id.unique().apply(lambda x: len(x)))}
     
     add_corpus(corpus_details)
+
+print('Done!')
