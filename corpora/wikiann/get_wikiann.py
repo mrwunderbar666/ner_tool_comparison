@@ -64,7 +64,7 @@ def parse_bio(bio):
                             'sentence_id': str(sentence).zfill(6),
                             'token_id': token_id,
                             'token': l[0],
-                            'IOB2': l[-1]})
+                            'CoNLL_IOB2': l[-1]})
             token_id += 1
             if len(output) > 1e7:
                 print('part:', part)
