@@ -1,51 +1,74 @@
 library(nametagger)
 library(arrow)
+library(stringr)
+library(readr)
 
 if (!dir.exists("tools/nametagger/tmp")) {
   dir.create("tools/nametagger/tmp")
 }
 
-model <- nametagger_download_model(language = "english-conll-140408", model_dir = "tools/nametagger/tmp")
+if (!file.exists("tools/nametagger/tmp/english-conll-140408.ner")) { 
+  model <- nametagger_download_model(language = "english-conll-140408", model_dir = "tools/nametagger/tmp")
+} else {
+  model <- nametagger_load_model("tools/nametagger/tmp/english-conll-140408.ner")
+}
 
 language <- "en"
 
-corpora <- c(conll = "conll/conll2003_en_validation_iob.feather",
-             emerging = "emerging/emerging.test.annotated.feather",
-             ontonotes = "ontonotes/english_VALIDATION.feather",
-             wikiann = "wikiann/wikiann-en_validation.feather")
+registry <- read_csv("corpora/registry.csv")
+registry <- registry[registry$split == 'validation', ]
+
+corpora <- registry[registry$language %in% language, ]
 
 
-for (c in corpora) {
+for (i in 1:nrow(corpora)) {
   
-  print(c)
+  print(corpora$path[i])
   
-  corpus <- arrow::read_feather(paste0("corpora/", c))
+  corpus <- arrow::read_feather(corpora$path[i])
   
   # satisfy the expected input of nametagger
   
   corpus$text <- corpus$token
   
-  if ('CoNLL_IOB2' %in% colnames(corpus)) {
-    corpus$IOB2 <- corpus$CoNLL_IOB2
+  if (!"doc_id" %in% colnames(corpus)) {
+    corpus$doc_id <- "1"
   }
   
-  if (!"doc_id" %in% colnames(corpus)) {
-    corpus$doc_id = '1'
-  }
   
   if (!"sentence_id" %in% colnames(corpus)) {
-    corpus$sentence_id = corpus$doc_id
+    corpus$sentence_id <- corpus$doc_id
   }
   
-  corpus$IOB2 <- as.factor(corpus$IOB2)
+  if (!is.numeric(corpus$sentence_id)) {
+    if (length(which(stringr::str_detect(corpus$sentence_id, '_'))) > 0) {
+      corpus$sentence_id <- gsub("_", '', corpus$sentence_id, fixed = T)
+    }
+    corpus$sentence_id <- as.numeric(corpus$sentence_id)
+    
+  }
   
+  corpus$CoNLL_IOB2 <- as.factor(corpus$CoNLL_IOB2)
+  
+  start_time <- Sys.time()
   annotations <- predict(model, corpus)
+  end_time <- Sys.time()
+  
   predictions <- data.frame(
     sentence_id = corpus$sentence_id,
-    nametagger = factor(annotations$entity, levels = levels(corpus$IOB2)),
-    references = corpus$IOB2
+    nametagger = factor(annotations$entity, levels = levels(corpus$CoNLL_IOB2)),
+    references = corpus$CoNLL_IOB2
   )
   
-  write_feather(predictions, paste0("tools/nametagger/tmp/", strsplit(c, '/', fixed=T)[[1]][1], '_', language, '.feather'))
-
-}
+  write_feather(predictions, paste0("tools/nametagger/tmp/", corpora$corpus[i], '_', corpora$subset[i], '_', language, '.feather'))
+  runtime <- data.frame(
+            corpus = corpora$corpus[i],
+            subset = corpora$subset[i],
+            language = language,
+            sentences = corpora$sentences[i],
+            tokens = corpora$tokens[i],
+            evaluation_time=as.double(difftime(end_time, start_time, units = "secs"))
+  )
+  write_csv(runtime, paste0("tools/nametagger/tmp/", corpora$corpus[i], '_', corpora$subset[i], '_', language, '.csv'))
+            
+  }

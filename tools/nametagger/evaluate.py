@@ -22,10 +22,15 @@ for o in outputs:
     overall['task'] = 'overall'
     r.append(overall)
     r = pd.DataFrame(r)
-    r['language'] = o.name.split('_')[-1].replace('.feather', '')
-    r['corpus'] = o.name.split('_')[0]
-    evaluations.append(r)
 
+    meta_info = pd.read_csv(str(o).replace('.feather', '.csv'))
+    r['corpus'] = meta_info.loc[0, 'corpus']
+    r['subset'] = meta_info.loc[0, 'subset']
+    r['language'] = meta_info.loc[0, 'language']
+    r['sentences'] = meta_info.loc[0, 'sentences']
+    r['tokens'] = meta_info.loc[0, 'tokens']
+    r['evaluation_time'] = meta_info.loc[0, 'evaluation_time']
+    evaluations.append(r)
 
 results_df = pd.concat(evaluations)
 
