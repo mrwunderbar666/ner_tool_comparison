@@ -5,13 +5,13 @@ import requests
 from datasets import load_metric
 from timeit import default_timer as timer
 from datetime import timedelta
+import random
 from time import sleep
 
 sys.path.insert(0, str(Path.cwd()))
 from tools.corenlp.utils import launch_server, stanford2conll, annotate
 from utils.registry import load_registry
 
-import random
 
 languages = {'zh': 'chinese', 
              'en': 'english', 
@@ -47,7 +47,7 @@ for lang, language in languages.items():
         finally:
             sleep(0.5)
 
-    # Send a test sentence first to provoke CoreNLP to load all files
+    # Send a test sentence to provoke CoreNLP to load all files
     params = {'properties': '{"annotators":"ner","outputFormat":"json","tokenize.language": "Whitespace"}'}
     sentence = 'This is a testing sentence.'
     r = requests.post(server_address, params=params, data=sentence)
@@ -55,7 +55,6 @@ for lang, language in languages.items():
     assert r.status_code == 200, 'CoreNLP Server not responding!'
 
     corpora = registry.loc[(registry.language == lang) & (registry.split == 'validation')]
-    # corpora = registry.loc[(registry.language == lang) & (registry.split == 'validation') & (registry.corpus == 'ontonotes')]
 
     for _, row in corpora.iterrows():
 
@@ -111,3 +110,5 @@ for lang, language in languages.items():
 
 results_df = pd.concat(evaluations)
 results_df.to_csv(results_path, index=False)
+
+print('Done!')
