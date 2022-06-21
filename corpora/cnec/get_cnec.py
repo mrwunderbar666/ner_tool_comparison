@@ -76,7 +76,7 @@ for treex in tmp.glob('cnec2.0/data/treex/*.treex'):
         for sentence in sentences:
             new_tokens = {lm['id']: 
                         {'sentence_id': sentence['id'],
-                        'token_id': lm.ord.get_text(),
+                        'token_id': int(lm.ord.get_text()),
                         'token': lm.form.get_text(),
                         'cnec_token_id': lm['id'],
                         'position': lm.ord.get_text()} for lm in sentence.a_tree.find_all('LM', id=True)} 
