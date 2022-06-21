@@ -2,7 +2,7 @@
 ### Helper Functions
 
 # Recode CoNLL Corpus Named Entity Columns
-recode_iob <- function(df, colname='IOB2') {
+recode_iob <- function(df, colname='CoNLL_IOB2') {
   
   # Recode Code Columns
   # Column for any named entity
