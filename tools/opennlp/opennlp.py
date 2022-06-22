@@ -1,10 +1,5 @@
 from subprocess import Popen, PIPE
 
-apache2conll = {'B-location': 'B-LOC', 'I-location': 'I-LOC',
-                'B-person': 'B-PER', 'I-person': 'I-PER',
-                'B-organization': 'B-ORG', 'I-organization': 'I-ORG',
-                'B-misc': 'B-MISC', 'I-misc': 'I-MISC', }
-
 def annotate(sentences, opennlp_bin, model='en-ner-person'):
     if isinstance(sentences, list):
         sentences = "\n".join(sentences)

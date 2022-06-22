@@ -8,6 +8,7 @@ from multiprocessing import Pool
 
 sys.path.insert(0, str(Path.cwd()))
 from utils.registry import add_corpus
+from utils.mappings import ontonotes2conll
 
 p = Path.cwd() / 'corpora' / 'ontonotes'
 
@@ -37,25 +38,8 @@ del j
 df = pd.DataFrame(tokenized)
 df.language = df.language.replace({'arabic': 'ar', 'chinese': 'zh', 'english': 'en'})
 
-iob2conll = {'I-PERSON': 'I-PER', 'B-PERSON': 'B-PER',
-             'I-GPE': 'I-LOC', 'B-GPE': 'B-LOC',
-             'I-FAC': 'I-LOC', 'B-FAC': 'B-LOC',
-             'I-EVENT': 'I-MISC', 'B-EVENT': 'B-MISC', 
-             'I-WORK_OF_ART': 'I-MISC', 'B-WORK_OF_ART': 'B-MISC', 
-             'I-PRODUCT': 'I-MISC', 'B-PRODUCT': 'B-MISC', 
-             'I-LAW': 'I-MISC', 'B-LAW': 'B-MISC', 
-             '[BI]-NORP': 'O', 
-             '[BI]-LANGUAGE': 'O', 
-             '[BI]-DATE': 'O', 
-             '[BI]-TIME': 'O', 
-             '[BI]-CARDINAL': 'O', 
-             '[BI]-MONEY': 'O', 
-             '[BI]-PERCENT': 'O', 
-             '[BI]-ORDINAL': 'O', 
-             '[BI]-QUANTITY': 'O'}
-
 # Helper function: wraps .replace() method for multiprocessing
-def replace_(series, d=iob2conll):
+def replace_(series, d=ontonotes2conll):
     return series.replace(d, regex=True)
 
 # Helper function to speed up the processing

@@ -55,32 +55,3 @@ def annotate(df,
                     df.loc[filt_sentence & filt_token, 'corenlp_ner'] = ner
                     first = False
             pbar.update(1)
-
-
-# don't change: 'B-MISC', 'I-MISC'
-stanford2conll = {'B-ORGANIZATION': 'B-ORG', 'I-ORGANIZATION': 'I-ORG',
-                    'B-PERSON': 'B-PER', 'I-PERSON': 'I-PER', 
-                    'B-LOCATION': 'B-LOC', 'I-LOCATION': 'I-LOC',
-                    'B-CITY': 'B-LOC', 'I-CITY': 'I-LOC', 
-                    'B-COUNTRY': 'B-LOC', 'I-COUNTRY': 'I-LOC', 
-                    'B-STATE_OR_PROVINCE': 'B-LOC', 'I-STATE_OR_PROVINCE': 'I-LOC', 
-                    'B-GPE': 'B-LOC', 'I-GPE': 'I-LOC',
-                    'B-FACILITY': 'B-LOC', 'I-FACILITY': 'I-LOC',
-                    'B-RELIGION': 'B-MISC', 'I-RELIGION': 'I-MISC',
-                    'B-NATIONALITY': 'B-MISC', 'I-NATIONALITY': 'I-MISC',
-                    'B-DEMONYM': 'B-MISC', 'I-DEMONYM': 'I-MISC',
-                    'B-CAUSE_OF_DEATH': 'B-MISC', 'I-CAUSE_OF_DEATH': 'I-MISC',
-                    'B-IDEOLOGY': 'B-MISC', 'I-IDEOLOGY': 'I-MISC',
-                    'B-TITLE': 'B-MISC', 'I-TITLE': 'I-MISC', 
-                    'B-MONEY': 'B-MISC', 'I-MONEY': 'I-MISC', 
-                    'B-PERCENT': 'O', 'I-PERCENT': 'O', 
-                    'B-NUMBER': 'O', 'I-NUMBER': 'O', 
-                    'B-DURATION': 'O', 'I-DURATION': 'O',
-                    'B-TIME': 'O', 'I-TIME': 'O', 
-                    'B-ORDINAL': 'O', 'I-ORDINAL': 'O', 
-                    'B-DATE': 'O', 'I-DATE': 'O', 
-                    'B-CRIMINAL_CHARGE': 'O', 'I-CRIMINAL_CHARGE': 'O', 
-                    'B-SET': 'O', 'I-SET': 'O', 
-                    'B-EMAIL': 'O', 'I-EMAIL': 'O',
-                    'B-URL': 'O', 'I-URL': 'O'
-                    }

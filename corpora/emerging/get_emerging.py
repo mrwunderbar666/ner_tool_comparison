@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path.cwd()))
 from utils.downloader import downloader
 from utils.parsers import parse_conll
 from utils.registry import add_corpus
+from utils.mappings import emerging2conll
 
 p = Path.cwd() / 'corpora' / 'emerging'
 tmp = p / 'tmp'
@@ -34,13 +35,6 @@ print(f'Downloading Emerging Entities Test Data from: {test_with_tags}...')
 downloader(test_with_tags, tmp / 'emerging.test.annotated.conll')
 
 # map to conll iob2 format
-emerging2conll = {'person': 'PER', 
-                    'creative-work': 'MISC', 
-                    'group': 'ORG', 
-                    'location': 'LOC', 
-                    'product': 'MISC', 
-                    'corporation': 'ORG'}
-
 
 print('Processing...')
 for corpus in tmp.glob('*.conll'):

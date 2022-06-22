@@ -8,6 +8,7 @@ import sys
 sys.path.insert(0, str(Path.cwd()))
 from utils.registry import add_corpus
 from utils.downloader import downloader
+from utils.mappings import cnec2conll
 
 p = Path.cwd() / 'corpora' / 'cnec'
 tmp = p / 'tmp'
@@ -91,7 +92,7 @@ for treex in tmp.glob('cnec2.0/data/treex/*.treex'):
     df = df.reset_index(drop=True)
     
 
-    # map to CoNLL IOB2 annotation style
+    # map to CoNLL IOB2 annotation style (see utils.mappings.py)
     # working from outer most to inner most tag
     # Challenge: e.g., Complex Address expression containing person names and locations
     # Ing. Tomáš BRYCHTA - SCANTRAVEL , Drtinova 17 , Praha 5
@@ -103,13 +104,9 @@ for treex in tmp.glob('cnec2.0/data/treex/*.treex'):
     # Then we replace all MISC with PER / LOC / ORG from the next lower level
     # we also get rid of numbers 
 
-    cnec2iob = {'P': 'PER', 'p.*': 'PER', 'i.*': 'ORG', 'g.*': 'LOC', '^[^PigTtna].*': 'MISC',
-                # drop numerical expressions
-                'T': 'O', 'n.*': 'O', 't.*': 'O', 'a.*': 'O'} 
-
     for col in df.columns:
         if col.startswith('NER_'):
-            df['IOB_' + col] = df[col].replace(cnec2iob, regex=True)
+            df['IOB_' + col] = df[col].replace(cnec2conll, regex=True)
         
 
     for col in df.columns:
@@ -145,7 +142,7 @@ for treex in tmp.glob('cnec2.0/data/treex/*.treex'):
         
     df['dataset'] = 'cnec2.0'
     df['subset'] = treex.name.replace('.treex', '')
-    df['language'] = 'cz'
+    df['language'] = 'cs'
 
     cols = ["dataset", "language", "subset", "sentence_id", "token_id", "token", "CoNLL_IOB2", 'cnec_token_id', "position", "CNEC_lvl_0", "position_lvl_0", "CNEC_lvl_1",  
             "position_lvl_1", "CNEC_lvl_2", "position_lvl_2", "CNEC_lvl_3", "position_lvl_3"]
@@ -173,7 +170,7 @@ for treex in tmp.glob('cnec2.0/data/treex/*.treex'):
                       'subset': treex.name.replace('.treex', ''), 
                       'path': corpus_path, 
                       'split': split, 
-                      'language': 'cz', 
+                      'language': 'cs', 
                       'tokens': len(df), 
                       'sentences': len(df.sentence_id.unique())}
 
