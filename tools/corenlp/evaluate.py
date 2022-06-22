@@ -9,9 +9,9 @@ import random
 from time import sleep
 
 sys.path.insert(0, str(Path.cwd()))
-from tools.corenlp.utils import launch_server, stanford2conll, annotate
+from tools.corenlp.utils import launch_server, annotate
 from utils.registry import load_registry
-
+from utils.mappings import corenlp2conll
 
 languages = {'zh': 'chinese', 
              'en': 'english', 
@@ -82,7 +82,7 @@ for lang, language in languages.items():
         end_validation = timer()
         validation_time = timedelta(seconds=end_validation-start_validation)
 
-        df['corenlp_iob'] = df.corenlp_ner.replace(stanford2conll)
+        df['corenlp_iob'] = df.corenlp_ner.replace(corenlp2conll)
 
         predictions = df.groupby('sentence_id')['corenlp_iob'].agg(list).to_list()
         references = df.groupby('sentence_id')['CoNLL_IOB2'].agg(list).to_list()
