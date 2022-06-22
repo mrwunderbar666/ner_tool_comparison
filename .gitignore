@@ -129,6 +129,9 @@ dmypy.json
 .pyre/
 .Rproj.user
 
+# R stuff
+.Rhistory
+
 # third party code
 utils/conll2003.py
 
@@ -136,6 +139,7 @@ utils/conll2003.py
 *.feather
 
 corpora/conll/*.txt
+corpora/conll/deu*
 corpora/europeana/enp_DE.sbb.bio.fixed
 corpora/ontonotes/ontonotes5_parsed.json
 results/
@@ -146,6 +150,7 @@ tools/opennlp/tmp
 tools/opennlp/models
 tools/corenlp/tmp
 tools/corenlp/stanford-core*/
+tools/nametagger/tmp
 wandb
 
 # datafiles
