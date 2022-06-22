@@ -20,7 +20,6 @@ registry <- registry[registry$split == 'validation', ]
 
 corpora <- registry[registry$language %in% language, ]
 
-
 for (i in 1:nrow(corpora)) {
   
   print(corpora$path[i])
