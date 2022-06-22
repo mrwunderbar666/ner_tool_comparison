@@ -1,6 +1,9 @@
 import pandas as pd
 from pathlib import Path
 from datasets import load_metric
+import sys
+sys.path.insert(0, str(Path.cwd()))
+from utils.mappings import nametagger2conll
 
 metric = load_metric("seqeval")
 
@@ -13,6 +16,9 @@ evaluations = []
 for o in outputs:
     print('Evaluating', o)
     df = pd.read_feather(o)
+    if str(o).endswith('_cs.feather'):
+        df.nametagger = df.nametagger.replace(nametagger2conll, regex = True)
+        df.references = df.references.str.replace('I-', 'B-')
     predictions = df.groupby('sentence_id')['nametagger'].agg(list).to_list()
     references = df.groupby('sentence_id')['references'].agg(list).to_list()
     assert all([len(p) == len(r) for p,r in zip(predictions, references)])

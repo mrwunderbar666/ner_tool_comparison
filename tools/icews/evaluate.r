@@ -24,7 +24,7 @@ icews_actors <- read_rds('tools/icews/icews_actors.rds')
 registry <- read_csv('corpora/registry.csv')
 registry <- registry[registry$split == 'validation', ]
 
-languages <- c("en", "de", 'nl', 'es', 'fr', 'cz', 'hu', 'it')
+languages <- c("en", "de", 'nl', 'es', 'fr', 'cs', 'hu', 'it')
 
 corpora <- registry[registry$language %in% languages, ]
 

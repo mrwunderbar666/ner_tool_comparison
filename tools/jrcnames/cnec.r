@@ -45,7 +45,7 @@ codings_cnec <- recode_results(tc_cnec$tokens)
 # Calculate Evaluation Metrics
 cm_cnec <- caret::confusionMatrix(codings_cnec$JRC_NE, reference=codings_cnec$NE, mode = "everything")
 
-r <- cm2df(cm_cnec, 'CNEC-DTest', 'cz')
+r <- cm2df(cm_cnec, 'CNEC-DTest', 'cs')
 r$validation_duration <- as.double(difftime(end_time, start_time, units="secs"))
 results <- rbind(results, r)
 
