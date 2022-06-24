@@ -104,6 +104,7 @@ for language in languages:
 
             r = pd.DataFrame(r)
             r['language'] = language
+            r['model'] = model
             r['corpus'] = row['corpus']
             r['subset'] = row['subset']
             r['validation_duration'] = validation_time.total_seconds()
