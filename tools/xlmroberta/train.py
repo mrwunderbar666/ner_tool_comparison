@@ -1,6 +1,7 @@
 import os 
 os.environ["WANDB_DISABLED"] = "true"
 import sys
+import json
 from timeit import default_timer as timer
 from datetime import timedelta
 import itertools
@@ -172,6 +173,9 @@ for languages in language_combinations:
                         }
 
         print(model_details)
+        with open(model_path / 'model_infos.json', 'w') as f:
+            json.dump(model_details, f)
+
         model_infos.append(model_details)
 
 
