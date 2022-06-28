@@ -84,11 +84,7 @@ for languages in language_combinations:
 
     corpora_combinations = []
 
-    j = 1
-    if len(languages) > 1:
-        j = 2
-
-    for i in range(j, len(unique_corpora) + 1):
+    for i in range(1, len(unique_corpora) + 1):
         corpora_combinations += list(itertools.combinations(unique_corpora, i))
 
     print('total combinations of corpora:', len(corpora_combinations))
