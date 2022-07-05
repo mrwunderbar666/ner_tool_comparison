@@ -1,5 +1,9 @@
+import itertools
+from pathlib import Path
 from transformers import AutoTokenizer, DataCollatorForTokenClassification
 from datasets import ClassLabel, Features, Value, Sequence
+from utils.registry import load_registry
+import pandas as pd
 
 labels_dict = {'O': 0, 'B-PER': 1, 'I-PER': 2, 'B-ORG': 3, 'I-ORG': 4, 'B-LOC': 5, 'I-LOC': 6, 'B-MISC': 7, 'I-MISC': 8}
 
@@ -31,3 +35,43 @@ def tokenize_and_align_labels(examples):
     tokenized_inputs["labels"] = labels
     return tokenized_inputs
 
+
+def generate_combinations():
+
+    language_combinations = [
+        ['en'], ['de'], ['es'], ['nl'], ['fr'], ['zh'], ['ar'], ['cs'], # every language individually
+        ['en', 'de', 'es', 'nl', 'fr', 'zh', 'ar', 'cs'], # all languages together
+        ['en', 'de', 'es', 'nl', 'fr', 'cs'] # only using latin scripts
+    ]
+
+    registry = load_registry()
+    registry = registry.loc[~(registry.corpus == 'wikiann')]
+
+    model_combinations = []
+    for languages in language_combinations:
+        corpora = registry.loc[registry.language.isin(languages)]
+        unique_corpora = list(corpora.corpus.unique())
+        for i in range(1, len(unique_corpora) + 1):
+            combs = list(itertools.combinations(unique_corpora, i))
+            for c in combs:
+                if len(registry.loc[(registry.language.isin(languages)) & (registry.corpus.isin(c))]) > 0:
+                    # l = ", ".join(languages)
+                    c = list(c)
+                    c.sort()
+                    model_combinations.append({'languages': languages, 'corpora': c})
+
+    return pd.DataFrame(model_combinations)
+
+
+def get_combination(number):
+
+    combinations_path = Path.cwd() / 'tools' / 'xlmroberta' / 'training_combinations.feather'
+    if not combinations_path.exists():
+        df = generate_combinations()
+        df.to_feather(combinations_path)
+    else:
+        df = pd.read_feather(combinations_path)
+    
+    language, corpus = df.loc[number]
+
+    return list(language), list(corpus)

@@ -1,0 +1,20 @@
+program: tools/xlmroberta/train_with_wandb.py
+command:
+  - python3
+  - ${program}
+  - ${args}
+method: grid
+metric:
+  name: eval_f1
+  goal: maximize
+parameters:
+  learning_rate:
+    values: [2e-05]
+  batch_size:
+    values: [8]
+  epochs:
+    values: [3]
+  model_combination:
+    min: 0
+    max: 147
+

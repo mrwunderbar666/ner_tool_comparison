@@ -141,6 +141,7 @@ for languages in language_combinations:
             num_train_epochs=epochs,
             weight_decay=0.01,
             save_steps=2000,
+            save_total_limit=1 # only save 1 checkpoint
         )
 
         trainer = Trainer(
@@ -150,7 +151,7 @@ for languages in language_combinations:
             eval_dataset=tokenized_test,
             tokenizer=tokenizer,
             data_collator=data_collator,
-            compute_metrics=compute_metrics
+            compute_metrics=compute_metrics,
         )
 
         # Train
@@ -163,7 +164,7 @@ for languages in language_combinations:
         trainer.save_model(model_path)
 
         model_details = {'model_id': model_id, 
-                        'model_path': model_path, 
+                        'model_path': str(model_path), 
                         'batch_size': batch_size,
                         'epochs': epochs,
                         'learning_rate': learning_rate,
