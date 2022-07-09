@@ -44,3 +44,7 @@ https://noisy-text.github.io/2017/files/wnuteval.py
 
 - [Quaero Broadcast News Extended Named Entity corpus Corpus](http://catalog.elra.info/en-us/repository/browse/ELRA-S0349/)
 - [Quaero Old Press Extended Named Entity corpus Corpus](http://catalog.elra.info/en-us/repository/browse/ELRA-W0073/)
+
+## Spanish
+
+- [AnCora](http://clic.ub.edu/corpus/en/ancora) (Catalan & Spanish)
