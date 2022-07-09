@@ -5,6 +5,7 @@
 - Europeana
 - OntoNotes
 - WikiANN
+- CNEC 2.0
 
 ## Data Converstion Scripts
 
@@ -32,3 +33,9 @@ https://noisy-text.github.io/2017/files/wnuteval.py
 - https://sites.google.com/site/rmyeid/projects/polylgot-ner
 - Stanza
 - Flair
+
+# More Corpora
+
+## Portuguese
+
+- [HAREM](https://www.linguateca.pt/HAREM/)
