@@ -6,7 +6,7 @@ import pandas as pd
 
 import torch
 from transformers import AutoTokenizer, AutoModelForTokenClassification, Trainer
-from datasets import Dataset, load_metric
+from datasets import Dataset
 
 # Set Pathing
 sys.path.insert(0, str(Path.cwd()))

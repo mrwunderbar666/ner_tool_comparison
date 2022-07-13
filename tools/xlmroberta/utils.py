@@ -1,7 +1,7 @@
 import itertools
 from pathlib import Path
 from transformers import AutoTokenizer, DataCollatorForTokenClassification
-from datasets import ClassLabel, Features, Value, Sequence
+from datasets import load_metric, ClassLabel, Features, Value, Sequence
 from utils.registry import load_registry
 import pandas as pd
 import numpy as np
