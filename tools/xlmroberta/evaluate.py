@@ -44,6 +44,16 @@ models = p.glob('tools/xlmroberta/models/*')
 
 for m in models:
 
+    model_infos = m / 'model_infos.json'
+    if not model_infos.exists():
+        print('MODEL INFO DOES NOT EXIST', model_infos)
+        continue
+
+    results_destination = m / 'eval_results.csv'
+    if results_destination.exists():
+        print('Model already evaluated', results_destination)
+        continue
+
     with open(m / 'model_infos.json') as f:
         infos = json.load(f)
 
