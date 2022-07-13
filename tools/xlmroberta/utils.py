@@ -4,11 +4,13 @@ from transformers import AutoTokenizer, DataCollatorForTokenClassification
 from datasets import ClassLabel, Features, Value, Sequence
 from utils.registry import load_registry
 import pandas as pd
+import numpy as np
 
 labels_dict = {'O': 0, 'B-PER': 1, 'I-PER': 2, 'B-ORG': 3, 'I-ORG': 4, 'B-LOC': 5, 'I-LOC': 6, 'B-MISC': 7, 'I-MISC': 8}
 
 conll_labels = ClassLabel(num_classes=len(labels_dict.keys()), names=list(labels_dict.keys()))
 conll_features = Features({'text': Sequence(Value(dtype="string")), 'labels': Sequence(conll_labels)})
+label_list = conll_features['labels'].feature.names
 
 tokenizer = AutoTokenizer.from_pretrained("xlm-roberta-base")
 data_collator = DataCollatorForTokenClassification(tokenizer=tokenizer)
@@ -75,3 +77,30 @@ def get_combination(number):
     language, corpus = df.loc[number]
 
     return list(language), list(corpus)
+
+
+
+
+metric = load_metric("seqeval")
+
+def compute_metrics(p):
+    predictions, labels = p
+    predictions = np.argmax(predictions, axis=2)
+    # Remove ignored index (special tokens)
+    true_predictions = [
+        [label_list[p] for (p, l) in zip(prediction, label) if l != -100]
+        for prediction, label in zip(predictions, labels)
+    ]
+    true_labels = [
+        [label_list[l] for (p, l) in zip(prediction, label) if l != -100]
+        for prediction, label in zip(predictions, labels)
+    ]
+    results = metric.compute(predictions=true_predictions, references=true_labels)
+    return {
+        "precision": results["overall_precision"],
+        "recall": results["overall_recall"],
+        "f1": results["overall_f1"],
+        "accuracy": results["overall_accuracy"],
+        'raw_results': results
+    }
+

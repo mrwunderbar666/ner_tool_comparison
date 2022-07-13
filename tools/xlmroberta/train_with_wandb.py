@@ -8,13 +8,12 @@ from datetime import timedelta
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from datasets import Dataset
+from datasets import Dataset, load_metric, concatenate_datasets
 from transformers import (AutoTokenizer,
                           AutoModelForTokenClassification, TrainingArguments, Trainer)
 import torch
 device = torch.device("cuda")
 
-from datasets import load_metric, concatenate_datasets
 
 # Set Pathing
 sys.path.insert(0, str(Path.cwd()))
@@ -23,9 +22,6 @@ from tools.xlmroberta.utils import (get_combination, tokenizer, tokenize_and_ali
                                     labels_dict, conll_labels, conll_features)
 from utils.registry import load_registry
 
-# set-up tokenizer
-print('Loading tokenizer...')
-tokenizer = AutoTokenizer.from_pretrained("xlm-roberta-base")
 
 print('Loading metric...')
 
