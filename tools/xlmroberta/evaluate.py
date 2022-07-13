@@ -12,8 +12,9 @@ from datasets import Dataset
 sys.path.insert(0, str(Path.cwd()))
 # import custom utilities (path: tools/xlmroberta/utils.py)
 from tools.xlmroberta.utils import (get_combination, tokenizer, tokenize_and_align_labels, data_collator, 
-                                    labels_dict, conll_labels, conll_features)
-from utils.registry import load_registry, compute_metrics
+                                    labels_dict, conll_labels, conll_features, compute_metrics)
+from utils.registry import load_registry
+
 
 registry = load_registry()
 
