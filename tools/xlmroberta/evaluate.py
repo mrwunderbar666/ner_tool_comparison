@@ -49,7 +49,7 @@ for m in models:
     print(infos['model_path'])
 
     roberta = AutoModelForTokenClassification.from_pretrained(m)
-    roberta.to_device(device)
+    roberta.to(device)
 
     roberta.eval()
 
