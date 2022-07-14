@@ -50,6 +50,13 @@ df$native <- as.integer(df$native)
 
 df$noisy <- as.integer(str_detect(df$model_corpora, "(emerging)|(europeana)"))
 
+# some general insights
+
+# which model performed the best on average
+f1_mean <- df %>% filter(task == 'overall') %>% group_by(model_id) %>% summarise(mean(f1))
+
+# how does corpora count affect f1 score (by language)?
+
 df %>% 
   filter(task == 'overall') %>% 
   ggplot(aes(x=number_model_corpora, y=f1)) +
@@ -69,17 +76,17 @@ df %>%
 
 df %>% 
   filter(task == 'overall') %>% 
-  ggplot(aes(x=training_sentences, y=f1)) +
+  ggplot(aes(x=language, y=f1)) +
   geom_point() +
-  geom_smooth() +
+  geom_boxplot() +
   facet_wrap(~as.factor(native))
 
 
 df %>% 
   filter(task == 'overall') %>% 
-  ggplot(aes(x=number_model_languages, y=f1)) +
+  ggplot(aes(x=language, y=f1)) +
   geom_point() +
-  geom_smooth() +
+  geom_boxplot() +
   facet_wrap(~as.factor(noisy))
 
 
@@ -103,7 +110,7 @@ m <- glm(f1 ~ number_model_corpora + number_model_languages + scale(training_tok
          data = df_overall)
 
 summary(m)
-dwplot(m)
+dwplot(m) + theme_minimal()
 
 regressions <- list()
 i <- 1
