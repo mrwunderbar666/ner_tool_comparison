@@ -43,7 +43,7 @@ for corpus in tmp.glob('*.conll'):
     df['subset'] = corpus.name.replace('.conll', '')
     df['language'] = 'en'
     df = df.drop(columns=['doc_id'])
-    df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
+    df.sentence_id = df.sentence_id.astype(str).str.zfill(7)
     df['CoNLL_IOB2'] = df.IOB2.replace(emerging2conll, regex=True)
     corpus_destination = p / corpus.name.replace('.conll', '.feather')
     df.to_feather(corpus_destination, compression='uncompressed')

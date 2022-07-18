@@ -17,8 +17,8 @@ for corpus in raw_data:
     df['dataset'] = 'conll2003'
     df['subset'] = corpus.name
     df['language'] = 'de'
-    df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
-    df.doc_id = df.doc_id.astype(str).str.zfill(4)
+    df.sentence_id = df.sentence_id.astype(str).str.zfill(7)
+    df.doc_id = df.doc_id.astype(str).str.zfill(7)
     df.sentence_id = df.doc_id + '_' + df.sentence_id
     corpus_destination = str(corpus) + '.feather'
     df.to_feather(corpus_destination, compression='uncompressed')

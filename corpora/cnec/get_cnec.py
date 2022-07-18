@@ -149,7 +149,7 @@ for treex in tmp.glob('cnec2.0/data/treex/*.treex'):
 
     df = df.loc[:, cols]
     df.sentence_id = df.sentence_id.str.replace('s', '').astype(int)
-    df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
+    df.sentence_id = df.sentence_id.astype(str).str.zfill(7)
 
     corpus_path =  p / treex.name.replace('.treex', '.feather')
 

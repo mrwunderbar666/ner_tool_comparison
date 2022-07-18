@@ -61,7 +61,7 @@ def parse_bio(bio):
             l = l.split()
             output.append({'corpus': 'wikiann',
                             'language': language,
-                            'sentence_id': str(sentence).zfill(6),
+                            'sentence_id': str(sentence).zfill(7),
                             'token_id': token_id,
                             'token': l[0],
                             'CoNLL_IOB2': l[-1]})

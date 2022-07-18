@@ -22,12 +22,13 @@ p = Path.cwd() / 'tools' / 'spacy'
 results_path = Path.cwd() / 'results' / f'spacy.csv'
 
 models = {'en': ['en_core_web_lg', "en_core_web_trf"],
-            'zh': ['zh_core_web_lg', 'zh_core_web_trf'],
-            'nl': ['nl_core_news_lg'],
-            'fr': ['fr_core_news_lg'],
-            'de': ['de_core_news_lg', 'de_dep_news_trf'],
-            'es': ['es_core_news_lg'],
-            'multi': ['xx_ent_wiki_sm']}
+          'zh': ['zh_core_web_lg', 'zh_core_web_trf'],
+          'nl': ['nl_core_news_lg'],
+          'fr': ['fr_core_news_lg'],
+          'de': ['de_core_news_lg', 'de_dep_news_trf'],
+          'es': ['es_core_news_lg'],
+          'multi': ['xx_ent_wiki_sm']
+         }
 
 registry = load_registry()
 metric = load_metric("seqeval")
@@ -35,6 +36,9 @@ evaluations = []
 
 
 for language in languages:
+
+    if language not in models.keys():
+        continue
 
     print('Evluating:', language)
 

@@ -64,7 +64,7 @@ for corpus in spanish_corpora:
     df['subset'] = corpus.name
     df['language'] = 'es'
     df = df.drop(columns=['doc_id'])
-    df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
+    df.sentence_id = df.sentence_id.astype(str).str.zfill(7)
     corpus_destination = p / corpus.name.replace('.txt', '.feather')
     df.to_feather(corpus_destination, compression='uncompressed')
 
@@ -98,8 +98,8 @@ for corpus in dutch_corpora:
     df['dataset'] = 'conll2003'
     df['subset'] = corpus.name
     df['language'] = 'nl'
-    df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
-    df.doc_id = df.doc_id.astype(str).str.zfill(4)
+    df.sentence_id = df.sentence_id.astype(str).str.zfill(7)
+    df.doc_id = df.doc_id.astype(str).str.zfill(7)
     df.sentence_id = df.doc_id + '_' + df.sentence_id
 
     corpus_destination = p / corpus.name.replace('.txt', '.feather')

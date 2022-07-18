@@ -78,7 +78,7 @@ for corpus in tmp.glob('*.txt'):
 
     df['language'] = language
     df = df.drop(columns=['doc_id'])
-    df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
+    df.sentence_id = df.sentence_id.astype(str).str.zfill(7)
     # fix wrong tags
     df.CoNLL_IOB2 = df.CoNLL_IOB2.replace({'B-BER': 'B-PER'})
     df.CoNLL_IOB2 = df.CoNLL_IOB2.replace({'P': 'O'})

@@ -31,7 +31,7 @@ for split in conll.keys():
     df = df.explode(['tokens', 'pos_tags', 'chunk_tags', 'ner_tags'])
     df['CoNLL_IOB2'] = df.ner_tags.replace(ner_tags)
     df['sentence_id'] = df.id.astype(int)
-    df['sentence_id'] = df.sentence_id.astype(str).str.zfill(6)
+    df['sentence_id'] = df.sentence_id.astype(str).str.zfill(7)
     df['token_id'] = df.groupby('sentence_id').cumcount()
     df['token_id'] = df['token_id'] + 1
     df['token'] = df.tokens

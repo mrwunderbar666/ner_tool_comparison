@@ -60,6 +60,7 @@ for tsv in tmp.glob('*.tsv'):
     df['CoNLL_IOB2'] = df.BIO.str.extract(r'([BI]-[A-Z]{3})')
     df['CoNLL_IOB2'] = df.CoNLL_IOB2.str.replace('OTH', 'MISC')
     df.loc[df.CoNLL_IOB2.isna(), 'CoNLL_IOB2'] = 'O'
+    df.sentence_id = df.sentence_id.astype(str).str.zfill(7)
 
     print('successfully parsed!')
     corpus_destination = p / (corp_id + '.feather')
