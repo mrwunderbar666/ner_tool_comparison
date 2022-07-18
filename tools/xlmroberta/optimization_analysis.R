@@ -50,6 +50,10 @@ df$native <- as.integer(df$native)
 
 df$noisy <- as.integer(str_detect(df$model_corpora, "(emerging)|(europeana)"))
 
+# dummy variable for wikiann
+
+df$wikiann <- as.integer(df$corpus == 'wikiann')
+
 # some general insights
 
 # which model performed the best on average
@@ -89,6 +93,16 @@ df %>%
   geom_boxplot() +
   facet_wrap(~as.factor(noisy))
 
+# how does number of sentences affect eval results?
+
+
+df %>% 
+  filter(task == 'overall') %>% 
+  ggplot(aes(x=log(training_sentences), y=f1)) +
+  geom_point() +
+  geom_smooth() +
+  facet_wrap(~language)
+
 
 
 df_overall <- df  %>% 
@@ -97,16 +111,16 @@ df_overall <- df  %>%
 df_per <- df  %>% 
   filter(task == 'PER') 
 
-m <- glm(f1 ~ number_model_corpora + number_model_languages + scale(training_tokens) + scale(training_sentences) + 
-           `model_cnec2.0` + model_ontonotes + model_emerging + model_europeana + model_germeval2014 + model_conll + native + noisy, 
+m <- glm(f1 ~ number_model_corpora + number_model_languages + log(training_tokens) + log(training_sentences) + 
+           `model_cnec2.0` + model_ontonotes + model_emerging + model_europeana + model_germeval2014 + model_conll + native + noisy + wikiann, 
          data = df_overall)
 
 summary(m)
 dwplot(m)
 
 
-m <- glm(f1 ~ number_model_corpora + number_model_languages + scale(training_tokens) + scale(training_sentences) + 
-           + native + noisy, 
+m <- glm(f1 ~ number_model_corpora + number_model_languages + log(training_tokens) + log(training_sentences) + 
+           + native + noisy + wikiann, 
          data = df_overall)
 
 summary(m)
@@ -116,7 +130,7 @@ regressions <- list()
 i <- 1
 for (l in unique(df_overall$language)) {
   m <- glm(f1 ~ number_model_corpora + number_model_languages + 
-             `model_cnec2.0` + model_ontonotes + model_emerging + model_europeana + model_germeval2014 + model_conll + native + noisy, 
+             `model_cnec2.0` + model_ontonotes + model_emerging + model_europeana + model_germeval2014 + model_conll + native + noisy + wikiann, 
            data = df_overall[df_overall$language == l, ])
   regressions[[i]] <- m
   i <- i + 1
@@ -134,8 +148,8 @@ dwplot(regressions, vline = geom_vline(
 regressions <- list()
 i <- 1
 for (l in unique(df_overall$language)) {
-  m <- glm(f1 ~ number_model_corpora + number_model_languages + 
-             native + noisy, 
+  m <- glm(f1 ~ number_model_corpora + number_model_languages + scale(training_sentences) +
+             native + noisy + wikiann, 
            data = df_overall[df_overall$language == l, ])
   regressions[[i]] <- m
   i <- i + 1
