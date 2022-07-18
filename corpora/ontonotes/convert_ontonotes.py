@@ -74,14 +74,15 @@ for split in available_splits:
 
     for lang in df.language.unique():
         corpus_destination = p / f'{lang}_{split}.feather'
+        tmp_lang = tmp.loc[tmp.language == lang, :].reset_index(drop=True)
         corpus_details = {'corpus': 'ontonotes', 
                       'subset': f"{split}_{lang}", 
                       'path': corpus_destination, 
                       'split': split.lower().replace('ing', ''),
                       'language': lang, 
-                      'tokens': len(tmp), 
-                      'sentences': len(tmp.sentence_id.unique())}
+                      'tokens': len(tmp_lang), 
+                      'sentences': len(tmp_lang.sentence_id.unique())}
         add_corpus(corpus_details)
-        tmp.loc[tmp.language == lang, :].reset_index(drop=True).to_feather(corpus_destination, compression='uncompressed')
+        tmp_lang.to_feather(corpus_destination, compression='uncompressed')
     
 print('Done!')
