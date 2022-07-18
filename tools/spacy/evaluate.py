@@ -25,7 +25,7 @@ models = {'en': ['en_core_web_lg', "en_core_web_trf"],
           'zh': ['zh_core_web_lg', 'zh_core_web_trf'],
           'nl': ['nl_core_news_lg'],
           'fr': ['fr_core_news_lg'],
-          'de': ['de_core_news_lg', 'de_dep_news_trf'],
+          'de': ['de_core_news_lg'],
           'es': ['es_core_news_lg'],
           'multi': ['xx_ent_wiki_sm']
          }
