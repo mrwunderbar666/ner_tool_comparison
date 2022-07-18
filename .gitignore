@@ -160,5 +160,6 @@ wandb
 corpora/wikiann/tmp/*
 
 tools/xlmroberta/models/
+tools/xlmroberta/models_varying/
 tools/*/tmp/
 tmp_trainer
