@@ -4,6 +4,8 @@ import subprocess
 from tqdm import tqdm
 import psutil
 
+from pandas import DataFrame
+
 def launch_server(corenlp_folder, language='english'):
     corenlp_server = [p for p in psutil.process_iter() if 'edu.stanford.nlp.pipeline.StanfordCoreNLPServer' in p.cmdline()]
     if len(corenlp_server) > 0:
@@ -23,7 +25,7 @@ def launch_server(corenlp_folder, language='english'):
     
     return corenlp_server
 
-def annotate(df, 
+def annotate(df: DataFrame, 
                 col_sentence_id = "sentence_id", 
                 server_address = 'http://localhost:9000/',
                 params = {'properties': '{"annotators":"ner","outputFormat":"json","tokenize.language": "Whitespace"}'}
@@ -55,3 +57,30 @@ def annotate(df,
                     df.loc[filt_sentence & filt_token, 'corenlp_ner'] = ner
                     first = False
             pbar.update(1)
+
+
+def annotate_sentence(sentence: str, 
+                server_address = 'http://localhost:9000/',
+                params = {'properties': '{"annotators":"ner","outputFormat":"json","tokenize.language": "Whitespace"}'}
+                ):
+    
+    r = requests.post(server_address, params=params, data=sentence.encode('utf-8'))
+    j = r.json()
+    iob = len(j['sentences'][0]['tokens']) * ['O']
+    tokenized = [tok['originalText'] for tok in j['sentences'][0]['tokens']]
+    for entity in j['sentences'][0]['entitymentions']:
+        ner_type = entity['ner']
+        first = True
+        for i in range(entity['tokenBegin'], entity['tokenEnd']):
+            if j['sentences'][0]['tokens'][i]['ner'] == 'O':
+                # somehow the JSON output of CoreNLP is inconsistent
+                # the 'entitymentions' also includes personal pronouns
+                # but the 'tokens' do not call these 'ner' ¯\_(ツ)_/¯
+                continue
+            if first:
+                ner = 'B-' + ner_type
+            else:
+                ner = 'I-' + ner_type
+            iob[i] = ner
+            first = False
+    return tokenized, iob
