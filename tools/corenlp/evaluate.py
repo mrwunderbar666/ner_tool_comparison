@@ -5,7 +5,6 @@ import requests
 from datasets import load_metric
 from timeit import default_timer as timer
 from datetime import timedelta
-import random
 from time import sleep
 
 sys.path.insert(0, str(Path.cwd()))
