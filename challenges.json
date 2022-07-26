@@ -1,0 +1,123 @@
+[
+    {
+        "text": "He saw John F. Kennedy just before the assassination.",
+        "language": "en",
+        "source": "Nouvel et al, (2016)",
+        "challenges": ["misclassification"],
+        "critical_phrases": ["John F. Kennedy"]
+    },
+    {
+        "text": "His trip through John F. Kennedy went well.",
+        "language": "en",
+        "source": "Nouvel et al, (2016)",
+        "challenges": ["misclassification"],
+        "critical_phrases": ["John F. Kennedy"]
+    },
+    {
+        "text": "The Abrams tank was widely tested during the Gulfwar.",
+        "language": "en",
+        "source": "Nouvel et al, (2016)",
+        "challenges": ["misclassification"],
+        "critical_phrases": ["Abrams"]
+    },
+    {
+        "text": "The Star Wars VII movie was directed by Abrams.",
+        "language": "en",
+        "source": "Nouvel et al, (2016)",
+        "challenges": ["misclassification"],
+        "critical_phrases": ["Abrams"]
+    },
+    {
+        "text": "Und nun will die Bundesregierung Gerhard Schröder Büro und Personal streichen.",
+        "language": "de",
+        "source": "tagesthemen, 18.05.2022",
+        "challenges": ["boundary detection"],
+        "critical_phrases": ["die Bundesregierung", "Gerhard Schröder"]
+    },
+    {
+        "text": "In Corona-Hochburgen wie München und Hamburg nähern sich einige Krankenhäuser der Kapazitätsgrenze.",
+        "language": "de",
+        "source": "Spiegel.de, 27.03.2020",
+        "challenges": ["neogolism"],
+        "critical_phrases": ["Corona-Hochburgen"]
+    },
+    {
+        "text": "This mistaken approach is made plain as Secretary for Commerce and Economic Development Gregory So Kam-leung was recently quoted as saying, \"(The government) will try to strike a balance between economic development and the livelihoods of people.\"",
+        "language": "en",
+        "source": "China Daily, HK Edition 03/11/2014 page10",
+        "challenges": ["foreign name"],
+        "critical_phrases": ["So Kam-leung"]
+    },
+    {
+        "text": "With options running out, the 18-year-old Wong announced at a rally late Monday that he and two other members of his group would go on an indefinite hunger strike to press demands that the Hong Kong government drop restrictions on inaugural 2017 elections for the city’s top leader.",
+        "language": "en",
+        "source": "China Post, 2014-12-02",
+        "challenges": ["boundary detection", "foreign name"],
+        "critical_phrases": ["18-year-old Wong"]
+    },
+    {
+        "text": "Chow Tai Fook plans to double its number of points of sale, including concessionaires and stand-alone outlets, in the next 10 years. ",
+        "language": "en",
+        "source": "China Daily, 2014-11-24",
+        "challenges": ["misclassification", "foreign name"],
+        "critical_phrases": ["Chow Tai Fook"]
+    },
+    {
+        "text": "Founded in 1929 in the southern city of Guangzhou, the jeweler was named after founder Chow Chi-yuen. \"Tai Fook\" means \"big blessing\" in Chinese.",
+        "language": "en",
+        "source": "China Daily, 2014-11-24",
+        "challenges": ["misclassification", "foreign name"],
+        "critical_phrases": ["Chow Chi-yuen", "Guangzhou"]
+    },
+    {
+        "text": "Hong Kong's students tell Xi they don't want a revolution.",
+        "language": "en",
+        "source": "Japan Times, 2014-10-12",
+        "challenges": ["foreign name"],
+        "critical_phrases": ["Xi"]
+    },
+    {
+        "text": "Agnes Chow Ting, 17, stepped down as a spokeswoman for Scholarism after 2½ years, citing exhaustion, saying that she’s “unable to shoulder such a great burden,” in a post Saturday on Scholarism’s Facebook page.",
+        "language": "en",
+        "source": "Japan Times, 2014-10-12",
+        "challenges": ["foreign name", "misclassification"],
+        "critical_phrases": ["Agnes Chow Ting", "Scholarism", "Facebook page"]
+    },
+    {
+        "text": "In another sign of tensions in the city, the newspaper Apple Daily, which is owned by prodemocracy activist Jimmy Lai, said on its website late Saturday that a truck was parked outside its headquarters in Tseung Kwan O, blocking access and threatening to prevent the newspaper being distributed.",
+        "language": "en",
+        "source": "Japan Times, 2014-10-12",
+        "challenges": ["foreign name"],
+        "critical_phrases": ["Tseung Kwan O"]
+    },
+    {
+        "text": "La Granda (Gozón), 23 may (EFECOM).",
+        "language": "es",
+        "source": "CoNLL 2002",
+        "challenges": ["boundary detection"],
+        "critical_phrases": ["La Granda"]
+    },
+    {
+        "text": "Romario, que en 1995, cuando militaba en el Flamengo, discutió públicamente con Luxemburgo - entonces técnico de ese club y quien, tras el enfrentamiento dejó la institución - , se mostró más obediente esta vez y reconoció que \"realmente sería muy difícil\" participar en el encuentro ante Inglaterra.",
+        "language": "es",
+        "source": "CoNLL 2002",
+        "challenges": ["misclassification"],
+        "critical_phrases": ["Luxemburgo"]
+    },
+    {
+        "text": "La cotización de las acciones españolas en la Bolsa de valores de París, fue hoy, martes, la siguiente: ACTUAL VARIACION TELEFONICA 20,66 euros + 0,63% BANCO POPULAR no cotizó - La Manga, 23 may (EFE).",
+        "language": "es",
+        "source": "CoNLL 2002",
+        "challenges": ["misclassification"],
+        "critical_phrases": ["TELEFONICA", "BANCO POPULAR"]
+    },
+    {
+        "text": "La venta anticipada de localidades para las dos representaciones que ofrecerá el actor Rafael Alvarez, \"El Brujo\" , de la obra \"El contrabajo\" , de Patrick Süskind, comenzará mañana miércoles a las 20:00 horas en la sala Trajano de Mérida.",
+        "language": "es",
+        "source": "CoNLL 2002",
+        "challenges": ["boundary detection"],
+        "critical_phrases": ["la sala Trajano", "Mérida"]
+    },
+    
+    
+]
