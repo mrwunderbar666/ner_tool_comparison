@@ -28,7 +28,7 @@ def launch_server(corenlp_folder, language='english'):
 def annotate(df: DataFrame, 
                 col_sentence_id = "sentence_id", 
                 server_address = 'http://localhost:9000/',
-                params = {'properties': '{"annotators":"ner","outputFormat":"json","tokenize.language": "Whitespace"}'}
+                params = {'properties': '{"annotators":"ner","outputFormat":"json","tokenize.language": "Whitespace","ssplit.isOneSentence":"true"}'}
                 ):
     assert all([i in df.columns for i in ["token", "token_id", col_sentence_id]]), 'DataFrame has wrong format!'
     
@@ -61,7 +61,7 @@ def annotate(df: DataFrame,
 
 def annotate_sentence(sentence: str, 
                 server_address = 'http://localhost:9000/',
-                params = {'properties': '{"annotators":"ner","outputFormat":"json","tokenize.language": "Whitespace"}'}
+                params = {'properties': '{"annotators":"ner","outputFormat":"json","tokenize.language": "Whitespace","ssplit.isOneSentence":"true"}'}
                 ):
     
     r = requests.post(server_address, params=params, data=sentence.encode('utf-8'))
