@@ -20,7 +20,7 @@ from utils.registry import load_registry
 
 registry = load_registry()
 
-languages = ['en', 'de', 'es', 'nl', 'fr', 'zh', 'ar', 'cs']
+languages = ['en', 'de', 'es', 'nl', 'fr', 'zh', 'ar', 'cs', 'it', 'hu']
 
 df_corpora = registry.loc[(registry.split == 'validation') & (registry.language.isin(languages))]
 
