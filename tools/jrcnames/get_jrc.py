@@ -1,7 +1,4 @@
 import requests
-
-import yaml
-
 from pathlib import Path
 from tqdm import tqdm
 import gzip

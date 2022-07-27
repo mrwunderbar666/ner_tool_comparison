@@ -6,7 +6,7 @@ java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -serverProper
 
 # Algorithm
 
-Gibbs Sampling
+Conditional Random Fields enhanced with Gibbs Sampling
 
 # Documentation
 
