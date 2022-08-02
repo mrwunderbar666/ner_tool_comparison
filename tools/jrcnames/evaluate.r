@@ -25,7 +25,7 @@ jrc_dict$keyword <- stringi::stri_replace_all(jrc_dict$keyword, fixed = '+', ' '
 registry <- read_csv('corpora/registry.csv')
 registry <- registry[registry$split == 'validation', ]
 
-languages <- c("en", "de", 'nl', 'es', 'fr', 'cz', 'hu', 'it', 'ar', 'zh')
+languages <- c("en", "de", 'nl', 'es', 'fr', 'cs', 'hu', 'it', 'ar', 'zh')
 
 corpora <- registry[registry$language %in% languages, ]
 
