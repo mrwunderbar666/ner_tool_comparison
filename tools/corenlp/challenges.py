@@ -19,7 +19,6 @@ languages = {'zh': 'chinese',
 p = Path.cwd() / 'tools' / 'corenlp'
 
 corenlp_folder = list(p.glob('stanford-corenlp-*'))[0]
-evaluations = []
 results_path = Path.cwd() / 'results' / 'corenlp_challenges.json'
 
 challenges = pd.read_json(Path.cwd() / 'challenges.json')
