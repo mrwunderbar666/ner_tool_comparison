@@ -3,14 +3,14 @@
         "text": "He saw John F. Kennedy just before the assassination.",
         "language": "en",
         "source": "Nouvel et al, (2016)",
-        "challenges": ["misclassification"],
+        "challenges": ["misclassification", "boundary detection"],
         "critical_phrases": ["John F. Kennedy"]
     },
     {
         "text": "His trip through John F. Kennedy went well.",
         "language": "en",
         "source": "Nouvel et al, (2016)",
-        "challenges": ["misclassification"],
+        "challenges": ["misclassification", "boundary detection"],
         "critical_phrases": ["John F. Kennedy"]
     },
     {
@@ -38,7 +38,7 @@
         "text": "In Corona-Hochburgen wie München und Hamburg nähern sich einige Krankenhäuser der Kapazitätsgrenze.",
         "language": "de",
         "source": "Spiegel.de, 27.03.2020",
-        "challenges": ["neogolism"],
+        "challenges": ["neologism"],
         "critical_phrases": ["Corona-Hochburgen"]
     },
     {
@@ -67,7 +67,7 @@
         "language": "en",
         "source": "China Daily, 2014-11-24",
         "challenges": ["misclassification", "foreign name"],
-        "critical_phrases": ["Chow Chi-yuen", "Guangzhou"]
+        "critical_phrases": ["Guangzhou", "Chow Chi-yuen"]
     },
     {
         "text": "Hong Kong's students tell Xi they don't want a revolution.",
@@ -87,8 +87,8 @@
         "text": "In another sign of tensions in the city, the newspaper Apple Daily, which is owned by prodemocracy activist Jimmy Lai, said on its website late Saturday that a truck was parked outside its headquarters in Tseung Kwan O, blocking access and threatening to prevent the newspaper being distributed.",
         "language": "en",
         "source": "Japan Times, 2014-10-12",
-        "challenges": ["foreign name"],
-        "critical_phrases": ["Tseung Kwan O"]
+        "challenges": ["Small organization", "foreign name"],
+        "critical_phrases": ["Apple Daily", "Tseung Kwan O"]
     },
     {
         "text": "La Granda (Gozón), 23 may (EFECOM).",
