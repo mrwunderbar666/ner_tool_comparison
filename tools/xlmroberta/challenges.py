@@ -28,7 +28,7 @@ model_id = 84 # model trained with all corpora / languages
 
 p = Path.cwd()
 model = p / 'tools' / 'xlmroberta' / 'models' / str(model_id)
-results_path = Path.cwd() / 'results' / f'xlmroberta_challenges.json'
+results_path = Path.cwd() / 'results' / 'xlmroberta_challenges.json'
 
 roberta = AutoModelForTokenClassification.from_pretrained(model)
 roberta.to(device)
