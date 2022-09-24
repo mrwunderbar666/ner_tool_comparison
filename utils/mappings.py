@@ -136,6 +136,23 @@ corenlp2conll = {'B-ORGANIZATION': 'B-ORG', 'I-ORGANIZATION': 'I-ORG',
                     'B-URL': 'O', 'I-URL': 'O'
                     }
 
+# Frog (Dutch)
+
+# 'O', 
+# Persons: 'B-per', 'I-per'
+# Organizations: 'B-org', 'I-org'
+# Locations: 'B-loc', 'I-loc'
+# Misc: 'B-misc', 'I-misc'
+# Products: 'B-pro', 'I-pro'
+# Events (natural and human): 'B-eve', 'I-eve'
+
+# first uppercase everything
+# then turn Products / Events into Misc
+# Per, Org, Loc match CoNLL definitions
+
+sonar2conll = {'B-PRO': 'B-MISC', 'I-PRO': 'I-MISC',
+               'B-EVE': 'B-MISC', 'I-EVE': 'I-MISC'}
+
 # Nametagger (Czech model)
 # uses annotation scheme of CNEC, but *in practice* cannot distinguish B-PER/I-PER, B-ORG/I-ORG, etc
 # give model the benefit of the doubt

@@ -1,0 +1,2 @@
+import frog
+frog.installdata()

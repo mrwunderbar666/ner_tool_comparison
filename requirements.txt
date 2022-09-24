@@ -11,3 +11,4 @@ numpy
 scikit-learn
 psutil
 spacy
+python-frog
