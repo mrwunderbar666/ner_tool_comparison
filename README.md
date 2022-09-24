@@ -54,6 +54,10 @@ https://noisy-text.github.io/2017/files/wnuteval.py
 
 - [AnCora](http://clic.ub.edu/corpus/en/ancora) (Catalan & Spanish)
 
+## Dutch
+
+- [SoNaR-1](https://taalmaterialen.ivdnt.org/download/tstc-sonar-corpus/)
+
 # Difficult Examples
 
 See the file `challenges.json` for a set of sentences which pose challenges for NER tools.
