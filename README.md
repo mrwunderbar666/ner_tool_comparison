@@ -19,15 +19,6 @@ Collection of scripts that automatically retrieve the datasets (if possible) and
 - `token`: actual token in its original form.
 - `CoNLL_IOB2`: Named entity tag according to *Inside-Outside-Beginning* scheme as defined by CoNLL. Named entities are limited to Persons, Organizations, Location, and Misc. 
 
-# Evaluation
-
-https://noisy-text.github.io/2017/files/wnuteval.py
-
-
-# Conclusion
-
-- older tools tend to perform worse on newer copora: but there is a lack of "fresh" data for many languages
-
 # Other Tools
 
 - https://sites.google.com/site/rmyeid/projects/polylgot-ner
@@ -46,6 +37,8 @@ https://noisy-text.github.io/2017/files/wnuteval.py
 - [HAREM](https://www.linguateca.pt/HAREM/)
 
 ## French
+
+License for Quaero corpus prohibits to train a model with the data and to redistribute the resulting model. Hence corpus only for validation purposes.
 
 - [Quaero Broadcast News Extended Named Entity corpus Corpus](http://catalog.elra.info/en-us/repository/browse/ELRA-S0349/)
 - [Quaero Old Press Extended Named Entity corpus Corpus](http://catalog.elra.info/en-us/repository/browse/ELRA-W0073/)
