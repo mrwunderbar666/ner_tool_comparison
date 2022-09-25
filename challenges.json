@@ -117,6 +117,55 @@
         "source": "CoNLL 2002",
         "challenges": ["boundary detection"],
         "critical_phrases": ["la sala Trajano", "Mérida"]
-    }    
+    },
+    {
+        "text": "De verklaring van Sainovic komt daags na een onverwacht bezoek aan Kosovo door Gorica Gajevic, de secretaris-generaal van de socialistische partij van Milosevic.",
+        "language": "nl",
+        "source": "De Morgen, 2000-09-01",
+        "challenges": ["foreign name", "misclassification"],
+        "critical_phrases": ["Sainovic", "Gorica Gajevic", "Milosevic"]
+    },
+    {
+        "text": "Stainthorp noemt ze wel prima voor volwassenen en oudere scholieren, maar het iele lijntje dat er uitkomt, is niet van aard om kinderen veel controle te geven over dit schrijfinstrument.",
+        "language": "nl",
+        "source": "De Morgen, 2000-09-01",
+        "challenges":  ["foreign name", "misclassification"],
+        "critical_phrases": ["Stainthorp"]
+    },
+    {
+        "text": "Wij gaan niet wachten tot er op de Europese raad een onderwijshervorming uit de bus komt, want dat duurt misschien nog twintig jaar.",
+        "language": "nl",
+        "source": "De Morgen, 2000-09-01",
+        "challenges":  ["misclassification", "boundary detection"],
+        "critical_phrases": ["Europese raad"]
+    },
+    {
+        "text": "In de Creative Hair & Nails Design-zaak aan de Compton Boulevard wordt daar iets anders tegen aangekeken.",
+        "language": "nl",
+        "source":"De Morgen, 2000-09-01",
+        "challenges": ["boundary detection"],
+        "critical_phrases": ["Creative Hair & Nails Design-zaak"]
+    },
+    {
+        "text": "Het feit dat een artiest als Ronan Keating van Boyzone ondertussen de TMF Awards in zijn agenda heeft genoteerd benadrukt volgens Castelain de internationale aantrekkingskracht van de TMF Awards.",
+        "language": "nl",
+        "source": "CoNLL 2002",
+        "challenges": ["boundary detection", "misclassification"],
+        "critical_phrases": ["Ronan Keating", "Boyzone", "Castelain"]
+    },
+    {
+        "text": "Hij is geen wraakzuchtige tiran als Poetin en geen Mao die alles ontmantelt. Maar als Xi Jinping straks aan een derde ambtstermijn begint, zal hij het nieuws nog tot 2027 domineren. Een portret.",
+        "language": "nl",
+        "source": "De Standaard, 2022-09-24",
+        "challenges": ["foreign name"],
+        "critical_phrases": ["Xi Jinping"]
+    },
+    {
+        "text": "Het drijvende restaurant Jumbo kreeg zaterdag af te rekenen met ‘ongunstige omstandigheden’ toen het de Paraceleilanden passeerde in de Zuid-Chinese Zee.",
+        "language":"nl",
+        "source": "De Standaard, 2022-06-21",
+        "challenges": ["foreign name", "Small organization", "boundary detection"],
+        "critical_phrases": ["Jumbo", "Paraceleilanden", "Zuid-Chinese Zee"]
+    }
     
 ]

@@ -7,7 +7,7 @@
 - WikiANN
 - CNEC 2.0
 
-## Data Converstion Scripts
+## Data Conversion Scripts
 
 Collection of scripts that automatically retrieve the datasets (if possible) and then convert them to a common format. Each corpus is in tokenized long format (one row = one token) and contains the following columns:
 
