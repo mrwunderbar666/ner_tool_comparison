@@ -19,10 +19,43 @@ results <- data.frame(
 
 source('tools/jrcnames/utils.r')
 
-challenges <- jsonlite::read_json("challenges.json")
+challenges <- jsonlite::fromJSON("challenges.json")
+
+challenges$doc_id <- 1:nrow(challenges)
+challenges$doc_id <- stringi::stri_pad(challenges$doc_id, 2, pad="0")
+
 
 # Load ICEWS Names Dictionary
 icews_actors <- read_rds('tools/icews/icews_actors.rds')
+
+
+tc <- corpustools::create_tcorpus(challenges)
+tc$code_dictionary(
+  icews_actors,
+  case_sensitive = T,
+  token_col = 'token',
+  string_col = 'keyword',
+  sep = ' ',
+  use_wildcards = F
+)
+
+tc$tokens$token <- as.character(tc$tokens$token) 
+
+for (i in 1:nrow(challenges)) {
+  challenges[i, 'tokens'] <- as.list(tc$tokens[tc$tokens$doc_id == i, 'token'])
+  challenges[i, 'code_id'] <- as.list(tc$tokens[tc$tokens$doc_id == i, 'code_id'])
+}
+
+for (i in 1:length(challenges)) {
+  challenges[[i]]$tool <- "icews"
+    annotations <- predict(model, challenges[[i]]$text)
+    challenges[[i]]$tokens <- list(annotations$term)
+    challenges[[i]]$iob <- list(annotations$entity)
+
+}
+
+jsonlite::write_json(challenges, 'results/nametagger_challenges.json')
+
 
 for (i in 1:nrow(corpora)) {
   print(corpora$path[i])
