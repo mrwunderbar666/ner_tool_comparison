@@ -153,6 +153,7 @@ tools/corenlp/stanford-core*/
 tools/nametagger/tmp
 
 tools/jrcnames/*.rds
+tools/jrcnames/*.feather
 tools/icews/*.rds
 
 wandb
