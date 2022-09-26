@@ -49,7 +49,9 @@ License for Quaero corpus prohibits to train a model with the data and to redist
 
 ## Dutch
 
-- [SoNaR-1](https://taalmaterialen.ivdnt.org/download/tstc-sonar-corpus/)
+- [SoNaR-1](https://taalmaterialen.ivdnt.org/download/tstc-sonar-corpus/). 
+    - https://taalmaterialen.ivdnt.org/wp-content/uploads/documentatie/sonar_verschillendecorpora.txt
+    - https://taalmaterialen.ivdnt.org/wp-content/uploads/documentatie/sonar_documentatie.pdf
 
 # Difficult Examples
 
