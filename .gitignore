@@ -151,6 +151,10 @@ tools/opennlp/models
 tools/corenlp/tmp
 tools/corenlp/stanford-core*/
 tools/nametagger/tmp
+
+tools/jrcnames/*.rds
+tools/icews/*.rds
+
 wandb
 
 # datafiles
