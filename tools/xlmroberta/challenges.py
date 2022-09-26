@@ -11,7 +11,7 @@ from tqdm import tqdm
 # Set Pathing
 sys.path.insert(0, str(Path.cwd()))
 # import custom utilities (path: tools/xlmroberta/utils.py)
-from tools.xlmroberta.utils import (tokenizer, labels_dict)
+from tools.xlmroberta.utils import (tokenizer, labels_dict, get_model_id_with_full_trainingdata)
 
 # flip labels_dict
 labels_dict = {v: k for k, v in labels_dict.items()}
@@ -24,7 +24,7 @@ challenges['tokens'] = ''
 challenges['iob'] = ''
 
 device = torch.device("cuda")
-model_id = 84 # model trained with all corpora / languages
+model_id = get_model_id_with_full_trainingdata() # model trained with all corpora / languages
 
 p = Path.cwd()
 model = p / 'tools' / 'xlmroberta' / 'models' / str(model_id)

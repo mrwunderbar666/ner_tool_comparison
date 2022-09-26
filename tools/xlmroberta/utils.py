@@ -79,6 +79,17 @@ def get_combination(number):
     return list(language), list(corpus)
 
 
+def get_model_id_with_full_trainingdata():
+    combinations_path = Path.cwd() / 'tools' / 'xlmroberta' / 'training_combinations.feather'
+    if not combinations_path.exists():
+        df = generate_combinations()
+        df.to_feather(combinations_path)
+    else:
+        df = pd.read_feather(combinations_path)
+
+    filt = (df.languages.apply(len) == max(df.languages.apply(len))) & (df.corpora.apply(len) == max(df.corpora.apply(len)))
+
+    return df[filt].index[0]
 
 
 metric = load_metric("seqeval")
