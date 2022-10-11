@@ -50,7 +50,7 @@ for language in languages:
             df.loc[filt, 'opennlp_ner'] = df.loc[filt, model]
 
         challenges.at[index, 'iob'] = df.opennlp_ner.to_list()
-
+        challenges.at[index, 'tokens'] = row['text'].split()
 
 challenges.to_json(results_path, orient="records")
 
