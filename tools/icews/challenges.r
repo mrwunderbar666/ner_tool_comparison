@@ -36,4 +36,4 @@ if (!dir.exists('results')) {
   dir.create('results')
 }
 
-jsonlite::write_json(results, "results/icews_challeges.json")
+jsonlite::write_json(results, "results/icews_challenges.json")
