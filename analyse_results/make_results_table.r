@@ -13,7 +13,7 @@ if (!dir.exists('plots')) {
 
 # Load Corpus Registry ----------------------------------------------------
 # Helps to compare corpus sizes
- 
+
 corpora <- read_csv("corpora/registry.csv")
 corpora <- corpora %>% filter(split == 'validation')
 
@@ -104,7 +104,7 @@ language_codes <- c("ar" = "Arabic",
                     "de" = "German", 
                     "hu" = "Hungarian",
                     "it" = "Italian"
-                    )
+)
 
 
 results$language <- str_replace_all(results$language, language_codes)
@@ -218,7 +218,7 @@ ggsave('plots/results_locations.png', loc, width = 12, height = 6, units = 'cm',
 
 p <- per / org / loc + plot_annotation(title = "Average precision / recall across all corpora", theme = theme_minimal(base_family = "source", base_size = 18))
 
-ggsave('plots/results_languages.pdf', p, width = 12, height = 18, units = 'cm', scale = 2)
+ggsave('plots/results_languages.pdf', p, width = 12, height = 18, units = 'cm', scale = 2.3)
 ggsave('plots/results_languages.png', p, width = 12, height = 18, units = 'cm', scale = 1, dpi=320)
 
 
@@ -297,11 +297,11 @@ loc
 # assemble into one figure
 
 p <- per / org / loc + 
-      plot_annotation(title = "Average precision / recall across all languages", 
-                                       theme = theme_minimal(base_family = "source", base_size = 18))
+  plot_annotation(title = "Average precision / recall across all languages", 
+                  theme = theme_minimal(base_family = "source", base_size = 18))
 
 
-ggsave('plots/results_corpora.pdf', p, width = 12, height = 18, units = 'cm', scale = 2)
+ggsave('plots/results_corpora.pdf', p, width = 12, height = 18, units = 'cm', scale = 2.3)
 ggsave('plots/results_corpora.png', p, width = 12, height = 18, units = 'cm', scale = 1, dpi=320)
 
 
