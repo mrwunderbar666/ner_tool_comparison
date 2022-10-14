@@ -140,6 +140,7 @@ utils/conll2003.py
 
 corpora/conll/*.txt
 corpora/conll/deu*
+corpora/conll/ner/
 corpora/europeana/enp_DE.sbb.bio.fixed
 corpora/ontonotes/ontonotes5_parsed.json
 results/
