@@ -1,15 +1,44 @@
+# Installation of Requirements
+
+Make sure to install all required packages (Python & R) before proceeding.
+
+## Python
+
+```
+python -m pip install -r requirements.txt
+```
+
+# R
+```
+Rscript r_packages.r
+```
+
 # Data
 
-- CoNLL 2002
-- CoNLL 2003
-- Europeana
-- OntoNotes
-- WikiANN
-- CNEC 2.0
+The datasets for evaluation are the following:
+
+- CoNLL 2002 (Dutch & Spanish)
+- CoNLL 2003 (English & German*)
+- Europeana (German, French, Dutch)
+- GermEval2014 (German)
+- WNUT Emerging Entities (English)
+- OntoNotes* (English, Chinese, Arabic)
+- WikiANN* (many)
+- CNEC 2.0 (Czech)
+
+Alomst every dataset can be downloaded automatically with the supplied scripts. The datasets marked with an asterisk (*) require user intervention. Please refer to the `readme.md` files in the corresponding sub-directories for instructions.
+
+**Please be aware that some datasets are very large and take a while to download and convert**
 
 ## Data Conversion Scripts
 
-Collection of scripts that automatically retrieve the datasets (if possible) and then convert them to a common format. Each corpus is in tokenized long format (one row = one token) and contains the following columns:
+Collection of scripts that automatically retrieve the datasets (if possible) and then convert them to a common format. 
+
+**Every script should be run from the root directory:** For example, if you want to automatically get the CoNLL2002 dataset run the following `python corpora/conll/get_conll2002.py`
+
+When you run the scripts that automatically download and convert the corpora, a `registry.csv` is created that contains meta-information on each corpus. This file is used by the evaluation scripts to automatically find all available datasets and run the tests.
+
+Each corpus is in tokenized long format (one row = one token) and contains the following columns:
 
 - `dataset`: name of dataset
 - `language`: language of dataset / tokens
@@ -18,6 +47,21 @@ Collection of scripts that automatically retrieve the datasets (if possible) and
 - `token_id`: id (actually position) of token within the sentence. Always starts at 1.
 - `token`: actual token in its original form.
 - `CoNLL_IOB2`: Named entity tag according to *Inside-Outside-Beginning* scheme as defined by CoNLL. Named entities are limited to Persons, Organizations, Location, and Misc. 
+
+# NER Tools
+
+- CoreNLP
+- NLTK
+- ICEWS
+- JRC Names
+- Nametagger
+- OpenNLP
+- spaCy
+- XLM-RoBERTa (via Huggingface)
+
+## Automatically Getting & Installing Tools
+
+**Every script should be run from the root directory:** For example, if you want to automatically get the CoreNLP  run the following `python tools/corenlp/get_corenlp.py`
 
 # Other Tools
 

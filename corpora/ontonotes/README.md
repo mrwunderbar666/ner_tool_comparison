@@ -27,7 +27,3 @@ You can also retrieve the dataset from Huggingface with:
 ```
 git clone https://huggingface.co/datasets/conll2012_ontonotesv5
 ```
-
-# Mapping
-
-`NORP` ?
