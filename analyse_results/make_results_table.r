@@ -10,14 +10,6 @@ if (!dir.exists('plots')) {
   dir.create('plots')
 }
 
-
-# Load Corpus Registry ----------------------------------------------------
-# Helps to compare corpus sizes
-
-corpora <- read_csv("corpora/registry.csv")
-corpora <- corpora %>% filter(split == 'validation')
-
-
 # Load Results from Tool Evaluations --------------------------------------
 
 results <- data.frame(corpus=NULL, tool=NULL, task=NULL, language=NULL, precision=NULL, recall=NULL,
@@ -303,20 +295,3 @@ p <- per / org / loc +
 
 ggsave('plots/results_corpora.pdf', p, width = 12, height = 18, units = 'cm', scale = 2.3)
 ggsave('plots/results_corpora.png', p, width = 12, height = 18, units = 'cm', scale = 1, dpi=320)
-
-
-
-# Calculate Speed of Tools ------------------------------------------------
-# in tokens per second
-
-results$speed <- round(results$tokens / results$validation_duration)
-
-results_speed <- results %>% filter(task == 'overall') %>% group_by(tool) %>% 
-  summarise(`tokens / sec` = round(mean(speed), 0)) %>% 
-  arrange(desc(`tokens / sec`))
-
-# Pretty print numbers
-results_speed$`tokens / sec` <- format(results_speed$`tokens / sec`, big.mark = ',', big.interval = 3L, justify = "none")
-
-# export results into simple table
-write_csv(results_speed, 'plots/speed_comparison.csv')
