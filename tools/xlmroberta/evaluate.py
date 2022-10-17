@@ -42,7 +42,7 @@ for _, row in df_corpora.iterrows():
                                     'tokens': row['tokens'],
                                     'sentences': row['sentences']}
 
-device = torch.device("cuda")
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 p = Path.cwd()
 model_id = get_model_id_with_full_trainingdata() # use the model with full training set

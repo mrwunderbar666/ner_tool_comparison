@@ -12,7 +12,7 @@ from datasets import Dataset, load_metric, concatenate_datasets
 from transformers import (AutoTokenizer,
                           AutoModelForTokenClassification, TrainingArguments, Trainer)
 import torch
-device = torch.device("cuda")
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 # Set Pathing

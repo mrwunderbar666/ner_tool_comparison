@@ -23,7 +23,7 @@ challenges['tool'] = 'xlmroberta'
 challenges['tokens'] = ''
 challenges['iob'] = ''
 
-device = torch.device("cuda")
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model_id = get_model_id_with_full_trainingdata() # model trained with all corpora / languages
 
 p = Path.cwd()

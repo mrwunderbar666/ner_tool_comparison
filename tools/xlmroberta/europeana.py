@@ -6,7 +6,7 @@ from pathlib import Path
 from datasets import ClassLabel, Features, Dataset, Value, Sequence
 from transformers import AutoModelForTokenClassification, TrainingArguments, Trainer
 import torch
-device = torch.device("cuda")
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 from datasets import load_metric
 

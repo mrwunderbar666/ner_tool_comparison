@@ -37,7 +37,7 @@ for _, row in df_corpora.iterrows():
     ds = ds.map(tokenize_and_align_labels, batched=True)
     validation_sets[row['path']] = ds
 
-device = torch.device("cuda")
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 p = Path.cwd()
 models = p.glob('tools/xlmroberta/models/*')
