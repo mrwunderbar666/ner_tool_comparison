@@ -138,6 +138,7 @@ utils/conll2003.py
 # datasets
 *.feather
 
+corpora/*.csv
 corpora/conll/*.txt
 corpora/conll/deu*
 corpora/conll/ner/
@@ -155,8 +156,12 @@ tools/nametagger/tmp
 
 tools/jrcnames/*.rds
 tools/jrcnames/*.feather
+tools/jrcnames/.RData
 tools/icews/*.rds
-
+icews_actors.rds
+jrc.yml
+nohup.out
+roberta*.zip
 wandb
 
 # datafiles
