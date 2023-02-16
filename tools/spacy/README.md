@@ -1,12 +1,31 @@
-# Installation
+# spaCy
 
-- Install Spacy `pip install spacy`
-- Download Models `python -m spacy download en_core_web_sm`
+- Website: https://spacy.io/
+- Algorithm: Neural Networks
+
+# Instructions
+
+
+Get models with
+
+```bash
+./tools/spacy/download_models.sh
+```
+
+Then you can run the evaluation with
+
+```bash
+python tools/spacy/evaluate.py
+```
+
+And test the challenges with
+
+```bash
+python tools/spacy/challenges.py
+```
 
 
 # Models
-
-Neural Networks
 
 ## Chinese
 

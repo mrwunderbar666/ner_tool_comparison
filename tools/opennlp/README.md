@@ -1,11 +1,28 @@
-# Algorithm
+# Apache OpenNLP
 
-Maximum Entropy
+- Website: https://opennlp.apache.org/download.html
+- Models: https://opennlp.apache.org/models.html
+- Algorithm: Maximum Entropy
 
-# Tools and Documentation
+- python wrapper (not used here): https://github.com/rohithb/openNLP-python-wrapper
+- python NLTK wrapper (not used here): https://github.com/paudan/opennlp_python
 
-Apache OpenNLP: https://opennlp.apache.org/download.html
-Models: https://opennlp.apache.org/models.html
+# Instructions
 
-python wrapper: https://github.com/rohithb/openNLP-python-wrapper
-python NLTK wrapper: https://github.com/paudan/opennlp_python
+Install with
+
+```bash
+python tools/opennlp/get_opennlp.py
+```
+
+Then you can run the evaluation with
+
+```bash
+python tools/opennlp/evaluate.py
+```
+
+And test the challenges with
+
+```bash
+python tools/opennlp/challenges.py
+```

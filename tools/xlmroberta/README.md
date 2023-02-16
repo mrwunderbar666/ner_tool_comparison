@@ -1,6 +1,9 @@
-# Info
+# XLM-RoBERTa
 
-Using the huggingface library for quick implementation.
+- Citation: Conneau, A., Khandelwal, K., Goyal, N., Chaudhary, V., Wenzek, G., Guzmán, F., Grave, E., Ott, M., Zettlemoyer, L., & Stoyanov, V. (2019). Unsupervised Cross-lingual Representation Learning at Scale. https://arxiv.org/abs/1911.02116
+- Model Repository: https://huggingface.co/xlm-roberta-large
+
+*Using the huggingface library for quick implementation.*
 
 # Hyperparameters
 
@@ -10,7 +13,6 @@ Several sweeps for hyperparamter optimization yielded the following optimal sett
 - Batch Size: 8
 - Epochs: 4
 - Weight Decay: 0.01
-
 
 ## Results
 
