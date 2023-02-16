@@ -2,42 +2,42 @@
     {
         "text": "He saw John F. Kennedy just before the assassination.",
         "language": "en",
-        "source": "Nouvel et al, (2016)",
+        "source": "Nouvel et al (2016)",
         "challenges": ["misclassification", "boundary detection"],
         "critical_phrases": ["John F. Kennedy"]
     },
     {
         "text": "His trip through John F. Kennedy went well.",
         "language": "en",
-        "source": "Nouvel et al, (2016)",
+        "source": "Nouvel et al (2016)",
         "challenges": ["misclassification", "boundary detection"],
         "critical_phrases": ["John F. Kennedy"]
     },
     {
         "text": "The Abrams tank was widely tested during the Gulfwar.",
         "language": "en",
-        "source": "Nouvel et al, (2016)",
+        "source": "Nouvel et al (2016)",
         "challenges": ["misclassification"],
         "critical_phrases": ["Abrams"]
     },
     {
         "text": "The Star Wars VII movie was directed by Abrams.",
         "language": "en",
-        "source": "Nouvel et al, (2016)",
+        "source": "Nouvel et al (2016)",
         "challenges": ["misclassification"],
         "critical_phrases": ["Abrams"]
     },
     {
         "text": "Und nun will die Bundesregierung Gerhard Schröder Büro und Personal streichen.",
         "language": "de",
-        "source": "tagesthemen, 18.05.2022",
+        "source": "tagesthemen, 2022-05-18",
         "challenges": ["boundary detection"],
         "critical_phrases": ["die Bundesregierung", "Gerhard Schröder"]
     },
     {
         "text": "In Corona-Hochburgen wie München und Hamburg nähern sich einige Krankenhäuser der Kapazitätsgrenze.",
         "language": "de",
-        "source": "Spiegel.de, 27.03.2020",
+        "source": "Spiegel.de, 2020-03-27",
         "challenges": ["neologism"],
         "critical_phrases": ["Corona-Hochburgen"]
     },
