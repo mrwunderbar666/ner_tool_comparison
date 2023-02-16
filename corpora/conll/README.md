@@ -1,18 +1,45 @@
 # CoNLL-2002 (Spanish & Dutch)
 
 - Website: https://www.clips.uantwerpen.be/conll2002/ner/
-- Introduction to the CoNLL-2002 Shared Task: Language-Independent Named Entity Recognition (Tjong Kim Sang, 2002). https://aclanthology.org/W02-2024/
+- Citation: Introduction to the CoNLL-2002 Shared Task: Language-Independent Named Entity Recognition (Tjong Kim Sang, 2002). https://aclanthology.org/W02-2024/
+
+## Get the Data
+
+Run
+
+```bash
+python corpora/conll/get_conll2002.py
+```
 
 # CoNLL-2003 (English & German)
 
 - Website: https://www.clips.uantwerpen.be/conll2003/ner/
-- Paper: Introduction to the CoNLL-2003 Shared Task: Language-Independent Named Entity Recognition (Tjong Kim Sang & De Meulder, 2003), https://aclanthology.org/W03-0419/
+- Citation: Introduction to the CoNLL-2003 Shared Task: Language-Independent Named Entity Recognition (Tjong Kim Sang & De Meulder, 2003), https://aclanthology.org/W03-0419/
+
+
+
+
+## Getting the English dataset
+
+Two options
+- CoNLL++ (English only): https://github.com/ZihanWangKi/CrossWeigh
+- CoNLL 2003 English: https://huggingface.co/datasets/conll2003
+
+Getting the original dataset via huggingface:
+
+```bash
+python corpora/conll/conll2003_en_huggingface.py
+```
 
 ## Getting the German dataset
 
+Two Options:
+- Get the [official German resource](https://catalog.ldc.upenn.edu/LDC94T5) and run the steps described below.
+- Get the already processed dataset from huggingface, which is a legal grey-zone. CoNLL 2003 German: https://huggingface.co/datasets/Davlan/conll2003_de_noMISC/tree/main
+
 **Disclaimer:** This probably won't work in Windows. If you're doing this in Windows, you can try using a Linux Subsystem.
 
-1. Get German Base Data from: https://catalog.ldc.upenn.edu/LDC94T5 (costs USD 75)
+1. Get German Base Data from: https://catalog.ldc.upenn.edu/LDC94T5 (costs USD 75 for non-members)
 2. Download the NER build tools from the original website
     - https://www.clips.uantwerpen.be/conll2003/ner.tgz
     - in case website is down, web.archive.org still has the files
@@ -25,6 +52,7 @@
 6. run the main script with `bin/make.deu`
 7. You should now have three new files in your current directory: `deu.train`, `deu.testa`, `deu.testb`
 8. Copy the files into subdirectory for this repository: `corpora/conll`
+9. Finally run `python corpora/conll/convert_conll2003_de.py`
 
 In case more details are needed, check the instructions in `ner.tgz` (`000README`)
 

@@ -1,16 +1,12 @@
-Cross-lingual Name Tagging and Linking for 282 Languages (Pan et al., ACL 2017)
+# WikiANN
 
-Paper: https://aclanthology.org/P17-1178/
+- Citation: Cross-lingual Name Tagging and Linking for 282 Languages (Pan et al., ACL 2017). https://aclanthology.org/P17-1178/
+- Repository: https://elisa-ie.github.io/wikiann/
+- Dataset: https://drive.google.com/drive/folders/1Q-xdT99SeaCghihGa7nRkcXGwRGUIsKN
+- Huggingface Dataset: https://huggingface.co/datasets/wikiann
+- Automatic Dataset Creation: https://github.com/panx27/wikiann
 
-https://elisa-ie.github.io/wikiann/
-
-URL: https://drive.google.com/drive/folders/1Q-xdT99SeaCghihGa7nRkcXGwRGUIsKN
-
-Huggingface Dataset: https://huggingface.co/datasets/wikiann
-
-Automatic Dataset Creation: https://github.com/panx27/wikiann
-
-# Instructions
+# Get the Data
 
 1. Go to his Google Drive Folder: https://drive.google.com/drive/folders/1aSpKIvRJUiOO3oPSY8A-5R2vI4eg6X96
 2. Right-click on the folder `name_tagging` and click download
