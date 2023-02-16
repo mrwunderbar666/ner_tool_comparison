@@ -97,6 +97,15 @@ License for Quaero corpus prohibits to train a model with the data and to redist
     - https://taalmaterialen.ivdnt.org/wp-content/uploads/documentatie/sonar_verschillendecorpora.txt
     - https://taalmaterialen.ivdnt.org/wp-content/uploads/documentatie/sonar_documentatie.pdf
 
+## Finnish
+
+- Finnish NER: https://github.com/mpsilfve/finer-data
+
+## Collections of more corpora (other domains)
+
+- https://github.com/juand-r/entity-recognition-datasets
+- https://github.com/davidsbatista/NER-datasets
+
 # Difficult Examples
 
 See the file `challenges.json` for a set of sentences which pose challenges for NER tools.
