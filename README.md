@@ -8,7 +8,7 @@ Make sure to install all required packages (Python & R) before proceeding.
 python -m pip install -r requirements.txt
 ```
 
-# R
+## R
 ```
 Rscript r_packages.r
 ```
