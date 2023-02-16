@@ -116,7 +116,7 @@ m <- glm(f1 ~ number_model_corpora + number_model_languages + log(training_token
          data = df_overall)
 
 summary(m)
-dwplot(m)
+dwplot(m) + theme_minimal()
 
 
 m <- glm(f1 ~ number_model_corpora + number_model_languages + log(training_tokens) + log(training_sentences) + 
@@ -142,7 +142,7 @@ dwplot(regressions, vline = geom_vline(
   xintercept = 0,
   colour = "grey60",
   linetype = 2)
-) + theme_minimal()
+) + theme_minimal(base_size = 24) + scale_color_viridis_d()
 
 
 regressions <- list()
