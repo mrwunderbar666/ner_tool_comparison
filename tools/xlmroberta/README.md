@@ -14,7 +14,6 @@ Several sweeps for hyperparameters optimization yielded the following optimal se
 - Learning Rate: 2e-05
 - Batch Size: 8
 - Epochs: 4
-- Weight Decay: 0.01
 
 You can replicate the search for hyperparameters by using the script `find_hyperparameters.py`. The parameters to search for are notes in `find_hyperparameters.yml`. Script is written for the service: [wandb](https://wandb.ai/). You can run a sweep and use the yaml file for the sweep settings. Please note that this process can take a while (one run about 60 minutes).
 
