@@ -47,7 +47,7 @@ def generate_combinations():
     ]
 
     registry = load_registry()
-    registry = registry.loc[~(registry.corpus == 'wikiann')]
+    # registry = registry.loc[~(registry.corpus == 'wikiann')]
 
     model_combinations = []
     for languages in language_combinations:
@@ -74,7 +74,7 @@ def get_combination(number):
     else:
         df = pd.read_feather(combinations_path)
     
-    language, corpus = df.loc[number]
+    language, corpus = df.loc[number, ['languages', 'corpora']]
 
     return list(language), list(corpus)
 
@@ -87,8 +87,12 @@ def get_model_id_with_full_trainingdata():
     else:
         df = pd.read_feather(combinations_path)
 
-    filt = (df.languages.apply(len) == max(df.languages.apply(len))) & (df.corpora.apply(len) == max(df.corpora.apply(len)))
+    # exclude wikiann
+    filt = df.corpora.apply(lambda x: 'wikiann' in x)
+    df = df[~filt]
 
+    filt = (df.languages.apply(len) == max(df.languages.apply(len))) & (df.corpora.apply(len) == max(df.corpora.apply(len)))
+    
     return df[filt].index[0]
 
 

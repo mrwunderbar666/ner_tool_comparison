@@ -1,27 +1,18 @@
-import wandb
-wandb.init()
+# Script to fine-tune XLM-RoBERTa with different corpora / language combinations
+# saves the trained model to tools/xlmroberta/models/model_id
+
+# Uses the service https://wandb.ai for logging results
+# If you wish to disable the service uncomment lines that menion "wandb"
+
+# Takes following input arguments
+#  -l LEARNING_RATE (float)         default 2e-5
+#  -e EPOCHS (int)                  default 3
+#  -b BATCH_SIZE (int)              default 8
+#  -m MODEL_COMBINATION (int)       which language combination to use. 
+#                                   Default setting is to load the model combination 
+#                                   with the full training set
+
 import argparse
-import sys
-import json
-from timeit import default_timer as timer
-from datetime import timedelta
-import pandas as pd
-import numpy as np
-from pathlib import Path
-from datasets import Dataset, concatenate_datasets
-from transformers import (AutoModelForTokenClassification, TrainingArguments, Trainer)
-import torch
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-
-# Set Pathing
-sys.path.insert(0, str(Path.cwd()))
-# import custom utilities (path: tools/xlmroberta/utils.py)
-from tools.xlmroberta.utils import (get_combination, tokenizer, tokenize_and_align_labels, data_collator, 
-                                    labels_dict, conll_labels, conll_features, compute_metrics)
-from utils.registry import load_registry
-
-
 # Set-up training parameters
 
 parser = argparse.ArgumentParser()
@@ -32,49 +23,106 @@ parser.add_argument('-e', '--epochs', type=int, default=3,
                      help='epochs', dest='epochs')
 parser.add_argument('-b', '--batch_size', type=int, default=8,
                      help='batch size', dest='batch_size')
-parser.add_argument('-t', '--training_size', type=int, default=1000,
-                     help='Samples of training data to use per corpus', dest='training_size')
+parser.add_argument('-m', '--model_combination', type=int, required=False,
+                     help='which language combination to use', dest='model_combination')
 
 args = parser.parse_args()
+
+
+import wandb
+
+import sys
+import json
+from timeit import default_timer as timer
+from datetime import timedelta
+import pandas as pd
+import numpy as np
+from pathlib import Path
+from datasets import Dataset, load_metric, concatenate_datasets
+from transformers import (AutoTokenizer,
+                          AutoModelForTokenClassification, TrainingArguments, Trainer)
+import torch
+
+
+# Set Pathing
+sys.path.insert(0, str(Path.cwd()))
+# import custom utilities (path: tools/xlmroberta/utils.py)
+from tools.xlmroberta.utils import (get_combination, get_model_id_with_full_trainingdata,
+                                    tokenizer, tokenize_and_align_labels, data_collator, 
+                                    labels_dict, conll_labels, conll_features)
+from utils.registry import load_registry
+
+# Initialize hardware
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+wandb.init()
+
+
+print('Loading metric...')
+
+metric = load_metric("seqeval")
+
+def compute_metrics(p):
+    predictions, labels = p
+    predictions = np.argmax(predictions, axis=2)
+    # Remove ignored index (special tokens)
+    true_predictions = [
+        [label_list[p] for (p, l) in zip(prediction, label) if l != -100]
+        for prediction, label in zip(predictions, labels)
+    ]
+    true_labels = [
+        [label_list[l] for (p, l) in zip(prediction, label) if l != -100]
+        for prediction, label in zip(predictions, labels)
+    ]
+    results = metric.compute(predictions=true_predictions, references=true_labels)
+    return {
+        "precision": results["overall_precision"],
+        "recall": results["overall_recall"],
+        "f1": results["overall_f1"],
+        "accuracy": results["overall_accuracy"],
+        'raw_results': results
+    }
+
 
 
 learning_rate = args.learning_rate
 epochs = args.epochs
 batch_size = args.batch_size
-training_size = args.training_size
-languages = ['en', 'de', 'es', 'nl', 'fr', 'cs']
+if not args.model_combination:
+    model_id = get_model_id_with_full_trainingdata()
+else:
+    model_id = args.model_combination
 
-print('Training Size:', training_size)
+languages, corpora = get_combination(model_id)
 
-wandb.log({'training_size': training_size})
+print('Model ID:', model_id)
+print('Combination:', languages, corpora)
 
-model_dir = Path.cwd() / 'tools' / 'xlmroberta' / 'models_varying_b'
+wandb.log({'model_id': model_id, 'languages': languages, 'corpora': corpora})
 
-model_id = wandb.run.name
+model_dir = Path.cwd() / 'tools' / 'xlmroberta' / 'models'
 
 if not model_dir.exists():
     model_dir.mkdir()
 
 registry = load_registry()
-df_corpora = registry.loc[(registry.language.isin(languages)) & (registry.corpus != 'wikiann') & (registry.corpus != 'europeana') & (registry.corpus != 'emerging')]
+# registry = registry.loc[~(registry.corpus == 'wikiann')]
+df_corpora = registry.loc[(registry.language.isin(languages)) & (registry.corpus.isin(corpora))]
 
 datasets = {'train': [], 'test': [], 'validation': []}
 
+print('Preparing training data...')
+
 # Load and prepare data
-print('Preparing Data...')
 for _, row in df_corpora.iterrows():
+    print(row['path'])
     if row['split'] not in datasets.keys():
         continue
-    if row['split'] != 'train' and row['corpus'] != 'conll':
-        continue
-    print('Preparing dataset:', row['path'])
     df = pd.read_feather(row['path'])
     df = df.loc[~df.token.isna(), ]
     df['CoNLL_IOB2'] = df['CoNLL_IOB2'].replace(labels_dict)
     df = df.groupby(['language', 'sentence_id'])[['token', 'CoNLL_IOB2']].agg(list)
-    if row['split'] == 'train':
-        df = df.sample(n=training_size)
     df = df.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})
+    df = df.reset_index(drop=True)
     datasets[row['split']].append(Dataset.from_pandas(df, features=conll_features))
 
 training_data = concatenate_datasets(datasets['train'])
@@ -146,7 +194,7 @@ model_details = {'model_id': model_id,
                 'epochs': epochs,
                 'learning_rate': learning_rate,
                 'languages': languages, 
-                'training_sentences': training_data.num_rows,
+                'corpora': corpora, 
                 'training_duration': training_time.total_seconds(),
                 'validation_duration': validation_time.total_seconds(),
                 'results': results

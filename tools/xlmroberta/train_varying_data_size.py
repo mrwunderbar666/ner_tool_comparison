@@ -1,6 +1,45 @@
+# Script to fine-tune XLM-RoBERTa with on a all corpora
+# You can specify th size of the training data to be used.
+# Either specify a percentage with `-t 0.2` =20% of training data
+# Or an absolute number with `-t 1000` = use 1000 training samples  
+
+# saves the trained model to tools/xlmroberta/models/model_id
+
+# Uses the service https://wandb.ai for logging results
+# If you wish to disable the service uncomment lines that menion "wandb"
+
+# Takes following input arguments
+#  -l LEARNING_RATE (float)         default 2e-5
+#  -e EPOCHS (int)                  default 3
+#  -b BATCH_SIZE (int)              default 8
+#  -t TRAINING_SIZE (float)         Amount of training data to use.
+#                                   If smaller than 1.0 uses a percentage of the training data.
+#                                   If larger than 1.0 uses the absolute number.
+
+
+import argparse
+
+# Set-up training parameters
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument('-l', '--learning_rate', type=float, default=2e-05,
+                     help='learning rate', dest='learning_rate')
+parser.add_argument('-e', '--epochs', type=int, default=3,
+                     help='epochs', dest='epochs')
+parser.add_argument('-b', '--batch_size', type=int, default=8,
+                     help='batch size', dest='batch_size')
+parser.add_argument('-t', '--training_size', type=float, default=0.1,
+                     help=('Amount of training data to use.'
+                        'If smaller than 1.0 uses a percentage of the training data.' 
+                        'If larger than 1.0 uses the absolute number.'), 
+                        dest='training_size')
+
+args = parser.parse_args()
+
+
 import wandb
 wandb.init()
-import argparse
 import sys
 import json
 from timeit import default_timer as timer
@@ -22,26 +61,15 @@ from tools.xlmroberta.utils import (get_combination, tokenizer, tokenize_and_ali
 from utils.registry import load_registry
 
 
-# Set-up training parameters
-
-parser = argparse.ArgumentParser()
-
-parser.add_argument('-l', '--learning_rate', type=float, default=2e-05,
-                     help='learning rate', dest='learning_rate')
-parser.add_argument('-e', '--epochs', type=int, default=3,
-                     help='epochs', dest='epochs')
-parser.add_argument('-b', '--batch_size', type=int, default=8,
-                     help='batch size', dest='batch_size')
-parser.add_argument('-t', '--training_size', type=float, default=0.1,
-                     help='Percentage of training data to use', dest='training_size')
-
-args = parser.parse_args()
-
 
 learning_rate = args.learning_rate
 epochs = args.epochs
 batch_size = args.batch_size
-training_size = args.training_size
+if args.training_size > 1.0:
+    training_size = int(args.training_size)
+else:
+    training_size = args.training_size
+
 languages = ['en', 'de', 'es', 'nl', 'fr', 'zh', 'ar', 'cs']
 
 print('Training Size:', training_size)
@@ -73,8 +101,12 @@ for _, row in df_corpora.iterrows():
     df['CoNLL_IOB2'] = df['CoNLL_IOB2'].replace(labels_dict)
     df = df.groupby(['language', 'sentence_id'])[['token', 'CoNLL_IOB2']].agg(list)
     if row['split'] == 'train':
-        df = df.sample(int(len(df) * training_size))
+        if isinstance(training_size, int):
+            df = df.sample(training_size)
+        else:
+            df = df.sample(frac=training_size)
     df = df.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})
+    df = df.reset_index(drop=True)
     datasets[row['split']].append(Dataset.from_pandas(df, features=conll_features))
 
 training_data = concatenate_datasets(datasets['train'])

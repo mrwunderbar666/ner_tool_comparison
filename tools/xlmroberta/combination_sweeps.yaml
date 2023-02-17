@@ -1,4 +1,4 @@
-program: tools/xlmroberta/train_with_wandb.py
+program: tools/xlmroberta/train_combinations.py
 command:
   - python3
   - ${program}

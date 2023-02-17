@@ -1,3 +1,5 @@
+# Automatically run validation tests against every model and store output
+
 import sys
 import json
 from pathlib import Path

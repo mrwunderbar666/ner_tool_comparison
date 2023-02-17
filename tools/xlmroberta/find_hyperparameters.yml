@@ -1,0 +1,17 @@
+program: conll2003.py
+command:
+  - python3
+  - ${program}
+  - ${args}
+method: grid
+metric:
+  name: f1
+  goal: maximize
+parameters:
+  learning_rate:
+    values: [3e-4, 1e-4, 5e-5, 3e-5, 2e-5]
+  batch_size:
+    values: [8, 16, 32, 64]
+  epochs:
+    values: [2, 3, 4]
+
