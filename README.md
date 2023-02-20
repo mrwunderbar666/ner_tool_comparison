@@ -2,16 +2,48 @@
 
 Make sure to install all required packages (Python & R) before proceeding.
 
-## Python
+Everything is conveniently handled by the script `install_prerequisites.sh`
+
+## Manual Installation
+
+### Install Python Dependencies
 
 ```
 python -m pip install -r requirements.txt
 ```
 
-## R
+Additionally, get a script from huggingface:
+
+```
+curl https://huggingface.co/datasets/conll2003/raw/main/conll2003.py -o utils/conll2003.py
+```
+
+Then, get spaCy models
+
+```
+python -m spacy download zh_core_web_lg
+python -m spacy download zh_core_web_trf
+python -m spacy download nl_core_news_lg
+python -m spacy download en_core_web_lg
+python -m spacy download fr_core_news_lg
+python -m spacy download de_core_news_lg
+python -m spacy download es_core_news_lg
+python -m spacy download xx_ent_wiki_sm
+```
+
+### Install R Packages
 ```
 Rscript r_packages.r
 ```
+
+### Install Tools
+
+python3 tools/corenlp/get_corenlp.py
+Rscript tools/icews/get_icews.r
+python3 tools/jrcnames/get_jrc.py
+python3 tools/nltk/get_dependencies.py
+python3 tools/opennlp/get_opennlp.py
+
 
 # Data
 
