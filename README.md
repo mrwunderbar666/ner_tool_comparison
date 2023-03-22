@@ -133,6 +133,12 @@ License for Quaero corpus prohibits to train a model with the data and to redist
 
 - Finnish NER: https://github.com/mpsilfve/finer-data
 
+## Russian
+
+- bsnlp-2019: http://bsnlp.cs.helsinki.fi/bsnlp-2019/shared_task.html (Russian, Czech, Polish, Bulgarian)
+- https://www.dialog-21.ru/evaluation/2016/ner/
+
+
 ## Collections of more corpora (other domains)
 
 - https://github.com/juand-r/entity-recognition-datasets
