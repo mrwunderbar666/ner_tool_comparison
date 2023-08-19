@@ -100,6 +100,7 @@ Each corpus is in tokenized long format (one row = one token) and contains the f
 - https://sites.google.com/site/rmyeid/projects/polylgot-ner
 - Stanza
 - Flair
+- NERF (Polish): http://nkjp.pl/index.php?page=14&lang=1
 
 # More Corpora
 
@@ -132,6 +133,10 @@ License for Quaero corpus prohibits to train a model with the data and to redist
 ## Finnish
 
 - Finnish NER: https://github.com/mpsilfve/finer-data
+
+## Polish
+
+- [NJKP](http://nkjp.pl/index.php?page=14&lang=1): 1-million-word subcorpus. The manually annotated 1-million word subcorpus of the NJKP, available on CC-BY 4.0.
 
 ## Russian
 
