@@ -142,6 +142,7 @@ License for Quaero corpus prohibits to train a model with the data and to redist
 
 - bsnlp-2019: http://bsnlp.cs.helsinki.fi/bsnlp-2019/shared_task.html (Russian, Czech, Polish, Bulgarian)
 - https://www.dialog-21.ru/evaluation/2016/ner/
+- NERUS: https://github.com/natasha/nerus
 
 
 ## Collections of more corpora (other domains)
