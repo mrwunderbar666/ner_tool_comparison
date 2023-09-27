@@ -12,3 +12,4 @@ scikit-learn
 psutil
 spacy
 python-frog
+seqeval
