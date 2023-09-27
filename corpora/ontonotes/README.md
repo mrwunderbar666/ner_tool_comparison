@@ -1,6 +1,6 @@
 # OntoNotes Release 5.0
 
-- Citation: Weischedel, Ralph, Palmer, Martha, Marcus, Mitchell, Hovy, Eduard, Pradhan, Sameer, Ramshaw, Lance, Xue, Nianwen, Taylor, Ann, Kaufman, Jeff, Franchini, Michelle, El-Bachouti, Mohammed, Belvin, Robert & Houston, Ann. (2013). OntoNotes Release 5.0. https://doi.org/10.35111/XMHB-2B84
+- Citation: Weischedel, Ralph, Palmer, Martha, Marcus, Mitchell, Hovy, Eduard, Pradhan, Sameer, Ramshaw, Lance, Xue, Nianwen, Taylor, Ann, Kaufman, Jeff, Franchini, Michelle, El-Bachouti, Mohammed, Belvin, Robert & Houston, Ann. (2013). OntoNotes Release 5.0. https://doi.org/10.35111/XMHB-2B84
 - Official repository: https://catalog.ldc.upenn.edu/LDC2013T19
 - Huggingface link: https://huggingface.co/datasets/conll2012_ontonotesv5
 
