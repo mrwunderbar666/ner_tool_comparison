@@ -6,6 +6,12 @@
 - Example for training custom classifier: https://github.com/arop/ner-re-pt/wiki/NLTK
 - Spanish Tagger: https://github.com/alvations/spaghetti-tagger
 
+## Training Material
+
+No clear description, but name of NER model indicates that it is trained with the ACE corpus
+
+> 'ACE Named Entity Chunker (Maximum entropy)'
+
 # Instructions
 
 

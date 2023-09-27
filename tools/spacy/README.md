@@ -3,6 +3,16 @@
 - Website: https://spacy.io/
 - Algorithm: Neural Networks
 
+## Training Material
+
+- English: OntoNotes 5
+- Chinese: OntoNotes 5
+- Dutch: Dutch NER Annotations for UD LassySmall (NLP Town) [proprietary]
+- French: WikiNER
+- German: WikiNER
+- Spanish: WikiNER
+- Multilingual: WikiNER
+
 # Instructions
 
 
