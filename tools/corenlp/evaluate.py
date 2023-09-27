@@ -2,7 +2,6 @@ import sys
 from pathlib import Path
 import pandas as pd
 import requests
-from datasets import load_metric
 from timeit import default_timer as timer
 from datetime import timedelta
 from time import sleep
@@ -11,6 +10,7 @@ sys.path.insert(0, str(Path.cwd()))
 from tools.corenlp.utils import launch_server, annotate
 from utils.registry import load_registry
 from utils.mappings import corenlp2conll
+from utils.metrics import compute_metrics
 
 languages = {'zh': 'chinese', 
              'en': 'english', 
@@ -25,7 +25,6 @@ p = Path.cwd() / 'tools' / 'corenlp'
 
 corenlp_folder = list(p.glob('stanford-corenlp-*'))[0]
 registry = load_registry()
-metric = load_metric("seqeval")
 evaluations = []
 results_path = Path.cwd() / 'results' / f'corenlp.csv'
 
@@ -86,7 +85,7 @@ for lang, language in languages.items():
         predictions = df.groupby('sentence_id')['corenlp_iob'].agg(list).to_list()
         references = df.groupby('sentence_id')['CoNLL_IOB2'].agg(list).to_list()
         
-        results = metric.compute(predictions=predictions, references=references)
+        results = compute_metrics(predictions, references)
 
         r = [{'task': key, **val} for key, val in results.items() if type(val) == dict]
 
