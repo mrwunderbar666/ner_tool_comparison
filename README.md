@@ -144,6 +144,21 @@ License for Quaero corpus prohibits to train a model with the data and to redist
 - https://www.dialog-21.ru/evaluation/2016/ner/
 - NERUS: https://github.com/natasha/nerus
 
+## Hungarian
+
+- "Hungarian Named Entity Corpora": György Szarvas, Richárd Farkas, László Felföldi, András Kocsor, János Csirik: Highly accurate Named Entity corpus for Hungarian. International Conference on Language Resources and Evaluation 2006, Genova (Italy).
+    - Website: https://rgai.inf.u-szeged.hu/node/130 (download link broken)
+    - Paper: http://www.inf.u-szeged.hu/projectdirs/hlt/papers/lrec_ne-corpus.pdf
+- NYTK-NerKor: Simon, Eszter; Vadász, Noémi. (2021) Introducing NYTK-NerKor, A Gold Standard Hungarian Named Entity Annotated Corpus. In: Ekštein K., Pártl F., Konopík M. (eds) Text, Speech, and Dialogue. TSD 2021. Lecture Notes in Computer Science, vol 12848. Springer, Cham. https://doi.org/10.1007/978-3-030-83527-9_19
+    - Repository: https://github.com/nytud/NYTK-NerKor
+
+## Arabic
+
+- AQMAR Arabic Wikipedia Named Entity Corpus: http://www.cs.cmu.edu/~ark/ArabicNER/
+
+## Japanese
+
+- Megagon Labs Tokyo NE Extension: https://github.com/megagonlabs/UD_Japanese-GSD
 
 ## Collections of more corpora (other domains)
 
