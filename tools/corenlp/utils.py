@@ -3,6 +3,7 @@ import requests
 import subprocess
 from tqdm import tqdm
 import psutil
+import time 
 
 from pandas import DataFrame
 
@@ -11,6 +12,7 @@ def launch_server(corenlp_folder, language='english'):
     if len(corenlp_server) > 0:
         print('Found other instance running. Terminating old processes...')
         [p.kill() for p in corenlp_server]
+        time.sleep(5)
 
     args = ['java', '-mx4g', '-cp', '*', 'edu.stanford.nlp.pipeline.StanfordCoreNLPServer', '-port', '9000', '-timeout', '15000', '-quiet']
     if language != 'english':
