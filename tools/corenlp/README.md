@@ -16,7 +16,6 @@
 - Spanish: Not documented
 - Italian: Not documented
 - Hungarian: Not documented
-- Arabic: Not documented
 
 # Instructions
 
