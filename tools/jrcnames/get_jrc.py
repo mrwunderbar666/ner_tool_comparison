@@ -1,6 +1,4 @@
-import requests
 from pathlib import Path
-from tqdm import tqdm
 import gzip
 import pandas as pd
 import sys
