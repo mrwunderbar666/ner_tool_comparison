@@ -1,6 +1,8 @@
-# Utility functions to keep track on 
-# downloaded corpora and tools
-# keeping it simple by storing everything in a csv file
+"""
+    Utility functions to keep track on 
+    downloaded corpora and tools
+    keeping it simple by storing everything in a csv file
+"""
 
 from pathlib import Path
 import csv
@@ -17,7 +19,13 @@ def find_corpus_registry():
             writer.writeheader()
     return r
 
-def add_corpus(data):
+def add_corpus(data: dict):
+    """ Add or update a corpus to the registry
+
+        Corpora are uniquely identified by their absolute file path.
+        This means that information for an already registered corpus
+        are updated automatically as long as the absolute path matches.
+    """
     assert isinstance(data, dict)
     h = corpus_headers.copy()
     assert list(data.keys()).sort() == h.sort()
