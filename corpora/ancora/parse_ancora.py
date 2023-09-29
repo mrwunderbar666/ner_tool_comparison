@@ -12,6 +12,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path.cwd()))
 from utils.registry import add_corpus
+from utils.mappings import harem2conll
 
 seed = 5618
 
@@ -22,9 +23,11 @@ def parse_xml(path: Path) -> t.List[dict]:
     document_id = path.parent.name + '_' + path.name.replace('.xml', '')
 
     article = []
+    language = soup.article['lng']
     for i, sentence in enumerate(soup.find_all('sentence'), start=1):
         s = [token for token in sentence.find_all(wd=True)]
         for token in s:
+            token['language'] = language
             token['sentence_number'] = i
             token['document_id'] = document_id
             bio = 'B'
@@ -41,14 +44,6 @@ def parse_xml(path: Path) -> t.List[dict]:
     
     return article
 
-# Mapping for strong named entities
-# See AnCora documentation, table 11 (p. 37)
-strong_ne_mapping = {'person': 'PER',
-                     'organization': 'ORG',
-                     'location': 'LOC',
-                     'other': 'MISC'
-                     }
-
 if __name__ == '__main__':
 
     p = Path.cwd() / 'corpora' / 'ancora'
@@ -58,9 +53,12 @@ if __name__ == '__main__':
     if not tmp.exists():
         tmp.mkdir(parents=True)
 
-    print('Extracting corpus zip file ...')
-    z = zipfile.ZipFile(p / 'ancora-es-2.0.0_2.zip', mode='r')
-    z.extractall(path=tmp)
+    archives = p.glob('*.zip')
+    for archive in archives:
+
+        print('Extracting', archive.name, '...')
+        z = zipfile.ZipFile(archive, mode='r')
+        z.extractall(path=tmp)
 
     xml_files = list(tmp.glob('*/*/*.xml'))
 
@@ -84,69 +82,72 @@ if __name__ == '__main__':
 
     df = pd.DataFrame(corpus)
 
-    df['CoNLL_IOB2'] = df['bio'].astype(str) + '-' + df['ne'].replace(strong_ne_mapping)
-    df.loc[~df['ne'].isin(strong_ne_mapping.keys()), 'CoNLL_IOB2'] = 'O'
+    df['CoNLL_IOB2'] = df['bio'].astype(str) + '-' + df['ne'].replace(harem2conll)
+    df.loc[~df['ne'].isin(harem2conll.keys()), 'CoNLL_IOB2'] = 'O'
 
     df['sentence_id'] = df.document_id + '_' + df.sentence_number.astype(str)
     df['token_id'] = df.groupby('sentence_id').cumcount() + 1
 
     df = df.rename(columns={'wd': 'token', 'lem': 'lemma'})
     df['corpus'] = 'ancora'
-    df['language'] = 'es'
 
     cols = ['corpus', 'language', 'sentence_id', 'token_id', 'token', 'lemma', 'CoNLL_IOB2']
 
     df = df.loc[:, cols]
 
-    sentence_index = df.sentence_id.unique().tolist()
-    train, test_val = train_test_split(sentence_index, test_size=0.3, random_state=seed)
-    test, val = train_test_split(test_val, test_size=0.5, random_state=seed)
+    for language in df['language'].unique().tolist():
+        print('Exporting language:', language)
+        subset = df.loc[df.language == language]
 
-    df_train = df.loc[df.sentence_id.isin(train), :]
-    df_test = df.loc[df.sentence_id.isin(test), :]
-    df_val = df.loc[df.sentence_id.isin(val), :]
+        sentence_index = subset.sentence_id.unique().tolist()
+        train, test_val = train_test_split(sentence_index, test_size=0.3, random_state=seed)
+        test, val = train_test_split(test_val, test_size=0.5, random_state=seed)
 
-    df_train.reset_index(inplace=True, drop=True)
-    df_test.reset_index(inplace=True, drop=True)
-    df_val.reset_index(inplace=True, drop=True)
+        df_train = subset.loc[subset.sentence_id.isin(train), :]
+        df_test = subset.loc[subset.sentence_id.isin(test), :]
+        df_val = subset.loc[subset.sentence_id.isin(val), :]
 
-    train_destination = p / 'ancora_train.feather'
-    test_destination = p / 'ancora_test.feather'
-    validation_destination = p / 'ancora_validation.feather'
+        df_train.reset_index(inplace=True, drop=True)
+        df_test.reset_index(inplace=True, drop=True)
+        df_val.reset_index(inplace=True, drop=True)
 
-    df_train.to_feather(train_destination, compression='uncompressed')
-    df_test.to_feather(test_destination, compression='uncompressed')
-    df_val.to_feather(validation_destination, compression='uncompressed')
-    print(f"processed ancora and saved to", train_destination, test_destination, validation_destination)
+        train_destination = p / f'ancora_{language}_train.feather'
+        test_destination = p / f'ancora_{language}_test.feather'
+        validation_destination = p / f'ancora_{language}_validation.feather'
 
-    train_details = {'corpus': 'ancora', 
-                    'subset': 'ancora-es-2.0', 
-                    'path': train_destination, 
-                    'split': "train",
-                    'language': 'es', 
-                    'tokens': len(df_train), 
-                    'sentences': len(df_train.sentence_id.unique())}
+        df_train.to_feather(train_destination, compression='uncompressed')
+        df_test.to_feather(test_destination, compression='uncompressed')
+        df_val.to_feather(validation_destination, compression='uncompressed')
+        print(f"processed ancora and saved to", train_destination, test_destination, validation_destination)
 
-    add_corpus(train_details)
+        train_details = {'corpus': 'ancora', 
+                        'subset': f'ancora-{language}-2.0', 
+                        'path': train_destination, 
+                        'split': "train",
+                        'language': language, 
+                        'tokens': len(df_train), 
+                        'sentences': len(df_train.sentence_id.unique())}
 
-    test_details = {'corpus': 'ancora', 
-                    'subset': 'ancora-es-2.0', 
-                    'path': test_destination, 
-                    'split': "test",
-                    'language': 'es', 
-                    'tokens': len(df_test), 
-                    'sentences': len(df_test.sentence_id.unique())}
+        add_corpus(train_details)
 
-    add_corpus(test_details)
+        test_details = {'corpus': 'ancora', 
+                        'subset': f'ancora-{language}-2.0', 
+                        'path': test_destination, 
+                        'split': "test",
+                        'language': language, 
+                        'tokens': len(df_test), 
+                        'sentences': len(df_test.sentence_id.unique())}
 
-    validation_details = {'corpus': 'ancora', 
-                        'subset': 'ancora-es-2.0', 
-                        'path': validation_destination, 
-                        'split': "validation",
-                        'language': 'es', 
-                        'tokens': len(df_val), 
-                        'sentences': len(df_val.sentence_id.unique())}
+        add_corpus(test_details)
 
-    add_corpus(validation_details)
+        validation_details = {'corpus': 'ancora', 
+                            'subset': f'ancora-{language}-2.0', 
+                            'path': validation_destination, 
+                            'split': "validation",
+                            'language': language, 
+                            'tokens': len(df_val), 
+                            'sentences': len(df_val.sentence_id.unique())}
+
+        add_corpus(validation_details)
 
     print('Done!')

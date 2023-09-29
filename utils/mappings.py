@@ -101,6 +101,30 @@ ontonotes2conll = {'I-PERSON': 'I-PER', 'B-PERSON': 'B-PER',
 # WikiANN
 # Same as CoNLL
 
+# AnCora
+# Mapping for strong named entities
+# See AnCora documentation, table 11 (p. 37)
+ancora2conll = {'person': 'PER',
+                     'organization': 'ORG',
+                     'location': 'LOC',
+                     'other': 'MISC'
+                     }
+
+# Harem
+# https://www.linguateca.pt/aval_conjunta/HAREM/GlossarioReRelEMIngles.html
+
+harem2conll = {"PESSOA": "PER",
+                "TEMPO": "O", # Time
+                "LOCAL": "LOC", # Place
+                "ORGANIZACAO": "ORG",
+                "OBRA": "O", # TITLE
+                "ACONTECIMENTO": "MISC", # Event
+                "VALOR": "O", # Amounts 
+                "ABSTRACCAO": "MISC", # Abstract
+                "COISA": "MISC", # Thing
+                "OUTRO": "MISC" # Other
+                }
+
 ###############################
 # Tools
 ###############################
