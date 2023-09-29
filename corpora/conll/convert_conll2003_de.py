@@ -14,6 +14,28 @@ for corpus in raw_data:
     assert corpus.exists(), f"Could not find raw corpus data: {corpus}"
     print('Converting', corpus)
     df = parse_conll(corpus, encoding='latin-1')
+
+    """ 
+        CoNLL-2003 uses a legacy format, the documentation reads:
+
+        The chunk tags and the named entity tags have the format I-TYPE 
+        which means that the word is inside a phrase of type TYPE. 
+        __Only if two phrases of the same type immediately follow each other__, 
+        the first word of the second phrase will have tag B-TYPE 
+        to show that it starts a new phrase. 
+
+        This means that all tags are by default I-TAGs, which is different from
+        the other corpora (where the Beginning is always marked with a B-TAG).
+        Here we fix this with a simple reformatting
+    """
+
+    df['i_tag'] = df.CoNLL_IOB2.str.startswith('I')
+    df['previous_i_tag'] = df.CoNLL_IOB2.shift(1).str.startswith('I').fillna(False)
+
+    filt = (df.i_tag) & (~df.previous_i_tag)
+
+    df.loc[filt, 'CoNLL_IOB2'] = df.loc[filt, 'CoNLL_IOB2'].str.replace('I-', 'B-', regex=False)
+
     df['dataset'] = 'conll2003'
     df['subset'] = corpus.name
     df['language'] = 'de'
