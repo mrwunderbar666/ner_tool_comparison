@@ -106,12 +106,8 @@ Each corpus is in tokenized long format (one row = one token) and contains the f
 
 ## English
 
-- [Ultra-Fine Entity Typing (ACL 2018)](https://www.cs.utexas.edu/~eunsol/html_pages/open_entity.html)
+- [Ultra-Fine Entity Typing (ACL 2018)](https://www.cs.utexas.edu/~eunsol/html_pages/open_entity.html) (Open-ended entity recognition)
 - [Few-NERD](https://ningding97.github.io/fewnerd/)
-
-## Portuguese
-
-- [HAREM](https://www.linguateca.pt/HAREM/)
 
 ## French
 
@@ -120,19 +116,11 @@ License for Quaero corpus prohibits to train a model with the data and to redist
 - [Quaero Broadcast News Extended Named Entity corpus Corpus](http://catalog.elra.info/en-us/repository/browse/ELRA-S0349/)
 - [Quaero Old Press Extended Named Entity corpus Corpus](http://catalog.elra.info/en-us/repository/browse/ELRA-W0073/)
 
-## Spanish
-
-- [AnCora](http://clic.ub.edu/corpus/en/ancora) (Catalan & Spanish)
-
 ## Dutch
 
-- [SoNaR-1](https://taalmaterialen.ivdnt.org/download/tstc-sonar-corpus/) Automatically labelled, not validated. 
+- [SoNaR-1](https://taalmaterialen.ivdnt.org/download/tstc-sonar-corpus/): 1-Million Words subset is manually annotated. 
     - https://taalmaterialen.ivdnt.org/wp-content/uploads/documentatie/sonar_verschillendecorpora.txt
     - https://taalmaterialen.ivdnt.org/wp-content/uploads/documentatie/sonar_documentatie.pdf
-
-## Finnish
-
-- Finnish NER: https://github.com/mpsilfve/finer-data
 
 ## Polish
 
@@ -151,10 +139,6 @@ License for Quaero corpus prohibits to train a model with the data and to redist
     - Paper: http://www.inf.u-szeged.hu/projectdirs/hlt/papers/lrec_ne-corpus.pdf
 - NYTK-NerKor: Simon, Eszter; Vadász, Noémi. (2021) Introducing NYTK-NerKor, A Gold Standard Hungarian Named Entity Annotated Corpus. In: Ekštein K., Pártl F., Konopík M. (eds) Text, Speech, and Dialogue. TSD 2021. Lecture Notes in Computer Science, vol 12848. Springer, Cham. https://doi.org/10.1007/978-3-030-83527-9_19
     - Repository: https://github.com/nytud/NYTK-NerKor
-
-## Arabic
-
-- AQMAR Arabic Wikipedia Named Entity Corpus: http://www.cs.cmu.edu/~ark/ArabicNER/
 
 ## Japanese
 
