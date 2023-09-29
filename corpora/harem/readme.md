@@ -31,6 +31,8 @@ Does the following:
 As stated in the original readme file:
 
 > Linguateca is jointly funded by the Portuguese Government and the European Union (FEDER and FSE) under contract ref. POSC/339/1.3/C/NAC, and by FCCN and by UMIC. 
+
 > We are grateful to Jorge Baptista, Caroline Hagège and Nuno Mamede for introducing the TEMPO track, to Nuno Cardoso for deploying SAHARA, and to Luís Miguel Cabral, Luís Costa and David Cruz for their support in several other tasks.
+
 > We also thank all Second HAREM participants for granting us permission to further distribute their runs. 
 
