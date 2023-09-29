@@ -1,7 +1,7 @@
 import pandas as pd
 from tqdm import tqdm
 
-def parse_conll(f_path, columns=['token', 'lemma', 'pos', 'chunk', 'CoNLL_IOB2'], encoding='utf-8', separator=' '):
+def parse_conll(f_path, columns=['token', 'lemma', 'pos', 'chunk', 'CoNLL_IOB2'], encoding='utf-8', separator=' ') -> pd.DataFrame:
 
     with open(f_path, 'r', encoding=encoding) as f:
         lines = f.readlines()
@@ -14,10 +14,13 @@ def parse_conll(f_path, columns=['token', 'lemma', 'pos', 'chunk', 'CoNLL_IOB2']
     with tqdm(total=len(lines), unit='line') as pbar:
         for l in lines:
             pbar.update()
-            if l.startswith('-DOCSTART-'):
+            if l.startswith('-DOCSTART-') or l.startswith('<HEADLINE>'):
                 doc_id += 1
                 sentence_id = 0
                 token_id = 1
+                continue
+            elif l.strip() in ['<BODY>', '<INGRESS>']:
+                # FiNER uses these tags to divide documents
                 continue
             elif l.strip() == '':
                 sentence_id += 1

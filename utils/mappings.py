@@ -125,6 +125,18 @@ harem2conll = {"PESSOA": "PER",
                 "OUTRO": "MISC" # Other
                 }
 
+# FiNER
+# see paper: 
+# https://doi.org/10.1007/s10579-019-09471-7
+# https://arxiv.org/abs/1908.04212
+
+finer2conll = {'B-DATE': 'O',
+                'I-DATE': 'O',
+                'B-PRO': 'B-MISC',
+                'I-PRO': 'I-MISC',
+                'B-EVENT': 'B-MISC',
+                'I-EVENT': 'I-MISC',}
+
 ###############################
 # Tools
 ###############################
