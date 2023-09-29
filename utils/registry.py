@@ -10,7 +10,7 @@ import pandas as pd
 
 corpus_headers = ['corpus', 'subset', 'path', 'split', 'language', 'tokens', 'sentences']
 
-def find_corpus_registry():
+def find_corpus_registry() -> Path:
     p = Path.cwd()
     r = p / 'corpora' / 'registry.csv'
     if not r.exists():
@@ -38,7 +38,7 @@ def add_corpus(data: dict):
     df.to_csv(registry, index=False)
     
 
-def load_registry():
+def load_registry() -> pd.DataFrame:
     r = find_corpus_registry()
     df = pd.read_csv(r)
     df = df.drop_duplicates()
