@@ -14,11 +14,11 @@ python3 tools/jrcnames/get_jrc.py
 python3 tools/nltk/get_dependencies.py
 python3 tools/opennlp/get_opennlp.py
 
-python3 -m spacy download zh_core_web_lg
-python3 -m spacy download zh_core_web_trf
-python3 -m spacy download nl_core_news_lg
-python3 -m spacy download en_core_web_lg
-python3 -m spacy download fr_core_news_lg
-python3 -m spacy download de_core_news_lg
-python3 -m spacy download es_core_news_lg
-python3 -m spacy download xx_ent_wiki_sm
+python3 -m spacy download zh_core_web_lg-3.3.0 --direct
+python3 -m spacy download zh_core_web_trf-3.3.0 --direct
+python3 -m spacy download nl_core_news_lg-3.3.0 --direct
+python3 -m spacy download en_core_web_lg-3.3.0 --direct
+python3 -m spacy download fr_core_news_lg-3.3.0 --direct
+python3 -m spacy download de_core_news_lg-3.3.0 --direct
+python3 -m spacy download es_core_news_lg-3.3.0 --direct
+python3 -m spacy download xx_ent_wiki_sm-3.3.0 --direct
