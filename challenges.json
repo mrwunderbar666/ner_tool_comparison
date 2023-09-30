@@ -166,6 +166,19 @@
         "source": "De Standaard, 2022-06-21",
         "challenges": ["foreign name", "Small organization", "boundary detection"],
         "critical_phrases": ["Jumbo", "Paraceleilanden", "Zuid-Chinese Zee"]
-    }
-    
+    },
+    {
+        "text": "Diese @handelsblatt Meldung gibt sehr zu denken … einzig positiver Aspekt ist, dass 🇩🇪 & 🇪🇺 von der #NordStream1 Pipeline nicht mehr abhängig sind.",
+        "language":"de",
+        "source": "@Klaus_Mueller (Twitter), 2022-09-26",
+        "challenges": ["account mention", "emoji", "NE in hashtag"],
+        "critical_phrases": ["@handelsblatt", "🇩🇪", "🇪🇺", "#NordStream1"]
+    },
+    {
+        "text": "This @handelsblatt gives much to think about … the only positive aspect is that 🇩🇪 & 🇪🇺 are no longer dependend on the #NordStream1 pipeline.",
+        "language":"en",
+        "source": "@Klaus_Mueller (Twitter, translated), 2022-09-26",
+        "challenges": ["account mention", "emoji", "NE in hashtag"],
+        "critical_phrases": ["@handelsblatt", "🇩🇪", "🇪🇺", "#NordStream1"]
+    }    
 ]
