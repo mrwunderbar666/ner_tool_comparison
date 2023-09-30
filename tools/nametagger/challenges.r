@@ -1,6 +1,7 @@
 library(nametagger)
 library(stringr)
 library(jsonlite)
+library(reticulate)
 
 if (!dir.exists("tools/nametagger/tmp")) {
   dir.create("tools/nametagger/tmp")
@@ -14,17 +15,19 @@ if (!file.exists("tools/nametagger/tmp/english-conll-140408.ner")) {
 
 language <- "en"
 
-challenges <- jsonlite::read_json("challenges.json")
+reticulate::use_virtualenv(paste0(getwd(), "/.venv"))
+utils <- reticulate::import("utils.challenges")
+challenges <- utils$load_challenges()
 
-for (i in 1:length(challenges)) {
-  challenges[[i]]$tool <- "nametagger"
+challenges <- challenges[challenges$language == language, ]
+challenges$tool <- "nametagger"
+challenges$tokens <- NA
 
-  if (challenges[[i]]$language == language) {
-    annotations <- predict(model, challenges[[i]]$text)
-    challenges[[i]]$tokens <- list(annotations$term)
-    challenges[[i]]$iob <- list(annotations$entity)
+for (i in 1:nrow(challenges)) {
+    annotations <- predict(model, challenges$text[i])
+    challenges$tokens[i] <- list(annotations$term)
+    challenges$iob[i] <- list(annotations$entity)
 
-  }
 }
 
 jsonlite::write_json(challenges, 'results/nametagger_challenges.json')

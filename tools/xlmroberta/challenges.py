@@ -12,12 +12,13 @@ from tqdm import tqdm
 sys.path.insert(0, str(Path.cwd()))
 # import custom utilities (path: tools/xlmroberta/utils.py)
 from tools.xlmroberta.utils import (tokenizer, labels_dict, get_model_id_with_full_trainingdata)
+from utils.challenges import load_challenges
 
 # flip labels_dict
 labels_dict = {v: k for k, v in labels_dict.items()}
 
 
-challenges = pd.read_json(Path.cwd() / 'challenges.json')
+challenges = load_challenges()
 
 challenges['tool'] = 'xlmroberta'
 challenges['tokens'] = ''
@@ -35,7 +36,7 @@ roberta.to(device)
 
 print('Running challenges...')
 
-with tqdm(len(challenges), unit="sentence") as pbar:
+with tqdm(total=len(challenges), unit="sentence") as pbar:
     for index, row in challenges.iterrows():
 
         inputs = tokenizer(row['text'], padding=True, return_tensors='pt')

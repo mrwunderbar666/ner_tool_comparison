@@ -4,6 +4,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path.cwd()))
 from tools.opennlp.opennlp import annotate
+from utils.challenges import load_challenges
 
 languages = ['en', 'nl', 'es']
 
@@ -13,7 +14,7 @@ opennlp_bin = opennlp_dir / 'bin' / 'opennlp'
 
 results_path = Path.cwd() / 'results' / f'opennlp_challenges.json'
 
-challenges = pd.read_json(Path.cwd() / 'challenges.json')
+challenges = load_challenges()
 
 challenges['tool'] = 'opennlp'
 challenges['tokens'] = ''

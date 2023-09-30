@@ -6,6 +6,7 @@ from time import sleep
 
 sys.path.insert(0, str(Path.cwd()))
 from tools.corenlp.utils import launch_server, annotate_sentence
+from utils.challenges import load_challenges
 
 languages = {'zh': 'chinese', 
              'en': 'english', 
@@ -21,7 +22,7 @@ p = Path.cwd() / 'tools' / 'corenlp'
 corenlp_folder = list(p.glob('stanford-corenlp-*'))[0]
 results_path = Path.cwd() / 'results' / 'corenlp_challenges.json'
 
-challenges = pd.read_json(Path.cwd() / 'challenges.json')
+challenges = load_challenges()
 
 challenges['tool'] = 'corenlp'
 challenges['tokens'] = ''

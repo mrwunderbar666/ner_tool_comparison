@@ -11,6 +11,7 @@ from tqdm import tqdm
 sys.path.insert(0, str(Path.cwd()))
 from utils.registry import load_registry
 from utils.mappings import sonar2conll
+from utils.challenges import load_challenges
 
 from frog import Frog, FrogOptions
 
@@ -25,7 +26,7 @@ evaluations = []
 results_path = Path.cwd() / 'results' / 'frog_challenges.json'
 
 
-challenges = pd.read_json(Path.cwd() / 'challenges.json')
+challenges = load_challenges()
 
 challenges['tool'] = 'frog'
 challenges['tokens'] = ''

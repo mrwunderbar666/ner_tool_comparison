@@ -5,6 +5,7 @@ from pathlib import Path
 import pandas as pd
 
 sys.path.insert(0, str(Path.cwd()))
+from utils.challenges import load_challenges
 
 p = Path.cwd() / 'tools' / 'spacy'
 
@@ -19,7 +20,7 @@ models = {'en': "en_core_web_trf",
           }
 
 
-challenges = pd.read_json(Path.cwd() / 'challenges.json')
+challenges = load_challenges()
 
 challenges['tool'] = 'spacy'
 challenges['tokens'] = ''

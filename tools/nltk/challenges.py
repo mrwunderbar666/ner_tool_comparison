@@ -4,12 +4,13 @@ import pandas as pd
 import nltk
 
 sys.path.insert(0, str(Path.cwd()))
+from utils.challenges import load_challenges
 
 language = 'en'
 p = Path.cwd() / 'tools' / 'nltk'
 results_path = Path.cwd() / 'results' / 'nltk_challenges.json'
 
-challenges = pd.read_json(Path.cwd() / 'challenges.json')
+challenges = load_challenges()
 
 challenges['tool'] = 'nltk'
 challenges['tokens'] = ''

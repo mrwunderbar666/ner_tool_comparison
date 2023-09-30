@@ -2,7 +2,10 @@
 
 Make sure to install all required packages (Python & R) before proceeding.
 
-Everything is conveniently handled by the script `install_prerequisites.sh`
+1. Create a virtual environment
+    - python3 -m venv .venv
+    - source .venv/bin/activate
+2. Execute the script `install_prerequisites.sh`
 
 ## Manual Installation
 
