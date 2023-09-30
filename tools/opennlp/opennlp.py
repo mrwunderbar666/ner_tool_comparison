@@ -1,6 +1,10 @@
+import typing
+from pathlib import Path
 from subprocess import Popen, PIPE
 
-def annotate(sentences, opennlp_bin, model='en-ner-person'):
+def annotate(sentences: typing.Union[str, list], 
+             opennlp_bin: typing.Union[Path, str], 
+             model: typing.Union[str, Path]='en-ner-person') -> list:
     if isinstance(sentences, list):
         sentences = "\n".join(sentences)
 
