@@ -28,6 +28,34 @@
         "critical_phrases": ["Abrams"]
     },
     {
+        "text": "Washington was born into slavery on the farm of James Burroughs.",
+        "language": "en",
+        "source": "Jurafsky, D. and Martin, J. H. (2020). Speech and Language Processing: An Introduction to Natural Language Processing, Computational Linguistics, and Speech Recognition. Third Edition draft.",
+        "challenges": ["misclassification"],
+        "critical_phrases": ["Washington"]
+    },
+    {
+        "text": "Washington went up 2 games to 1 in the four-game series.",
+        "language": "en",
+        "source": "Jurafsky, D. and Martin, J. H. (2020). Speech and Language Processing: An Introduction to Natural Language Processing, Computational Linguistics, and Speech Recognition. Third Edition draft.",
+        "challenges": ["misclassification"],
+        "critical_phrases": ["Washington"]
+    },
+    {
+        "text": "Blair arrived in Washington for what may well be his last state visit.",
+        "language": "en",
+        "source": "Jurafsky, D. and Martin, J. H. (2020). Speech and Language Processing: An Introduction to Natural Language Processing, Computational Linguistics, and Speech Recognition. Third Edition draft.",
+        "challenges": ["misclassification"],
+        "critical_phrases": ["Washington"]
+    },
+    {
+        "text": "In June, Washington passed a primary seatbelt law.",
+        "language": "en",
+        "source": "Jurafsky, D. and Martin, J. H. (2020). Speech and Language Processing: An Introduction to Natural Language Processing, Computational Linguistics, and Speech Recognition. Third Edition draft.",
+        "challenges": ["misclassification"],
+        "critical_phrases": ["Washington"]
+    },
+    {
         "text": "Und nun will die Bundesregierung Gerhard Schröder Büro und Personal streichen.",
         "language": "de",
         "source": "tagesthemen, 2022-05-18",
