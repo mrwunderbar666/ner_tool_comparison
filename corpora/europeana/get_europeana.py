@@ -83,12 +83,31 @@ for corpus in tmp.glob('*.txt'):
     df.CoNLL_IOB2 = df.CoNLL_IOB2.replace({'B-BER': 'B-PER'})
     df.CoNLL_IOB2 = df.CoNLL_IOB2.replace({'P': 'O'})
 
+
+    """ 
+        French subcorpus uses a legacy format, see github issue:
+        https://github.com/EuropeanaNewspapers/ner-corpora/issues/44
+
+        This means that all tags are by default I-TAGs, which is different from
+        the other corpora (where the Beginning is always marked with a B-TAG).
+        Here we fix this with a simple reformatting
+    """
+    if language == 'fr':
+
+        df['i_tag'] = df.CoNLL_IOB2.str.startswith('I')
+        df['previous_i_tag'] = df.CoNLL_IOB2.shift(1).str.startswith('I').fillna(False)
+
+        filt = (df.i_tag) & (~df.previous_i_tag)
+
+        df.loc[filt, 'CoNLL_IOB2'] = df.loc[filt, 'CoNLL_IOB2'].str.replace('I-', 'B-', regex=False)
+
+
     sentence_index = df.sentence_id.unique().tolist()
     train, test_val = train_test_split(sentence_index, test_size=0.3, random_state=seed)
     test, val = train_test_split(test_val, test_size=0.5, random_state=seed)
-    df_train = df.loc[df.sentence_id.isin(train), ]
-    df_test = df.loc[df.sentence_id.isin(test), ]
-    df_val = df.loc[df.sentence_id.isin(val), ]
+    df_train = df.loc[df.sentence_id.isin(train), :]
+    df_test = df.loc[df.sentence_id.isin(test), :]
+    df_val = df.loc[df.sentence_id.isin(val), :]
 
     df_train.reset_index(inplace=True, drop=True)
     df_test.reset_index(inplace=True, drop=True)
