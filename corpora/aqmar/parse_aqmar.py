@@ -1,13 +1,8 @@
 import sys
-import copy
-import typing as t
 import zipfile
 
 from pathlib import Path
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from bs4 import BeautifulSoup
 from sklearn.model_selection import train_test_split
-from tqdm import tqdm
 import pandas as pd
 
 sys.path.insert(0, str(Path.cwd()))
