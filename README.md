@@ -147,6 +147,21 @@ License for Quaero corpus prohibits to train a model with the data and to redist
 
 - Megagon Labs Tokyo NE Extension: https://github.com/megagonlabs/UD_Japanese-GSD
 
+## Italian
+
+- Italian Content Annotation Bank (I-CAB) https://ontotext.fbk.eu/icab.html
+    - Foundation for other tasks
+    - Requires licence agreement
+- EVALITA 2011: Named Entity Recognition on Transcribed Broadcast News (https://www.evalita.it/campaigns/evalita-2011/tasks/named-entities/)
+- EVALITA 2016: Named Entity rEcognition and Linking in Italian Tweets Task (http://neel-it.github.io/)
+    - Data shared in protected GDrive
+- KIND (Kessler Italian Named-entities Dataset)
+    - Part of EVALITA 2023
+    - Repository: https://github.com/dhfbk/KIND/tree/main
+    - Permissive licence
+
+
+
 ## Collections of more corpora (other domains)
 
 - https://github.com/juand-r/entity-recognition-datasets
