@@ -12,7 +12,7 @@
 
 ## Source Materials
 
-Mix of freely available news (wikinews) and litarary work.
+Mix of freely available news (wikinews), political speeches, and litarary work.
 
 # Parse the Data
 
