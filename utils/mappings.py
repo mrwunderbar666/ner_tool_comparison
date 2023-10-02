@@ -155,6 +155,26 @@ hipe2conll = {'B-pers': 'B-PER',
               'I-time': 'O'
               }
 
+# SoNaR
+# See documentation: 
+# https://taalmaterialen.ivdnt.org/wp-content/uploads/documentatie/sonar_documentatie.pdf
+
+# 'O', 
+# Persons: 'B-per', 'I-per'
+# Organizations: 'B-org', 'I-org'
+# Locations: 'B-loc', 'I-loc'
+# Misc: 'B-misc', 'I-misc'
+# Products: 'B-pro', 'I-pro'
+# Events (natural and human): 'B-eve', 'I-eve'
+
+# first uppercase everything
+# then turn Products / Events into Misc
+# Per, Org, Loc match CoNLL definitions
+
+sonar2conll = {'B-PRO': 'B-MISC', 'I-PRO': 'I-MISC',
+               'B-EVE': 'B-MISC', 'I-EVE': 'I-MISC'}
+
+
 ###############################
 # Tools
 ###############################
@@ -191,21 +211,7 @@ corenlp2conll = {'B-ORGANIZATION': 'B-ORG', 'I-ORGANIZATION': 'I-ORG',
                     }
 
 # Frog (Dutch)
-
-# 'O', 
-# Persons: 'B-per', 'I-per'
-# Organizations: 'B-org', 'I-org'
-# Locations: 'B-loc', 'I-loc'
-# Misc: 'B-misc', 'I-misc'
-# Products: 'B-pro', 'I-pro'
-# Events (natural and human): 'B-eve', 'I-eve'
-
-# first uppercase everything
-# then turn Products / Events into Misc
-# Per, Org, Loc match CoNLL definitions
-
-sonar2conll = {'B-PRO': 'B-MISC', 'I-PRO': 'I-MISC',
-               'B-EVE': 'B-MISC', 'I-EVE': 'I-MISC'}
+# Uses SoNaR scheme (above)
 
 # Nametagger (Czech model)
 # uses annotation scheme of CNEC, but *in practice* cannot distinguish B-PER/I-PER, B-ORG/I-ORG, etc
