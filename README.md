@@ -119,11 +119,6 @@ License for Quaero corpus prohibits to train a model with the data and to redist
 - [Quaero Broadcast News Extended Named Entity corpus Corpus](http://catalog.elra.info/en-us/repository/browse/ELRA-S0349/)
 - [Quaero Old Press Extended Named Entity corpus Corpus](http://catalog.elra.info/en-us/repository/browse/ELRA-W0073/)
 
-## Dutch
-
-- [SoNaR-1](https://taalmaterialen.ivdnt.org/download/tstc-sonar-corpus/): 1-Million Words subset is manually annotated. 
-    - https://taalmaterialen.ivdnt.org/wp-content/uploads/documentatie/sonar_verschillendecorpora.txt
-    - https://taalmaterialen.ivdnt.org/wp-content/uploads/documentatie/sonar_documentatie.pdf
 
 ## Polish
 
@@ -155,12 +150,6 @@ License for Quaero corpus prohibits to train a model with the data and to redist
 - EVALITA 2011: Named Entity Recognition on Transcribed Broadcast News (https://www.evalita.it/campaigns/evalita-2011/tasks/named-entities/)
 - EVALITA 2016: Named Entity rEcognition and Linking in Italian Tweets Task (http://neel-it.github.io/)
     - Data shared in protected GDrive
-- KIND (Kessler Italian Named-entities Dataset)
-    - Part of EVALITA 2023
-    - Repository: https://github.com/dhfbk/KIND/tree/main
-    - Permissive licence
-
-
 
 ## Collections of more corpora (other domains)
 
