@@ -16,7 +16,7 @@ It contains texts from news, education, opinion pieces, blogs, FAQ section, lega
 Run
 
 ```bash
-python corpora/ancora/parse_ancora.py
+python corpora/harem/parse_harem.py
 ```
 
 Does the following:
