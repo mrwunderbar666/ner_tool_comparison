@@ -2,7 +2,6 @@ import sys
 import zipfile
 
 from pathlib import Path
-import pandas as pd
 
 sys.path.insert(0, str(Path.cwd()))
 from utils.registry import add_corpus
@@ -19,8 +18,6 @@ if __name__ == '__main__':
 
     z = zipfile.ZipFile(p / "evalita_2023.zip", mode='r')
     z.extractall(path=tmp)
-
-    docs = []
 
     for corpus in tmp.glob("*.tsv"):
         print('Parsing file', corpus.name)
