@@ -106,3 +106,36 @@ def parse_hipe(f_path: Path) -> pd.DataFrame:
             token_id += 1
 
     return pd.DataFrame(tokens)
+
+
+
+def parse_conllup(f_path: Path) -> pd.DataFrame:
+    """
+        CoNLL-U+ format
+
+        has a column declaration at the header
+
+    """
+    with open(f_path, 'r') as f:
+        lines = f.readlines()
+
+    sentence_id = 1
+    token_id = 1
+    tokens = []
+
+    columns = lines.pop(0).split('=')[-1].split()
+    columns = [c.strip() for c in columns]
+
+    for l in lines:
+        if l.strip() == '':
+            sentence_id += 1
+            token_id = 1
+            continue
+        else:
+            token = {k.strip(): v.strip() for k, v in zip(columns, l.split("\t"))}
+            token['sentence_id'] = sentence_id
+            token['token_id'] = token_id
+            tokens.append(token)
+            token_id += 1
+
+    return pd.DataFrame(tokens)
