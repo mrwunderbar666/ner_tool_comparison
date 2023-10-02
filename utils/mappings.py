@@ -135,7 +135,25 @@ finer2conll = {'B-DATE': 'O',
                 'B-PRO': 'B-MISC',
                 'I-PRO': 'I-MISC',
                 'B-EVENT': 'B-MISC',
-                'I-EVENT': 'I-MISC',}
+                'I-EVENT': 'I-MISC'}
+
+
+# HIPE 
+# CLEF HIPE 2020: Named Entity Processing on Historical Newspapers
+# see paper:
+# https://infoscience.epfl.ch/record/281054
+
+hipe2conll = {'B-pers': 'B-PER',
+              'I-pers': 'I-PER',
+              'B-org': 'B-ORG',
+              'I-org': 'I-ORG',
+              'B-loc': 'B-LOC', 
+              'I-loc': 'I-LOC',
+              'B-prod': 'B-MISC',
+              'I-prod': 'I-MISC',
+              'B-time': 'O',
+              'I-time': 'O'
+              }
 
 ###############################
 # Tools
