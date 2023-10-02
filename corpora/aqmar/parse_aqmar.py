@@ -63,7 +63,7 @@ if __name__ == '__main__':
     df_train.to_feather(train_destination, compression='uncompressed')
     df_test.to_feather(test_destination, compression='uncompressed')
     df_val.to_feather(validation_destination, compression='uncompressed')
-    print(f"processed ancora and saved to", train_destination, test_destination, validation_destination)
+    print(f"processed aqmar and saved to", train_destination, test_destination, validation_destination)
 
     train_details = {'corpus': 'aqmar', 
                     'subset': 'aqmar', 
