@@ -120,7 +120,7 @@ if __name__ == '__main__':
                         'tokens': len(corpus_test), 
                         'sentences': len(corpus_test.sentence_id.unique())}
 
-    add_corpus(train_details)
+    add_corpus(test_details)
 
     validation_details = {'corpus': 'sonar', 
                         'subset': 'SoNaR-1', 
