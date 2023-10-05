@@ -30,6 +30,9 @@ if __name__ == "__main__":
 
         df['CoNLL_IOB2'] = df['ne_coarse_lit'].replace(hipe2conll, regex=False)
 
+        # fix this one bad annotation
+        df.loc[df.CoNLL_IOB2 == 'B-comp', 'CoNLL_IOB2'] = 'B-LOC'
+
         """
             HIPE annotation count demonyms as Persons, these are additionally tagged
             in NE-FINE-LIT as `B-pers.coll` / `I-pers.coll`
