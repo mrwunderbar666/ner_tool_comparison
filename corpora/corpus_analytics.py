@@ -42,7 +42,11 @@ for language in languages:
             continue
         print('Loading corpus', corpus_name)
         for split in splits:
-            corpus_meta = registry.loc[filt & (registry.split == split)].to_dict(orient='records')[0]
+            try:
+                corpus_meta = registry.loc[filt & (registry.split == split)].to_dict(orient='records')[0]
+            except IndexError:
+                print('corpus', corpus_name, 'does not have a', split, 'split for language', language)
+                continue
             corpus = pd.read_feather(corpus_meta['path'])
             ner_tags_summary = corpus.CoNLL_IOB2.value_counts().to_dict()
             persons = corpus.loc[corpus.CoNLL_IOB2.str.contains('B-PER'), ['token', 'CoNLL_IOB2']]
