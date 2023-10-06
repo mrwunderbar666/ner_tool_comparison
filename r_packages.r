@@ -9,7 +9,9 @@ pkg <- c("corpustools",
          "patchwork", 
          "tidyverse", 
          "RColorBrewer",
-         "reticulate")
+         "reticulate",
+         "kableExtra",
+         "viridis")
 
 for (p in pkg) {
     install.packages(p)
