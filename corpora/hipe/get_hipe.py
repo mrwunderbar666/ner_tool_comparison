@@ -58,6 +58,7 @@ if __name__ == "__main__":
                 'nel_meto', 'misc']
 
         df = df.loc[:, cols]
+        df = df.rename(columns={'misc': 'additional_information'})
         corpus_destination = p / corpus.name.replace('.tsv', '.feather')
         df.to_feather(corpus_destination, compression='uncompressed')
 
