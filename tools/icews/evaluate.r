@@ -4,6 +4,15 @@ library(arrow)
 library(stringi)
 library(caret)
 
+args <-  commandArgs(trailingOnly=TRUE)
+
+if ('--debug' %in% args) {
+  print('debug mode')
+  debug <- TRUE
+} else {
+  debug <- FALSE
+}
+
 # Initialize final results table
 results <- data.frame(
   corpus = NULL,
@@ -24,7 +33,7 @@ icews_actors <- read_rds('tools/icews/icews_actors.rds')
 registry <- read_csv('corpora/registry.csv')
 registry <- registry[registry$split == 'validation', ]
 
-languages <- c("en", "de", 'nl', 'es', 'fr', 'cs', 'hu', 'it')
+languages <- c("en", "de", 'nl', 'es', 'fr', 'cs', 'hu', 'it', 'fi', 'pt', 'ca')
 
 corpora <- registry[registry$language %in% languages, ]
 
@@ -36,6 +45,14 @@ for (i in 1:nrow(corpora)) {
   
   if ('doc_id' %in% colnames(df)) {
     df$doc_id <- NULL
+  }
+
+  if (debug) {
+    sentence_ids <- unique(df$sentence_id)
+    sample_size <- min(c(length(sentence_ids), 100))
+    random_sentences <- sample(sentence_ids, sample_size)
+    filt <- df$sentence_id %in% random_sentences
+    df <- df[filt, ]
   }
   
   df <- recode_iob(df)
@@ -51,11 +68,11 @@ for (i in 1:nrow(corpora)) {
   start_time <- Sys.time()
   tc$code_dictionary(
     icews_actors,
-    case_sensitive = T,
+    case_sensitive = TRUE,
     token_col = 'token',
     string_col = 'keyword',
     sep = ' ',
-    use_wildcards = F
+    use_wildcards = FALSE
   )
   end_time <- Sys.time()
   
@@ -86,4 +103,4 @@ if (!dir.exists('results')) {
   dir.create('results')
 }
 
-write.csv(results, file = 'results/icews.csv', row.names = F)
+write.csv(results, file = 'results/icews.csv', row.names = FALSE)

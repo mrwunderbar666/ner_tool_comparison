@@ -5,12 +5,18 @@ import requests
 from timeit import default_timer as timer
 from datetime import timedelta
 from time import sleep
+from argparse import ArgumentParser
 
 sys.path.insert(0, str(Path.cwd()))
 from tools.corenlp.utils import launch_server, annotate
 from utils.registry import load_registry
 from utils.mappings import corenlp2conll
 from utils.metrics import compute_metrics
+
+
+argparser = ArgumentParser(prog='Run CoreNLP Evaluation')
+argparser.add_argument('--debug', action='store_true', help='Debug flag (only test a random sample)')
+args = argparser.parse_args()
 
 languages = {'zh': 'chinese', 
              'en': 'english', 
@@ -65,13 +71,14 @@ for lang, language in languages.items():
         print('Loading corpus:', corpus_path)
 
         df = pd.read_feather(corpus_path)
-        df = df.loc[~df.token.isna(), ]
+        df = df.loc[~df.token.isna(), :]
 
-        # for debugging, make the sample smaller
-        # sentence_index = df.sentence_id.unique().tolist()
-        # if len(sentence_index) > 20000:
-        #     sentence_index = random.sample(sentence_index, 20000)
-        #     df = df.loc[df.sentence_id.isin(sentence_index)]
+        if args.debug:
+            import random
+            sample_size = min(len(df.sentence_id.unique().tolist()), 100)
+            sentende_ids = random.sample(df.sentence_id.unique().tolist(), sample_size)
+            df = df.loc[df.sentence_id.isin(sentende_ids), :]
+            df = df.reset_index(drop=True)
 
         print('Annotating...', corpus_path)
         start_validation = timer()

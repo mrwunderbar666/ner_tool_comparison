@@ -5,6 +5,7 @@ from timeit import default_timer as timer
 from datetime import timedelta
 
 import pandas as pd
+from argparse import ArgumentParser
 
 import torch
 from transformers import AutoTokenizer, AutoModelForTokenClassification, Trainer
@@ -13,10 +14,16 @@ from datasets import Dataset
 # Set Pathing
 sys.path.insert(0, str(Path.cwd()))
 # import custom utilities (path: tools/xlmroberta/utils.py)
-from tools.xlmroberta.utils import (get_combination, tokenizer, tokenize_and_align_labels, data_collator, 
+from tools.xlmroberta.utils import (get_combination, tokenizer, generate_tokenize_function, data_collator, 
                                     labels_dict, conll_labels, conll_features, compute_metrics, get_model_id_with_full_trainingdata)
 from utils.registry import load_registry
 
+
+argparser = ArgumentParser(prog='Run XLM-RoBERTa Evaluation')
+argparser.add_argument('--debug', action='store_true', help='Debug flag (only test a random sample)')
+args = argparser.parse_args()
+
+tokenize = generate_tokenize_function("xlm-roberta-base", labels_dict)
 
 registry = load_registry()
 
@@ -29,7 +36,13 @@ validation_sets = {}
 # Load and prepare data
 for _, row in df_corpora.iterrows():
     df = pd.read_feather(row['path'])
-    df = df.loc[~df.token.isna(), ]
+    df = df.loc[~df.token.isna(), :]
+    if args.debug:
+        import random
+        sample_size = min(len(df.sentence_id.unique().tolist()), 100)
+        sentende_ids = random.sample(df.sentence_id.unique().tolist(), sample_size)
+        df = df.loc[df.sentence_id.isin(sentende_ids), :]
+
     df['CoNLL_IOB2'] = df['CoNLL_IOB2'].replace(labels_dict)
     df = df.groupby(['sentence_id'])[['token', 'CoNLL_IOB2']].agg(list)
     df = df.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})

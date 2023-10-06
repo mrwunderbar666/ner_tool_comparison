@@ -1,10 +1,16 @@
 import itertools
 from pathlib import Path
 from transformers import AutoTokenizer, DataCollatorForTokenClassification
-from datasets import load_metric, ClassLabel, Features, Value, Sequence
+from transformers.models.roberta.tokenization_roberta_fast import RobertaTokenizerFast
+
+from datasets import ClassLabel, Features, Value, Sequence
 from utils.registry import load_registry
 import pandas as pd
 import numpy as np
+import sys
+
+sys.path.insert(0, str(Path.cwd()))
+from utils.metrics import compute_metrics as _compute_metrics
 
 labels_dict = {'O': 0, 'B-PER': 1, 'I-PER': 2, 'B-ORG': 3, 'I-ORG': 4, 'B-LOC': 5, 'I-LOC': 6, 'B-MISC': 7, 'I-MISC': 8}
 
@@ -36,6 +42,63 @@ def tokenize_and_align_labels(examples):
         labels.append(label_ids)
     tokenized_inputs["labels"] = labels
     return tokenized_inputs
+
+
+def get_tokenizer(model):
+    return AutoTokenizer.from_pretrained(model)
+
+def generate_tokenize_function(model, labels_dict: dict, 
+                               text_col="text", 
+                               label_col="labels",
+                               max_length=128):
+    """
+        This function loads the tokenizer for the BERT model and 
+        aligns the NE labels to match the BERT-subtokens
+        It returns a tokenize function that can be applied to the dataset
+    """
+    tokenizer = get_tokenizer(model)
+    tokenizer.add_prefix_space = isinstance(tokenizer, RobertaTokenizerFast)
+
+    # 'B-PER' => 'I-PER'`
+    b_to_i_label = {k: "" for k in labels_dict if k.startswith('B')}
+    for k in labels_dict:
+        if k.startswith('I-'):
+            b_to_i_label['B-' + k.replace('I-', '')] = k
+
+    b_to_i_label = {labels_dict[k]: labels_dict[v] for k,v in b_to_i_label.items()}
+    b_to_i_label[0] = 0
+
+    def _tokenize_func(examples, truncation=True, 
+                       is_split_into_words=True,
+                       padding="max_length"):
+        tokenized_inputs = tokenizer(
+            examples[text_col],
+            padding=padding,
+            truncation=truncation,
+            is_split_into_words=is_split_into_words,
+            max_length=max_length)
+        labels = []
+        for i, label in enumerate(examples[label_col]):
+            # Map tokens to their respective word.
+            word_ids = tokenized_inputs.word_ids(batch_index=i)
+            previous_word_idx = None
+            label_ids = []
+            for word_idx in word_ids:
+                # Special tokens have a word id that is None. We set the label to -100 so they are automatically
+                # ignored in the loss function.
+                if word_idx is None:
+                    label_ids.append(-100)
+                # We set the label for the first token of each word.
+                elif word_idx != previous_word_idx:
+                    label_ids.append(label[word_idx])
+                # For the other tokens in a word, we set the label to either the current label
+                else:
+                    label_ids.append(b_to_i_label[label[word_idx]])
+            previous_word_idx = word_idx
+            labels.append(label_ids)
+        tokenized_inputs[label_col] = labels
+        return tokenized_inputs
+    return _tokenize_func
 
 
 def generate_combinations():
@@ -96,8 +159,6 @@ def get_model_id_with_full_trainingdata():
     return df[filt].index[0]
 
 
-metric = load_metric("seqeval")
-
 def compute_metrics(p):
     predictions, labels = p
     predictions = np.argmax(predictions, axis=2)
@@ -110,7 +171,7 @@ def compute_metrics(p):
         [label_list[l] for (p, l) in zip(prediction, label) if l != -100]
         for prediction, label in zip(predictions, labels)
     ]
-    results = metric.compute(predictions=true_predictions, references=true_labels)
+    results = _compute_metrics(predictions=true_predictions, references=true_labels)
     return {
         "precision": results["overall_precision"],
         "recall": results["overall_recall"],

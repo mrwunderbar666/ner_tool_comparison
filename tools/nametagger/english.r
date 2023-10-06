@@ -3,6 +3,15 @@ library(arrow)
 library(stringr)
 library(readr)
 
+args <-  commandArgs(trailingOnly=TRUE)
+
+if ('--debug' %in% args) {
+  print('debug mode')
+  debug <- TRUE
+} else {
+  debug <- FALSE
+}
+
 if (!dir.exists("tools/nametagger/tmp")) {
   dir.create("tools/nametagger/tmp")
 }
@@ -25,6 +34,14 @@ for (i in 1:nrow(corpora)) {
   print(corpora$path[i])
   
   corpus <- arrow::read_feather(corpora$path[i])
+
+  if (debug) {
+    sentence_ids <- unique(corpus$sentence_id)
+    sample_size <- min(c(length(sentence_ids), 100))
+    random_sentences <- sample(sentence_ids, sample_size)
+    filt <- corpus$sentence_id %in% random_sentences
+    corpus <- corpus[filt, ]
+  }
   
   # satisfy the expected input of nametagger
   

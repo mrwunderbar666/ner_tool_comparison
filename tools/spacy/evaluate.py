@@ -7,14 +7,20 @@ from pathlib import Path
 import pandas as pd
 from timeit import default_timer as timer
 from datetime import timedelta
-
-from datasets import load_metric
+from argparse import ArgumentParser
 
 from tqdm import tqdm
 
 sys.path.insert(0, str(Path.cwd()))
 from utils.mappings import spacy2conll
 from utils.registry import load_registry
+from utils.metrics import compute_metrics
+
+
+argparser = ArgumentParser(prog='Run spaCy Evaluation')
+argparser.add_argument('--debug', action='store_true', help='Debug flag (only test a random sample)')
+args = argparser.parse_args()
+
 
 languages = ['en', 'nl', 'fr', 'de', 'es', 'zh']
 p = Path.cwd() / 'tools' / 'spacy'
@@ -31,7 +37,6 @@ models = {'en': ['en_core_web_lg', "en_core_web_trf"],
          }
 
 registry = load_registry()
-metric = load_metric("seqeval")
 evaluations = []
 
 
@@ -68,7 +73,13 @@ for language in languages:
             print('Loading corpus:', path_corpus)
 
             df = pd.read_feather(path_corpus)
-            df = df.loc[~df.token.isna(), ]
+            df = df.loc[~df.token.isna(), :]
+
+            if args.debug:
+                import random
+                sample_size = min(len(df.sentence_id.unique().tolist()), 100)
+                sentende_ids = random.sample(df.sentence_id.unique().tolist(), sample_size)
+                df = df.loc[df.sentence_id.isin(sentende_ids), :]
 
             # re-arrange corpus into sentences    
             sentences = df.groupby('sentence_id')['token'].agg(list)
@@ -97,7 +108,7 @@ for language in languages:
             predictions = df.groupby('sentence_id')['spacy_ner'].agg(list).to_list()
             references = df.groupby('sentence_id')['CoNLL_IOB2'].agg(list).to_list()
 
-            results = metric.compute(predictions=predictions, references=references)
+            results = compute_metrics(predictions=predictions, references=references)
 
             r = [{'task': key, **val} for key, val in results.items() if type(val) == dict]
 

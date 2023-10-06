@@ -1,15 +1,22 @@
 import sys
 from pathlib import Path
 import pandas as pd
-from datasets import load_metric
 from timeit import default_timer as timer
 from datetime import timedelta
 from tqdm import tqdm
+from argparse import ArgumentParser
+
 import nltk
 
 sys.path.insert(0, str(Path.cwd()))
 from utils.mappings import nltk2conll
 from utils.registry import load_registry
+from utils.metrics import compute_metrics
+
+
+argparser = ArgumentParser(prog='Run NLTK English Evaluation')
+argparser.add_argument('--debug', action='store_true', help='Debug flag (only test a random sample)')
+args = argparser.parse_args()
 
 language = 'en'
 p = Path.cwd() / 'tools' / 'nltk'
@@ -19,7 +26,6 @@ registry = load_registry()
 
 corpora = registry.loc[(registry.language == language) & (registry.split == 'validation')]
 
-metric = load_metric("seqeval")
 evaluations = []
 
 print('Evaluating:', language)
@@ -35,8 +41,14 @@ for _, row in corpora.iterrows():
     print('Loading corpus:', path_corpus)
 
     df = pd.read_feather(path_corpus)
-    df = df.loc[~df.token.isna(), ]
+    df = df.loc[~df.token.isna(), :]
 
+    if args.debug:
+        import random
+        sample_size = min([len(df.sentence_id.unique().tolist()), 100])
+        sentende_ids = random.sample(df.sentence_id.unique().tolist(), sample_size)
+        df = df.loc[df.sentence_id.isin(sentende_ids), :]
+        df = df.reset_index(drop=True)
 
     # ensure consistent order of sentences
     df.sentence_id = df.sentence_id.astype(str).str.zfill(6)
@@ -74,7 +86,7 @@ for _, row in corpora.iterrows():
     predictions = df.groupby('sentence_id')['nltk_iob'].agg(list).to_list()
     references = df.groupby('sentence_id')['CoNLL_IOB2'].agg(list).to_list() 
 
-    results = metric.compute(predictions=predictions, references=references)
+    results = compute_metrics(predictions=predictions, references=references)
 
     r = [{'task': key, **val} for key, val in results.items() if type(val) == dict]
 

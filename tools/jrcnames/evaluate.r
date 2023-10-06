@@ -4,6 +4,15 @@ library(arrow)
 library(stringi)
 library(caret)
 
+args <-  commandArgs(trailingOnly=TRUE)
+
+if ('--debug' %in% args) {
+  print('debug mode')
+  debug <- TRUE
+} else {
+  debug <- FALSE
+}
+
 # Initialize final results table
 results <- data.frame(
   corpus = NULL,
@@ -37,6 +46,14 @@ for (i in 1:nrow(corpora)) {
   
   if ('doc_id' %in% colnames(df)) {
     df$doc_id <- NULL
+  }
+
+  if (debug) {
+    sentence_ids <- unique(df$sentence_id)
+    sample_size <- min(c(length(sentence_ids), 100))
+    random_sentences <- sample(sentence_ids, sample_size)
+    filt <- df$sentence_id %in% random_sentences
+    df <- df[filt, ]
   }
   
   df <- recode_iob(df)
