@@ -208,5 +208,12 @@
         "source": "@Klaus_Mueller (Twitter, translated), 2022-09-26",
         "challenges": ["account mention", "emoji", "NE in hashtag"],
         "critical_phrases": ["@handelsblatt", "🇩🇪", "🇪🇺", "#NordStream1"]
-    }    
+    },
+    {
+        "text": "In addition, 28 industry-leading companies, including America Online, Inc., Apple Computer, Inc., Architext Software, Attachmate Corporation, AT&T, Borland International, Brio Technology, Inc., Computer Associates, Inc., Digital Equipment Corporation, Hewlett-Packard Company, Iconovex Corporation, Illustra Information Technologies, Inc., Informix Software, Inc., Intuit, Inc., Macromedia, Metrowerks, Inc., Novell, Inc., Oracle Corporation, Paper Software, Inc., Precept Software, Inc., RAD Technologies, Inc., The Santa Cruz Operation, Inc., Silicon Graphics, Inc., Spider Technologies, Sybase, Inc., Toshiba Corporation, Verity, Inc., and Vermeer Technologies, Inc., have endorsed JavaScript as an open standard object scripting language and intend to provide it in future products.",
+        "language": "en",
+        "source": "Netscape and Sun Announce JavaScript (1995). https://www.tech-insider.org/java/research/1995/1204.html",
+        "challenges": ["long list of organizations"],
+        "critical_phrases": ["America Online, Inc.", "Apple Computer, Inc.", "Architext Software", "Attachmate Corporation", "AT&T", "Borland International", "Brio Technology, Inc.", "Computer Associates, Inc.", "Digital Equipment Corporation", "Hewlett-Packard Company", "Iconovex Corporation", "Illustra Information Technologies, Inc.", "Informix Software, Inc.", "Intuit, Inc.", "Macromedia", "Metrowerks, Inc.", "Novell, Inc.", "Oracle Corporation", "Paper Software, Inc.", "Precept Software, Inc.", "RAD Technologies, Inc.", "The Santa Cruz Operation, Inc.", "Silicon Graphics, Inc.", "Spider Technologies", "Sybase, Inc.", "Toshiba Corporation", "Verity, Inc.", "Vermeer Technologies, Inc."]
+    }
 ]
