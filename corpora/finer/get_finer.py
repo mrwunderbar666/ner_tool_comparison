@@ -38,7 +38,7 @@ if __name__ == '__main__':
         df['dataset'] = 'finer'
         df['subset'] = corpus.name.replace('.txt', '')
         df['language'] = 'fi'
-        df.sentence_id = df.sentence_id.astype(str).str.zfill(7)
+        df.sentence_id = df.doc_id.astype(str).str.zfill(4) + '_' + df.sentence_id.astype(str).str.zfill(4)
         corpus_destination = p / corpus.name.replace('.txt', '.feather')
         df.to_feather(corpus_destination, compression='uncompressed')
 
