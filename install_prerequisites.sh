@@ -26,3 +26,4 @@ python3 -m spacy download xx_ent_wiki_sm-3.3.0 --direct
 python3 -m spacy download pt_core_news_lg-3.3.0 --direct
 python3 -m spacy download fi_core_news_lg-3.3.0 --direct
 python3 -m spacy download ca_core_news_lg-3.3.0 --direct
+python3 -m spacy download it_core_news_lg-3.3.0 --direct
