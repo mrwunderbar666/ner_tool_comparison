@@ -55,16 +55,20 @@ for language in languages:
         if args.debug:
             import random
             sample_size = min([len(df.sentence_id.unique().tolist()), 100])
-            sentende_ids = random.sample(df.sentence_id.unique().tolist(), sample_size)
-            df = df.loc[df.sentence_id.isin(sentende_ids), :]
+            sentence_ids = random.sample(df.sentence_id.unique().tolist(), sample_size)
+            df = df.loc[df.sentence_id.isin(sentence_ids), :]
             df = df.reset_index(drop=True)
+        
+        # arrange into single sentences
+        df['tmp_token_id'] = df.token_id.astype(str).str.zfill(4)
+        df = df.sort_values(['sentence_id', 'tmp_token_id']).reset_index(drop=True)
+        sentences = df.groupby('sentence_id')['token'].agg(list)
+        assert all(sentences.explode().index == df.sentence_id), 'IDs of sentences and dataframe do not align!'
+
+        sentences = "\n".join([" ".join(s) for s in sentences])
 
         start_validation = timer()
         print('Annotating...', path_corpus)
-            
-        sentences = df.groupby('sentence_id')['token'].agg(list).tolist()
-
-        sentences = "\n".join([" ".join(s) for s in sentences])
 
         for model, model_path in models.items():
             if not model_path.exists(): continue

@@ -46,8 +46,8 @@ for _, row in corpora.iterrows():
     if args.debug:
         import random
         sample_size = min([len(df.sentence_id.unique().tolist()), 100])
-        sentende_ids = random.sample(df.sentence_id.unique().tolist(), sample_size)
-        df = df.loc[df.sentence_id.isin(sentende_ids), :]
+        sentence_ids = random.sample(df.sentence_id.unique().tolist(), sample_size)
+        df = df.loc[df.sentence_id.isin(sentence_ids), :]
         df = df.reset_index(drop=True)
 
     # ensure consistent order of sentences
@@ -56,7 +56,8 @@ for _, row in corpora.iterrows():
     start_validation = timer()
     print('Annotating...', path_corpus)
         
-    sentences = df.groupby('sentence_id')['token'].agg(list).tolist()
+    sentences = df.groupby('sentence_id')['token'].agg(list)
+    assert all(sentences.explode().index == df.sentence_id), 'IDs of sentences and dataframe do not align!'
 
     classified = []
 
@@ -77,6 +78,7 @@ for _, row in corpora.iterrows():
             pbar.update(1)
 
     # rejoin with df
+
     df['nltk_ner'] = pd.Series(classified).explode().reset_index(drop=True)
     end_validation = timer()
     validation_time = timedelta(seconds=end_validation-start_validation)

@@ -67,6 +67,8 @@ if __name__ == '__main__':
     corpus = pd.concat(docs, ignore_index=True).reset_index(drop=True)
 
     corpus['sentence_id'] = corpus['doc_id'] + '_' + corpus['sentence_id'].astype(str).str.zfill(4)
+    corpus["tmp_token_id"] = corpus.token_id.astype(str).str.zfill(5)
+    corpus = corpus.sort_values(["sentence_id", "tmp_token_id"]).reset_index(drop=True)
 
     corpus['CoNLL_IOB2'] = corpus.ner_tag.str.upper().replace(sonar2conll)
 

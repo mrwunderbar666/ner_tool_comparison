@@ -85,7 +85,7 @@ if __name__ == '__main__':
     df['CoNLL_IOB2'] = df['bio'].astype(str) + '-' + df['ne'].replace(harem2conll)
     df.loc[~df['ne'].isin(harem2conll.keys()), 'CoNLL_IOB2'] = 'O'
 
-    df['sentence_id'] = df.document_id + '_' + df.sentence_number.astype(str)
+    df['sentence_id'] = df.document_id + '_' + df.sentence_number.astype(str).str.zfill(4)
     df['token_id'] = df.groupby('sentence_id').cumcount() + 1
 
     df = df.rename(columns={'wd': 'token', 'lem': 'lemma'})

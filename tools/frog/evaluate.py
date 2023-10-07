@@ -42,8 +42,8 @@ for _, row in corpora.iterrows():
     if args.debug:
         import random
         sample_size = min([len(df.sentence_id.unique().tolist()), 100])
-        sentende_ids = random.sample(df.sentence_id.unique().tolist(), sample_size)
-        df = df.loc[df.sentence_id.isin(sentende_ids), :]
+        sentence_ids = random.sample(df.sentence_id.unique().tolist(), sample_size)
+        df = df.loc[df.sentence_id.isin(sentence_ids), :]
         df = df.reset_index(drop=True)
 
     print('Annotating...', corpus_path)

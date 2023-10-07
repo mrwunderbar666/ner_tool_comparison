@@ -48,7 +48,9 @@ if __name__ == "__main__":
         df['corpus'] = 'hipe'
         df['subset'] = corpus.name.replace('.tsv', '')
 
-        df.sentence_id = df.document_id.str.replace('-', '_') + '_' + df.sentence_id.astype(str)
+        df.sentence_id = df.document_id.str.replace('-', '_') + '_' + df.sentence_id.astype(str).str.zfill(4)
+        df["tmp_token_id"] = df.token_id.astype(str).str.zfill(5)
+        df = df.sort_values(["sentence_id", "tmp_token_id"]).reset_index(drop=True)
 
         cols = ['corpus', 'subset',
                 'language', 'sentence_id', 

@@ -27,7 +27,8 @@ p = Path.cwd() / 'tools' / 'spacy'
 
 results_path = Path.cwd() / 'results' / f'spacy.csv'
 
-models = {'en': ['en_core_web_lg', "en_core_web_trf"],
+models = {
+          'en': ['en_core_web_lg', "en_core_web_trf"],
           'zh': ['zh_core_web_lg', 'zh_core_web_trf'],
           'nl': ['nl_core_news_lg'],
           'fr': ['fr_core_news_lg'],
@@ -78,10 +79,13 @@ for language in languages:
             if args.debug:
                 import random
                 sample_size = min(len(df.sentence_id.unique().tolist()), 100)
-                sentende_ids = random.sample(df.sentence_id.unique().tolist(), sample_size)
-                df = df.loc[df.sentence_id.isin(sentende_ids), :]
+                sentence_ids = sorted(random.sample(df.sentence_id.unique().tolist(), sample_size))
+                df = df.loc[df.sentence_id.isin(sentence_ids), :].reset_index(drop=True)
+
 
             # re-arrange corpus into sentences    
+            df['tmp_token_id'] = df.token_id.astype(str).str.zfill(4)
+            df = df.sort_values(['sentence_id', 'tmp_token_id']).reset_index(drop=True)
             sentences = df.groupby('sentence_id')['token'].agg(list)
 
             start_validation = timer()
