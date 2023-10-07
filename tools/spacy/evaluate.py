@@ -22,7 +22,7 @@ argparser.add_argument('--debug', action='store_true', help='Debug flag (only te
 args = argparser.parse_args()
 
 
-languages = ['en', 'nl', 'fr', 'de', 'es', 'zh', 'pt', 'fi', 'ca']
+languages = ['en', 'nl', 'fr', 'de', 'es', 'zh', 'pt', 'fi', 'ca', 'it']
 p = Path.cwd() / 'tools' / 'spacy'
 
 results_path = Path.cwd() / 'results' / f'spacy.csv'
@@ -37,6 +37,7 @@ models = {
           'pt': ['pt_core_news_lg'],
           'fi': ['fi_core_news_lg'],
           'ca': ['ca_core_news_lg'],
+          'it': ['it_core_news_lg'],
           'multi': ['xx_ent_wiki_sm']
          }
 
