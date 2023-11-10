@@ -43,6 +43,10 @@ if __name__ == '__main__':
     df['CoNLL_IOB2'] = df.CoNLL_IOB2.str.replace('B-ENGLISH', 'B-MISC')
     df['CoNLL_IOB2'] = df.CoNLL_IOB2.str.replace('I--ORG', 'I-ORG')
 
+    # Meta information
+    df['corpus'] = 'aqmar'
+    df['language'] = 'ar'
+
 
     sentence_index = df.sentence_id.unique().tolist()
     train, test_val = train_test_split(sentence_index, test_size=0.3, random_state=seed)
