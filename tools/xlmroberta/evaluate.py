@@ -8,7 +8,7 @@ import pandas as pd
 from argparse import ArgumentParser
 
 import torch
-from transformers import AutoTokenizer, AutoModelForTokenClassification, Trainer
+from transformers import AutoModelForTokenClassification, Trainer
 from datasets import Dataset
 
 # Set Pathing
@@ -47,7 +47,7 @@ for _, row in df_corpora.iterrows():
     df = df.groupby(['sentence_id'])[['token', 'CoNLL_IOB2']].agg(list)
     df = df.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})
     ds = Dataset.from_pandas(df, features=conll_features)
-    ds = ds.map(tokenize_and_align_labels, batched=True)
+    ds = ds.map(tokenize, batched=True)
     validation_sets[row['path']] = {'dataset': ds, 
                                     'language': row['language'],
                                     'corpus': row['corpus'],

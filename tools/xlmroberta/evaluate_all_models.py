@@ -9,14 +9,14 @@ from datetime import timedelta
 import pandas as pd
 
 import torch
-from transformers import AutoTokenizer, AutoModelForTokenClassification, Trainer
+from transformers import AutoModelForTokenClassification, Trainer
 from datasets import Dataset
 
 # Set Pathing
 sys.path.insert(0, str(Path.cwd()))
 # import custom utilities (path: tools/xlmroberta/utils.py)
-from tools.xlmroberta.utils import (get_combination, tokenizer, tokenize_and_align_labels, data_collator, 
-                                    labels_dict, conll_labels, conll_features, compute_metrics)
+from tools.xlmroberta.utils import (tokenizer, generate_tokenize_function, data_collator, 
+                                    labels_dict, conll_features, compute_metrics)
 from utils.registry import load_registry
 
 
@@ -28,6 +28,8 @@ df_corpora = registry.loc[(registry.split == 'validation') & (registry.language.
 
 validation_sets = {}
 
+tokenize = generate_tokenize_function("xlm-roberta-base", labels_dict)
+
 # Load and prepare data
 for _, row in df_corpora.iterrows():
     df = pd.read_feather(row['path'])
@@ -36,7 +38,7 @@ for _, row in df_corpora.iterrows():
     df = df.groupby(['language', 'sentence_id'])[['token', 'CoNLL_IOB2']].agg(list)
     df = df.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})
     ds = Dataset.from_pandas(df, features=conll_features)
-    ds = ds.map(tokenize_and_align_labels, batched=True)
+    ds = ds.map(tokenize, batched=True)
     validation_sets[row['path']] = ds
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

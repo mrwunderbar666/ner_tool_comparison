@@ -56,7 +56,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # Set Pathing
 sys.path.insert(0, str(Path.cwd()))
 # import custom utilities (path: tools/xlmroberta/utils.py)
-from tools.xlmroberta.utils import (get_combination, tokenizer, tokenize_and_align_labels, data_collator, 
+from tools.xlmroberta.utils import (tokenizer, generate_tokenize_function, data_collator, 
                                     labels_dict, conll_labels, conll_features, compute_metrics)
 from utils.registry import load_registry
 
@@ -80,8 +80,10 @@ model_dir = Path.cwd() / 'tools' / 'xlmroberta' / 'models_varying'
 
 model_id = wandb.run.name
 
+tokenize = generate_tokenize_function("xlm-roberta-base", labels_dict)
+
 if not model_dir.exists():
-    model_dir.mkdir()
+    model_dir.mkdir(parents=True)
 
 registry = load_registry()
 df_corpora = registry.loc[registry.language.isin(languages)]
@@ -123,9 +125,9 @@ validation_data = concatenate_datasets(datasets['validation'])
 
 label_list = training_data.features[f"labels"].feature.names
 
-tokenized_train = training_data.map(tokenize_and_align_labels, batched=True)
-tokenized_test = test_data.map(tokenize_and_align_labels, batched=True)
-tokenized_validation = validation_data.map(tokenize_and_align_labels, batched=True)
+tokenized_train = training_data.map(tokenize, batched=True)
+tokenized_test = test_data.map(tokenize, batched=True)
+tokenized_validation = validation_data.map(tokenize, batched=True)
 
 roberta = AutoModelForTokenClassification.from_pretrained("xlm-roberta-base", num_labels=len(label_list))
 roberta.to(device)
@@ -144,7 +146,8 @@ training_args = TrainingArguments(
     weight_decay=0.01,
     save_steps=2000,
     save_total_limit=1, # only save 1 checkpoint,
-    report_to="wandb"
+    report_to="wandb",
+    torch_compile=True
 )
 
 trainer = Trainer(

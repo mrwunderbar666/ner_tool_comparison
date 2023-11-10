@@ -25,8 +25,8 @@ from pathlib import Path
 # Set Pathing
 sys.path.insert(0, str(Path.cwd()))
 # import custom utilities (path: tools/xlmroberta/utils.py)
-from tools.xlmroberta.utils import (tokenizer, tokenize_and_align_labels, data_collator, 
-                                   compute_metrics)
+from tools.xlmroberta.utils import (tokenizer, generate_tokenize_function, data_collator, 
+                                   compute_metrics, labels_dict)
 
 from datasets import load_dataset
 from transformers import (AutoModelForTokenClassification, TrainingArguments, Trainer)
@@ -35,6 +35,7 @@ import torch
 wandb.init()
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+tokenize = generate_tokenize_function("xlm-roberta-base", labels_dict)
 
 learning_rate = args.learning_rate
 epochs = args.epochs
@@ -50,7 +51,7 @@ conll = load_dataset("conllpp")
 label_list = conll["train"].features[f"ner_tags"].feature.names
 
 
-tokenized_conll = conll.map(tokenize_and_align_labels, batched=True)
+tokenized_conll = conll.map(tokenize, batched=True)
 
 roberta = AutoModelForTokenClassification.from_pretrained("xlm-roberta-base", num_labels=len(label_list))
 roberta.to(device)
@@ -66,6 +67,7 @@ training_args = TrainingArguments(
     save_steps=2000,
     save_total_limit=1, # only save 1 checkpoint,
     report_to="wandb",
+    torch_compile=True
 )
 
 trainer = Trainer(

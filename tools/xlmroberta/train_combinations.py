@@ -2,7 +2,7 @@
 # saves the trained model to tools/xlmroberta/models/model_id
 
 # Uses the service https://wandb.ai for logging results
-# If you wish to disable the service uncomment lines that menion "wandb"
+# If you wish to disable the service uncomment lines that mention "wandb"
 
 # Takes following input arguments
 #  -l LEARNING_RATE (float)         default 2e-5
@@ -38,9 +38,8 @@ from datetime import timedelta
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from datasets import Dataset, load_metric, concatenate_datasets
-from transformers import (AutoTokenizer,
-                          AutoModelForTokenClassification, TrainingArguments, Trainer)
+from datasets import Dataset, concatenate_datasets
+from transformers import (AutoModelForTokenClassification, TrainingArguments, Trainer)
 import torch
 
 
@@ -48,18 +47,21 @@ import torch
 sys.path.insert(0, str(Path.cwd()))
 # import custom utilities (path: tools/xlmroberta/utils.py)
 from tools.xlmroberta.utils import (get_combination, get_model_id_with_full_trainingdata,
-                                    tokenizer, tokenize_and_align_labels, data_collator, 
-                                    labels_dict, conll_labels, conll_features)
+                                    tokenizer, generate_tokenize_function, data_collator, 
+                                    labels_dict, label_list, conll_features)
 from utils.registry import load_registry
+from utils.metrics import compute_metrics as seq_eval
 
 # Initialize hardware
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-wandb.init()
+
+print('Loading Model ...')
+
+roberta = AutoModelForTokenClassification.from_pretrained("xlm-roberta-base", num_labels=len(label_list))
+roberta.to(device)
 
 
 print('Loading metric...')
-
-metric = load_metric("seqeval")
 
 def compute_metrics(p):
     predictions, labels = p
@@ -73,7 +75,7 @@ def compute_metrics(p):
         [label_list[l] for (p, l) in zip(prediction, label) if l != -100]
         for prediction, label in zip(predictions, labels)
     ]
-    results = metric.compute(predictions=true_predictions, references=true_labels)
+    results = seq_eval(predictions=true_predictions, references=true_labels)
     return {
         "precision": results["overall_precision"],
         "recall": results["overall_recall"],
@@ -96,6 +98,8 @@ languages, corpora = get_combination(model_id)
 
 print('Model ID:', model_id)
 print('Combination:', languages, corpora)
+
+wandb.init()
 
 wandb.log({'model_id': model_id, 'languages': languages, 'corpora': corpora})
 
@@ -137,18 +141,18 @@ validation_data = concatenate_datasets(datasets['validation'])
 
 # Tokenize / Convert to XLM-Roberta tokens
 
-label_list = training_data.features[f"labels"].feature.names
+print('Tokenizing ...')
 
-tokenized_train = training_data.map(tokenize_and_align_labels, batched=True)
-tokenized_test = test_data.map(tokenize_and_align_labels, batched=True)
-tokenized_validation = validation_data.map(tokenize_and_align_labels, batched=True)
+tokenize = generate_tokenize_function("xlm-roberta-base", labels_dict)
 
-roberta = AutoModelForTokenClassification.from_pretrained("xlm-roberta-base", num_labels=len(label_list))
-roberta.to(device)
+tokenized_train = training_data.map(tokenize, batched=True)
+tokenized_test = test_data.map(tokenize, batched=True)
+tokenized_validation = validation_data.map(tokenize, batched=True)
+
 
 model_path = model_dir / str(model_id)
 if not model_path.exists():
-    model_path.mkdir()
+    model_path.mkdir(parents=True)
 
 training_args = TrainingArguments(
     output_dir=model_path,
@@ -160,7 +164,8 @@ training_args = TrainingArguments(
     weight_decay=0.01,
     save_steps=2000,
     save_total_limit=1, # only save 1 checkpoint,
-    report_to="wandb"
+    report_to="wandb",
+    torch_compile=True
 )
 
 trainer = Trainer(
