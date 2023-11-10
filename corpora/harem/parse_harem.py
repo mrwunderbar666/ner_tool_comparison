@@ -31,7 +31,7 @@ def parse_paragraph(p: Tag, paragraph_id=1) -> typing.List[dict]:
             tokens += [new_token(t, paragraph_id=paragraph_id) for t in toks]
         elif child.name == 'ALT':
             """
-                The corpus offers alternative annotations for compund NE. 
+                The corpus offers alternative annotations for compound NE. 
                 For example: "Martin Luther's 95 Theses" is annotated several times. 
                 Once as a complete compound, and once as two separate entities (Martin Luther and the "95 Theses")
 
