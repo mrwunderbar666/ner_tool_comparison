@@ -28,12 +28,12 @@ if __name__ == '__main__':
     for txt in tmp.glob('*.txt'):
         df = parse_conll(txt, columns=['token', 'ner_tag'])
         df['doc_id'] = txt.name.replace('.txt', '')
-        # map Misc tags to generic misc tag
         docs.append(df)
 
     df = pd.concat(docs, ignore_index=True).reset_index(drop=True)
 
     df['sentence_id'] = df['doc_id'] + '_' + df['sentence_id'].astype(str).str.zfill(4)
+    # map Misc tags to generic misc tag
     df['CoNLL_IOB2'] = df.ner_tag.str.replace(r'([IB]-)MIS.*', r'\1MISC', regex=True)
 
     # fix some wrong labels
