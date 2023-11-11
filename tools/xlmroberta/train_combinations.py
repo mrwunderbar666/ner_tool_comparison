@@ -25,9 +25,11 @@ parser.add_argument('-b', '--batch_size', type=int, default=8,
                      help='batch size', dest='batch_size')
 parser.add_argument('-m', '--model_combination', type=int, required=False,
                      help='which language combination to use', dest='model_combination')
-
+parser.add_argument('--debug', action="store_true", help="Debug flag. Only use a small random sample.")
 args = parser.parse_args()
 
+if args.debug:
+    print('Running in debug mode!')
 
 import wandb
 
@@ -122,10 +124,12 @@ for _, row in df_corpora.iterrows():
     if row['split'] not in datasets.keys():
         continue
     df = pd.read_feather(row['path'])
-    df = df.loc[~df.token.isna(), ]
+    df = df.loc[~df.token.isna(), :]
     df['CoNLL_IOB2'] = df['CoNLL_IOB2'].replace(labels_dict)
     df = df.groupby(['language', 'sentence_id'])[['token', 'CoNLL_IOB2']].agg(list)
     df = df.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})
+    if args.debug:
+        df = df.sample(min(len(df), 200))
     df = df.reset_index(drop=True)
     datasets[row['split']].append(Dataset.from_pandas(df, features=conll_features))
 
@@ -155,7 +159,7 @@ if not model_path.exists():
     model_path.mkdir(parents=True)
 
 training_args = TrainingArguments(
-    output_dir=model_path,
+    output_dir=str(model_path),
     evaluation_strategy="epoch",
     learning_rate=learning_rate,
     per_device_train_batch_size=batch_size,
@@ -164,7 +168,7 @@ training_args = TrainingArguments(
     weight_decay=0.01,
     save_steps=2000,
     save_total_limit=1, # only save 1 checkpoint,
-    report_to="wandb",
+    report_to=["wandb"],
     torch_compile=True
 )
 
@@ -191,9 +195,9 @@ results = trainer.evaluate()
 end_validation = timer()
 validation_time = timedelta(seconds=end_validation-start_validation)
 
-trainer.save_model(model_path)
+trainer.save_model(str(model_path))
 
-model_details = {'model_id': model_id, 
+model_details = {'model_id': int(model_id), 
                 'model_path': str(model_path), 
                 'batch_size': batch_size,
                 'epochs': epochs,
@@ -207,4 +211,4 @@ model_details = {'model_id': model_id,
 
 print(model_details)
 with open(model_path / 'model_infos.json', 'w') as f:
-    json.dump(model_details, f)
+    json.dump(model_details, f, default=str)
