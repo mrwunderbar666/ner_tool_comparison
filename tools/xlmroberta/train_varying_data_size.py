@@ -35,6 +35,8 @@ parser.add_argument('-t', '--training_size', type=float, default=0.1,
                         'If larger than 1.0 uses the absolute number.'), 
                         dest='training_size')
 
+parser.add_argument('--debug', action="store_true", help="Debug flag. Only use a small random sample.")
+
 args = parser.parse_args()
 
 
@@ -70,7 +72,7 @@ if args.training_size > 1.0:
 else:
     training_size = args.training_size
 
-languages = ['en', 'de', 'es', 'nl', 'fr', 'zh', 'ar', 'cs']
+languages = ['en', 'de', 'es', 'nl', 'fr', 'zh', 'ar', 'cs', 'pt', 'ca', 'hu', 'it', 'fi']
 
 print('Training Size:', training_size)
 
@@ -99,7 +101,7 @@ for _, row in df_corpora.iterrows():
         continue
     print('Preparing dataset:', row['path'])
     df = pd.read_feather(row['path'])
-    df = df.loc[~df.token.isna(), ]
+    df = df.loc[~df.token.isna(), :]
     df['CoNLL_IOB2'] = df['CoNLL_IOB2'].replace(labels_dict)
     df = df.groupby(['language', 'sentence_id'])[['token', 'CoNLL_IOB2']].agg(list)
     if row['split'] == 'train':
@@ -115,11 +117,11 @@ training_data = concatenate_datasets(datasets['train'])
 test_data = concatenate_datasets(datasets['test'])
 validation_data = concatenate_datasets(datasets['validation'])
 
-# dry run
-# training_data = training_data.shuffle()
-# training_data = training_data.select(list(range(1000)))
-# test_data = test_data.shuffle()
-# test_data = test_data.select(list(range(100)))
+if args.debug:
+    training_data = training_data.shuffle()
+    training_data = training_data.select(list(range(1000)))
+    test_data = test_data.shuffle()
+    test_data = test_data.select(list(range(100)))
 
 # Tokenize / Convert to XLM-Roberta tokens
 
@@ -137,7 +139,7 @@ if not model_path.exists():
     model_path.mkdir()
 
 training_args = TrainingArguments(
-    output_dir=model_path,
+    output_dir=str(model_path),
     evaluation_strategy="epoch",
     learning_rate=learning_rate,
     per_device_train_batch_size=batch_size,
@@ -146,7 +148,7 @@ training_args = TrainingArguments(
     weight_decay=0.01,
     save_steps=2000,
     save_total_limit=1, # only save 1 checkpoint,
-    report_to="wandb",
+    report_to=["wandb"],
     torch_compile=True
 )
 
@@ -173,7 +175,7 @@ results = trainer.evaluate()
 end_validation = timer()
 validation_time = timedelta(seconds=end_validation-start_validation)
 
-trainer.save_model(model_path)
+trainer.save_model(str(model_path))
 
 model_details = {'model_id': model_id, 
                 'model_path': str(model_path), 
@@ -189,4 +191,4 @@ model_details = {'model_id': model_id,
 
 print(model_details)
 with open(model_path / 'model_infos.json', 'w') as f:
-    json.dump(model_details, f)
+    json.dump(model_details, f, default=str)
