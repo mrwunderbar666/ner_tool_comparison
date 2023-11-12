@@ -49,10 +49,10 @@ import torch
 sys.path.insert(0, str(Path.cwd()))
 # import custom utilities (path: tools/xlmroberta/utils.py)
 from tools.xlmroberta.utils import (get_combination, get_model_id_with_full_trainingdata,
+                                    compute_metrics,
                                     tokenizer, generate_tokenize_function, data_collator, 
                                     labels_dict, label_list, conll_features)
 from utils.registry import load_registry
-from utils.metrics import compute_metrics as seq_eval
 
 # Initialize hardware
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -61,32 +61,6 @@ print('Loading Model ...')
 
 roberta = AutoModelForTokenClassification.from_pretrained("xlm-roberta-base", num_labels=len(label_list))
 roberta.to(device)
-
-
-print('Loading metric...')
-
-def compute_metrics(p):
-    predictions, labels = p
-    predictions = np.argmax(predictions, axis=2)
-    # Remove ignored index (special tokens)
-    true_predictions = [
-        [label_list[p] for (p, l) in zip(prediction, label) if l != -100]
-        for prediction, label in zip(predictions, labels)
-    ]
-    true_labels = [
-        [label_list[l] for (p, l) in zip(prediction, label) if l != -100]
-        for prediction, label in zip(predictions, labels)
-    ]
-    results = seq_eval(predictions=true_predictions, references=true_labels)
-    return {
-        "precision": results["overall_precision"],
-        "recall": results["overall_recall"],
-        "f1": results["overall_f1"],
-        "accuracy": results["overall_accuracy"],
-        'raw_results': results
-    }
-
-
 
 learning_rate = args.learning_rate
 epochs = args.epochs
@@ -194,6 +168,8 @@ start_validation = timer()
 results = trainer.evaluate()
 end_validation = timer()
 validation_time = timedelta(seconds=end_validation-start_validation)
+
+print('saving model to', model_path)
 
 trainer.save_model(str(model_path))
 

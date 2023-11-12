@@ -138,12 +138,11 @@ def generate_combinations() -> pd.DataFrame:
 
     language_combinations = [
         # every language individually
-        ['en'], ['de'], ['es'], ['nl'], ['fr'], ['zh'], ['ar'], ['cs'], 
-        ['pt'], ['it'], ['hu'], ['ca'],
+        ['ar'], ['ca'], ['cs'], ['de'], ['en'], ['es'], ['fi'], ['fr'], ['hu'], ['it'], ['nl'], ['pt'], ['zh'],
         # all languages together
-        ['en', 'de', 'es', 'nl', 'fr', 'zh', 'ar', 'cs', 'pt', 'it', 'hu', 'ca'], 
+        ['ar', 'ca', 'cs', 'de', 'en', 'es', 'fi', 'fr', 'hu', 'it', 'nl', 'pt', 'zh'], 
         # only using latin scripts
-        ['en', 'de', 'es', 'nl', 'fr', 'cs', 'pt', 'hu', 'it', 'ca'] 
+        ['ca', 'cs', 'de', 'en', 'es', 'fi', 'fr', 'hu', 'it', 'nl', 'pt'] 
     ]
 
     registry = load_registry()

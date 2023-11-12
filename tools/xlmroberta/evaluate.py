@@ -14,8 +14,8 @@ from datasets import Dataset
 # Set Pathing
 sys.path.insert(0, str(Path.cwd()))
 # import custom utilities (path: tools/xlmroberta/utils.py)
-from tools.xlmroberta.utils import (get_combination, tokenizer, generate_tokenize_function, data_collator, 
-                                    labels_dict, conll_labels, conll_features, compute_metrics, get_model_id_with_full_trainingdata)
+from tools.xlmroberta.utils import (tokenizer, generate_tokenize_function, data_collator, 
+                                    labels_dict, conll_features, compute_metrics, get_model_id_with_full_trainingdata)
 from utils.registry import load_registry
 
 
@@ -27,7 +27,7 @@ tokenize = generate_tokenize_function("xlm-roberta-base", labels_dict)
 
 registry = load_registry()
 
-languages = ['en', 'de', 'es', 'nl', 'fr', 'zh', 'ar', 'cs', 'it', 'hu']
+languages = ['ar', 'ca', 'cs', 'de', 'en', 'es', 'fi', 'fr', 'hu', 'it', 'nl', 'pt', 'zh']
 
 df_corpora = registry.loc[(registry.split == 'validation') & (registry.language.isin(languages))]
 
@@ -45,7 +45,7 @@ for _, row in df_corpora.iterrows():
 
     df['CoNLL_IOB2'] = df['CoNLL_IOB2'].replace(labels_dict)
     df = df.groupby(['sentence_id'])[['token', 'CoNLL_IOB2']].agg(list)
-    df = df.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})
+    df = df.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'}).reset_index(drop=True)
     ds = Dataset.from_pandas(df, features=conll_features)
     ds = ds.map(tokenize, batched=True)
     validation_sets[row['path']] = {'dataset': ds, 
@@ -64,10 +64,7 @@ model_path = p / 'tools' / 'xlmroberta' / 'models' / str(model_id)
 model_infos = model_path / 'model_infos.json'
 results_destination = p / 'results' / 'xlmroberta.csv'
 
-if not model_infos.exists():
-    print('MODEL INFO DOES NOT EXIST', model_infos)
-    sys.exit(1)
-
+assert model_infos.exists(), f'MODEL INFO DOES NOT EXIST: {model_infos}'
 
 with open(model_infos) as f:
     infos = json.load(f)
@@ -90,6 +87,7 @@ trainer = Trainer(
 end_results = []
 
 for v_path, v in validation_sets.items():
+    print('evaluating', v_path)
     trainer.eval_dataset = v['dataset']
     start_validation = timer()
     results = trainer.evaluate()
