@@ -110,7 +110,7 @@ language_codes <- c("ar" = "Arabic",
                     "de" = "German",
                     "hu" = "Hungarian",
                     "it" = "Italian",
-                    "fi" = "Finish",
+                    "fi" = "Finnish",
                     "ca" = "Catalan",
                     "pt" = "Portuguese"
                   )
