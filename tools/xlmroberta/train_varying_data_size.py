@@ -23,13 +23,13 @@ import argparse
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('-l', '--learning_rate', type=float, default=2e-05,
+parser.add_argument('--learning_rate', type=float, default=2e-05,
                      help='learning rate', dest='learning_rate')
-parser.add_argument('-e', '--epochs', type=int, default=3,
+parser.add_argument('--epochs', type=int, default=3,
                      help='epochs', dest='epochs')
-parser.add_argument('-b', '--batch_size', type=int, default=8,
+parser.add_argument('--batch_size', type=int, default=8,
                      help='batch size', dest='batch_size')
-parser.add_argument('-t', '--training_size', type=float, default=0.1,
+parser.add_argument('--training_size', type=float, default=0.1,
                      help=('Amount of training data to use.'
                         'If smaller than 1.0 uses a percentage of the training data.' 
                         'If larger than 1.0 uses the absolute number.'), 
@@ -106,7 +106,7 @@ for _, row in df_corpora.iterrows():
     df = df.groupby(['language', 'sentence_id'])[['token', 'CoNLL_IOB2']].agg(list)
     if row['split'] == 'train':
         if isinstance(training_size, int):
-            df = df.sample(training_size)
+            df = df.sample(min(training_size, len(df)))
         else:
             df = df.sample(frac=training_size)
     df = df.rename(columns={'token': 'text', 'CoNLL_IOB2': 'labels'})
