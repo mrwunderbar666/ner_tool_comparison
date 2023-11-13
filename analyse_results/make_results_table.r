@@ -3,6 +3,8 @@ library(tidyverse)
 library(RColorBrewer)
 library(showtext)
 library(patchwork)
+library(viridis)
+
 showtext_auto()
 font_add_google("Source Sans Pro", "source")
 
@@ -76,13 +78,25 @@ results[filt, 'tool'] <- paste(results[filt, 'tool'], results[filt, 'model_kind'
 pretty_corpora <- c("conll" = "CoNLL", 
                     "ontonotes" = "OntoNotes", 
                     "germeval2014" = "GermEval", 
+                    "hipe" = "HIPE",
                     "cnec2.0" = "CNEC 2.0", 
                     "europeana" = "Europeana", 
                     "emerging" =  "Emerging Entities", 
-                    "wikiann" = "WikiANN")
+                    "wikiann" = "WikiANN",
+                    "nerkor" = "NYTK-NerKor",
+                    "kind" = "KIND",
+                    "ancora" = "AnCora",
+                    "aqmar" = "AQMAR",
+                    "harem" = "HAREM",
+                    "sonar" = "SoNaR",
+                    "finer" = "FiNER")
 
 results$corpus <- str_replace_all(results$corpus, pretty_corpora)
-results$corpus <- factor(results$corpus, levels = c("CoNLL", "OntoNotes",  "GermEval",  "CNEC 2.0",  "Europeana",  "Emerging Entities", "WikiANN"))
+results$corpus <- factor(results$corpus, 
+  levels = c("CoNLL", "AnCora", "HAREM", "AQMAR", 
+             "OntoNotes", "SoNaR", "CNEC 2.0", 
+             "GermEval", "Europeana", "Emerging Entities", 
+             "WikiANN", "HIPE", "FiNER", "KIND", "NYTK-NerKor"))
 
 # Make Languages Pretty
 
@@ -93,10 +107,13 @@ language_codes <- c("ar" = "Arabic",
                     "nl" = "Dutch",
                     "en" = "English",
                     "fr" = "French",
-                    "de" = "German", 
+                    "de" = "German",
                     "hu" = "Hungarian",
-                    "it" = "Italian"
-)
+                    "it" = "Italian",
+                    "fi" = "Finish",
+                    "ca" = "Catalan",
+                    "pt" = "Portuguese"
+                  )
 
 
 results$language <- str_replace_all(results$language, language_codes)
@@ -119,7 +136,17 @@ tools_pretty <-   c("xlmroberta" = "XLM-RoBERTa",
 
 results$tool <- str_replace_all(results$tool, tools_pretty)
 
+tasks_pretty <- c("PER" = "Persons",
+                  "ORG" = "Organizations",
+                  "LOC" = "Locations",
+                  "MISC" = "Misc",
+                  "overall" = "Overall")
 
+results$Task <- str_replace_all(results$task, tasks_pretty)
+
+results$Task <- factor(results$Task, 
+  levels = c("Persons", "Organizations", "Locations",
+  "Misc", "Overall", "O"))
 
 # Plots for Precision / Recall / F1 ---------------------------------------
 
@@ -136,19 +163,22 @@ results_average <- results %>% filter(task == 'PER') %>%
 results_average$prec_rec <- paste(round(results_average$precision * 100, 0), '/', round(results_average$recall * 100, 0))
 results_average$f1 <- results_average$f1 * 100
 
+blue <- rgb(0.23001121,	0.34597357,	0.60240251)
+
 per <- ggplot(results_average, aes(language, tool)) +
   geom_tile(aes(fill = f1)) +
   geom_text(aes(label = prec_rec)) +
-  scale_fill_gradient(low = "white", high = "#0063A6", name = expression(F[1]), limits = c(0,100)) +
+  scale_fill_gradient(low = "white", high = blue, name = expression(F[1]), limits = c(0,100)) +
   theme_minimal(base_family = "source", base_size = 18) +
   ggtitle("NER Task: Persons") +
   xlab("") +
   ylab("") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+  legend.position = "top")
 
 per
 
-ggsave('plots/results_persons.pdf', per, width = 12, height = 6, units = 'cm', scale = 2)
+ggsave('plots/results_persons.pdf', per, width = 14, height = 7, units = 'cm', scale = 2)
 ggsave('plots/results_persons.png', per, width = 12, height = 9, units = 'cm', scale = 1, dpi=320)
 
 # Plot: Organizations
@@ -166,16 +196,17 @@ results_average$f1 <- results_average$f1 * 100
 org <- ggplot(results_average, aes(language, tool)) +
   geom_tile(aes(fill = f1)) +
   geom_text(aes(label = prec_rec)) +
-  scale_fill_gradient(low = "white", high = "#0063A6", name = expression(F[1]), limits = c(0,100)) +
+  scale_fill_gradient(low = "white", high = blue, name = expression(F[1]), limits = c(0,100)) +
   theme_minimal(base_family = "source", base_size = 18) +
   ggtitle("NER Task: Organizations") +
   xlab("") +
   ylab("") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+  legend.position = "top")
 
 org
 
-ggsave('plots/results_organizations.pdf', org, width = 12, height = 6, units = 'cm', scale = 2)
+ggsave('plots/results_organizations.pdf', org, width = 14, height = 7, units = 'cm', scale = 2)
 ggsave('plots/results_organizations.png', org, width = 12, height = 6, units = 'cm', scale = 1, dpi=320)
 
 # Plot: Locations
@@ -193,24 +224,48 @@ results_average$f1 <- results_average$f1 * 100
 loc <- ggplot(results_average, aes(language, tool)) +
   geom_tile(aes(fill = f1)) +
   geom_text(aes(label = prec_rec)) +
-  scale_fill_gradient(low = "white", high = "#0063A6", name = expression(F[1]), limits = c(0,100)) +
+  scale_fill_gradient(low = "white", high = blue, name = expression(F[1]), limits = c(0,100)) +
   theme_minimal(base_family = "source", base_size = 18) +
   ggtitle("NER Task: Locations") +
   xlab("") +
   ylab("") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+  legend.position = "top")
 
 loc
 
-ggsave('plots/results_locations.pdf', loc, width = 12, height = 6, units = 'cm', scale = 2)
+ggsave('plots/results_locations.pdf', loc, width = 14, height = 7, units = 'cm', scale = 2)
 ggsave('plots/results_locations.png', loc, width = 12, height = 6, units = 'cm', scale = 1, dpi=320)
 
 
 # assemble into one figure
 
-p <- per / org / loc + plot_annotation(title = "Average precision / recall across all corpora", theme = theme_minimal(base_family = "source", base_size = 18))
+results_average <- results %>% 
+  filter(language %in% langs) %>% 
+  complete(Task, tool, language) %>% 
+  mutate(across(c(precision:f1), ~ifelse(is.na(.x), 0, .x))) %>% 
+  group_by(Task, tool, language) %>% 
+  summarise(across(c(precision:f1), ~mean(.x, na.rm = T)))
 
-ggsave('plots/results_languages.pdf', p, width = 12, height = 18, units = 'cm', scale = 2.3)
+
+results_average$prec_rec <- paste(round(results_average$precision * 100, 0), '/', round(results_average$recall * 100, 0))
+results_average$f1 <- results_average$f1 * 100
+
+p <- results_average |> 
+  filter(Task %in% c("Persons", "Organizations", "Locations")) |> 
+  ggplot(aes(language, tool)) +
+    geom_tile(aes(fill = f1)) +
+    geom_text(aes(label = prec_rec)) +
+    scale_fill_gradient(low = "white", high = blue, name = expression(F[1]), limits = c(0,100)) +
+    theme_minimal(base_family = "source", base_size = 18) +
+    xlab("") +
+    ylab("") +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+      legend.position = "top",
+      legend.justification = "right") +
+    facet_wrap(~Task, ncol = 1)
+
+ggsave('plots/results_languages.pdf', p, width = 14, height = 20, units = 'cm', scale = 2.3)
 ggsave('plots/results_languages.png', p, width = 12, height = 18, units = 'cm', scale = 1, dpi=320)
 
 
@@ -230,12 +285,13 @@ results_average$f1 <- results_average$f1 * 100
 per <- ggplot(results_average, aes(corpus, tool)) +
   geom_tile(aes(fill = f1)) +
   geom_text(aes(label = prec_rec)) +
-  scale_fill_gradient(low = "white", high = "#0063A6", name = expression(F[1]), limits = c(0,100)) +
+  scale_fill_gradient(low = "white", high = blue, name = expression(F[1]), limits = c(0,100)) +
   theme_minimal(base_family = "source", base_size = 18) +
   ggtitle("NER Task: Persons") +
   xlab("") +
   ylab("") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+  legend.position = "top")
 
 per
 
@@ -253,12 +309,13 @@ results_average$f1 <- results_average$f1 * 100
 org <- ggplot(results_average, aes(corpus, tool)) +
   geom_tile(aes(fill = f1)) +
   geom_text(aes(label = prec_rec)) +
-  scale_fill_gradient(low = "white", high = "#0063A6", name = expression(F[1]), limits = c(0,100)) +
+  scale_fill_gradient(low = "white", high = blue, name = expression(F[1]), limits = c(0,100)) +
   theme_minimal(base_family = "source", base_size = 18) +
   ggtitle("NER Task: Organizations") +
   xlab("") +
   ylab("") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+  legend.position = "top")
 
 org
 
@@ -276,22 +333,42 @@ results_average$f1 <- results_average$f1 * 100
 loc <- ggplot(results_average, aes(corpus, tool)) +
   geom_tile(aes(fill = f1)) +
   geom_text(aes(label = prec_rec)) +
-  scale_fill_gradient(low = "white", high = "#0063A6", name = expression(F[1]), limits = c(0,100)) +
+  scale_fill_gradient(low = "white", high = blue, name = expression(F[1]), limits = c(0,100)) +
   theme_minimal(base_family = "source", base_size = 18) +
   ggtitle("NER Task: Locations") +
   xlab("") +
   ylab("") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+  legend.position = "top")
 
 loc
 
 
 # assemble into one figure
 
-p <- per / org / loc + 
-  plot_annotation(title = "Average precision / recall across all languages", 
-                  theme = theme_minimal(base_family = "source", base_size = 18))
+results_average <- results %>% 
+  complete(Task, tool, corpus) %>% 
+  mutate(across(c(precision:f1), ~ifelse(is.na(.x), 0, .x))) %>% 
+  group_by(Task, tool, corpus) %>% 
+  summarise(across(c(precision:f1), ~mean(.x, na.rm = T)))
 
 
-ggsave('plots/results_corpora.pdf', p, width = 12, height = 18, units = 'cm', scale = 2.3)
+results_average$prec_rec <- paste(round(results_average$precision * 100, 0), '/', round(results_average$recall * 100, 0))
+results_average$f1 <- results_average$f1 * 100
+
+p <- results_average |> 
+  filter(Task %in% c("Persons", "Organizations", "Locations")) |> 
+  ggplot(aes(corpus, tool)) +
+    geom_tile(aes(fill = f1)) +
+    geom_text(aes(label = prec_rec)) +
+    scale_fill_gradient(low = "white", high = blue, name = expression(F[1]), limits = c(0,100)) +
+    theme_minimal(base_family = "source", base_size = 18) +
+    xlab("") +
+    ylab("") +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+      legend.position = "top",
+      legend.justification = "right") +
+    facet_wrap(~Task, ncol = 1)
+
+ggsave('plots/results_corpora.pdf', p, width = 15, height = 20, units = 'cm', scale = 2.3)
 ggsave('plots/results_corpora.png', p, width = 12, height = 18, units = 'cm', scale = 1, dpi=320)
