@@ -86,16 +86,16 @@ for language in languages:
                 
                 # create female subcorpus
                 filt = corpus.entity_id.isin(female_entities)
-                filt2 = corpus[filt].sentence_id
-                female_corpus = corpus[filt].reset_index(drop=True)
+                filt2 = corpus.sentence_id.isin(corpus[filt].sentence_id.to_list())
+                female_corpus = corpus[filt2].reset_index(drop=True)
                 female_corpus['subset'] = 'validation_female'
                 print('Saving female only validation split ...')
                 female_corpus.to_feather(corpus_meta['path'] + '.female', compression="uncompressed")
 
                 # create male subcorpus
                 filt = corpus.entity_id.isin(male_entities)
-                filt2 = corpus[filt].sentence_id
-                male_corpus = corpus[filt].reset_index(drop=True)
+                filt2 = corpus.sentence_id.isin(corpus[filt].sentence_id.to_list())
+                male_corpus = corpus[filt2].reset_index(drop=True)
                 male_corpus['subset'] = 'validation_male'
                 print('Saving male only validation split ...')
                 male_corpus.to_feather(corpus_meta['path'] + '.male', compression="uncompressed")
