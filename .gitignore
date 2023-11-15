@@ -137,6 +137,8 @@ utils/conll2003.py
 
 # datasets
 *.feather
+*.female
+*.male
 
 corpora/*.csv
 corpora/conll/*.txt
