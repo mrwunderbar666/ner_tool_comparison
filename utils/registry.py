@@ -43,3 +43,16 @@ def load_registry() -> pd.DataFrame:
     df = pd.read_csv(r)
     df = df.drop_duplicates()
     return df
+
+def male_female_registry(registry: pd.DataFrame) -> pd.DataFrame:
+    """ 
+    Take the registry and change the pathing so that it lists 
+        the female / male only subsets
+    """
+    female_corpora = registry.copy()
+    male_corpora = registry.copy()
+    female_corpora.path = female_corpora.path + '.female'
+    female_corpora.split = female_corpora.split + '_female'
+    male_corpora.path = male_corpora.path + '.male'
+    male_corpora.split = male_corpora.split + '_male'
+    return pd.concat([female_corpora, male_corpora], ignore_index=True).reset_index(drop=True)

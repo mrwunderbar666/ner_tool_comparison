@@ -10,21 +10,33 @@ import nltk
 
 sys.path.insert(0, str(Path.cwd()))
 from utils.mappings import nltk2conll
-from utils.registry import load_registry
+from utils.registry import load_registry, male_female_registry
 from utils.metrics import compute_metrics
 
 
 argparser = ArgumentParser(prog='Run NLTK English Evaluation')
 argparser.add_argument('--debug', action='store_true', help='Debug flag (only test a random sample)')
+argparser.add_argument('--gender', action='store_true', help="If enabled, only test the gender specific subsets")
 args = argparser.parse_args()
 
 language = 'en'
 p = Path.cwd() / 'tools' / 'nltk'
-results_path = Path.cwd() / 'results' / f'nltk_{language}.csv'
+results_dir = Path.cwd() / 'results'
+
+if args.gender:
+    results_dir = Path.cwd() / 'results' / 'gender'
+
+if not results_dir.exists():
+    results_dir.mkdir(parents=True)
+
+results_path = results_dir / f'nltk_{language}.csv'
 
 registry = load_registry()
 
 corpora = registry.loc[(registry.language == language) & (registry.split == 'validation')]
+
+if args.gender:
+    corpora = male_female_registry(corpora)
 
 evaluations = []
 
@@ -101,6 +113,7 @@ for _, row in corpora.iterrows():
     r['language'] = language
     r['corpus'] = row['corpus']
     r['subset'] = row['subset']
+    r['split'] = row['split']
     r['validation_duration'] = validation_time.total_seconds()
     r['tokens'] = row['tokens']
     r['sentences'] = row['sentences']
@@ -108,6 +121,9 @@ for _, row in corpora.iterrows():
     evaluations.append(r)
 
 results_df = pd.concat(evaluations)
+if args.gender:
+    results_df = results_df[results_df.task == 'PER'].reset_index(drop=True)
+
 results_df.to_csv(results_path, index=False)
 
 print('Done!')
