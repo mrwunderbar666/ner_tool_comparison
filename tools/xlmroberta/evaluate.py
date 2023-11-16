@@ -21,6 +21,7 @@ from utils.registry import load_registry
 
 argparser = ArgumentParser(prog='Run XLM-RoBERTa Evaluation')
 argparser.add_argument('--debug', action='store_true', help='Debug flag (only test a random sample)')
+argparser.add_argument('--model_id', type=str, default=None)
 args = argparser.parse_args()
 
 tokenize = generate_tokenize_function("xlm-roberta-base", labels_dict)
@@ -58,7 +59,10 @@ for _, row in df_corpora.iterrows():
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 p = Path.cwd()
-model_id = get_model_id_with_full_trainingdata() # use the model with full training set
+if args.model_id:
+    model_id = args.model_id
+else:
+    model_id = get_model_id_with_full_trainingdata() # use the model with full training set
 
 model_path = p / 'tools' / 'xlmroberta' / 'models' / str(model_id) 
 model_infos = model_path / 'model_infos.json'
