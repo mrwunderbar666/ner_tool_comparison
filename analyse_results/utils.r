@@ -15,23 +15,34 @@ corpus_release_year <- c("conll" = "2002",
                         "nerkor" = "2021",
                         "harem" = "2008")
 
-pretty_corpora <- c("conll" = "CoNLL", 
-                    "ontonotes" = "OntoNotes 5.0", 
-                    "germeval2014" = "GermEval", 
-                    "cnec2.0" = "CNEC 2.0", 
-                    "europeana" = "Europeana", 
-                    "emerging" =  "Emerging Entities", 
-                    "wikiann" = "WikiANN",
-                    "kind" = "KIND",
+pretty_corpora <- c(
                     "ancora" = "AnCora",
-                    "hipe" = "CLEF-HIPE",
-                    "sonar" = "SoNaR-1",
                     "aqmar" = "AQMAR",
+                    "cnec2.0" = "CNEC 2.0", 
+                    "conll" = "CoNLL", 
+                    "emerging" = "Emerging Entities", 
+                    "europeana" = "Europeana", 
                     "finer" = "FiNER",
+                    "germeval2014" = "GermEval", 
+                    "harem" = "HAREM",
+                    "hipe" = "HIPE",
+                    "kind" = "KIND",
                     "nerkor" = "NYTK-NerKor",
-                    "harem" = "HAREM")
+                    "ontonotes" = "OntoNotes", 
+                    "wikiann" = "WikiANN",
+                    "sonar" = "SoNaR")
 
 
+tools_pretty <-   c("xlmroberta" = "XLM-RoBERTa",
+                    "spacy_trf" = "spaCy (transformers)",
+                    "spacy_lg" = "spaCy",
+                    "opennlp" = "OpenNLP",
+                    "nltk" = "NLTK",
+                    "nametagger" = "Nametagger",
+                    "jrc" = "JRC Names",
+                    "icews" = "ICEWS", 
+                    "frog" = "Frog",
+                    "corenlp" = "CoreNLP")
 
 language_codes <- c("ar" = "Arabic",
                     "ca" = "Catalan",
@@ -46,17 +57,6 @@ language_codes <- c("ar" = "Arabic",
                     "nl" = "Dutch",
                     "pt" = "Portuguese",
                     "zh" = "Chinese")
-
-
-tools_pretty <-   c("xlmroberta" = "XLM-RoBERTa",
-                    "spacy_trf" = "spaCy (transformers)",
-                    "spacy_lg" = "spaCy",
-                    "opennlp" = "OpenNLP",
-                    "nltk" = "NLTK",
-                    "nametagger" = "Nametagger",
-                    "jrc" = "JRC Names",
-                    "icews" = "ICEWS", 
-                    "corenlp" = "CoreNLP")
 
 
 tasks_pretty <- c("PER" = "Persons",

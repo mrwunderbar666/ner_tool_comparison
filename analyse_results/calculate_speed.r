@@ -72,8 +72,8 @@ results[results$tool %in% c('jrc', 'icews') & results$task == 'O', 'task'] <- 'o
 
 # Rename Values and Variables ---------------------------------------------
 source("analyse_results/utils.r")
-# Make Corpora Pretty
 
+# Make Corpora Pretty
 results$corpus <- str_replace_all(results$corpus, pretty_corpora)
 results$corpus <- factor(results$corpus, levels = c("CoNLL", "OntoNotes",  "GermEval",  "CNEC 2.0",  "Europeana",  "Emerging Entities", "WikiANN"))
 
@@ -83,7 +83,6 @@ results$language <- str_replace_all(results$language, language_codes)
 langs <- levels(as.factor(results$language))
 
 # Make Tools pretty
-
 results$tool <- str_replace_all(results$tool, tools_pretty)
 
 
