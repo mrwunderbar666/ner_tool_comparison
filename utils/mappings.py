@@ -210,9 +210,6 @@ corenlp2conll = {'B-ORGANIZATION': 'B-ORG', 'I-ORGANIZATION': 'I-ORG',
                     'B-URL': 'O', 'I-URL': 'O'
                     }
 
-# Frog (Dutch)
-# Uses SoNaR scheme (above)
-
 # Nametagger (Czech model)
 # uses annotation scheme of CNEC, but *in practice* cannot distinguish B-PER/I-PER, B-ORG/I-ORG, etc
 # give model the benefit of the doubt
