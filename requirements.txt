@@ -11,5 +11,4 @@ numpy
 scikit-learn
 psutil
 spacy==3.3.0
-python-frog
 seqeval
