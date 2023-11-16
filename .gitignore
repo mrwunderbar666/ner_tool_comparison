@@ -181,3 +181,7 @@ tmp_trainer
 # plots
 
 plots/
+
+.RData
+*.Rproj
+.vscode
