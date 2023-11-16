@@ -71,53 +71,18 @@ results[filt, 'tool'] <- paste(results[filt, 'tool'], results[filt, 'model_kind'
 results[results$tool %in% c('jrc', 'icews') & results$task == 'O', 'task'] <- 'overall'
 
 # Rename Values and Variables ---------------------------------------------
+source("analyse_results/utils.r")
+
 # Make Corpora Pretty
-
-
-pretty_corpora <- c("conll" = "CoNLL", 
-                    "ontonotes" = "OntoNotes", 
-                    "germeval2014" = "GermEval", 
-                    "cnec2.0" = "CNEC 2.0", 
-                    "europeana" = "Europeana", 
-                    "emerging" =  "Emerging Entities", 
-                    "wikiann" = "WikiANN")
-
 results$corpus <- str_replace_all(results$corpus, pretty_corpora)
 results$corpus <- factor(results$corpus, levels = c("CoNLL", "OntoNotes",  "GermEval",  "CNEC 2.0",  "Europeana",  "Emerging Entities", "WikiANN"))
 
 # Make Languages Pretty
-
-language_codes <- c("ar" = "Arabic",
-                    "es" = "Spanish",
-                    "cs" = "Czech",
-                    "zh" = "Chinese",
-                    "nl" = "Dutch",
-                    "en" = "English",
-                    "fr" = "French",
-                    "de" = "German", 
-                    "hu" = "Hungarian",
-                    "it" = "Italian"
-)
-
-
 results$language <- str_replace_all(results$language, language_codes)
 
 langs <- levels(as.factor(results$language))
 
 # Make Tools pretty
-
-tools_pretty <-   c("xlmroberta" = "XLM-RoBERTa",
-                    "spacy_trf" = "spaCy (transformers)",
-                    "spacy_lg" = "spaCy",
-                    "opennlp" = "OpenNLP",
-                    "nltk" = "NLTK",
-                    "nametagger" = "Nametagger",
-                    "jrc" = "JRC Names",
-                    "icews" = "ICEWS", 
-                    "frog" = "Frog",
-                    "corenlp" = "CoreNLP")
-
-
 results$tool <- str_replace_all(results$tool, tools_pretty)
 
 
