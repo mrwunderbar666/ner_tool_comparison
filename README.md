@@ -1,13 +1,31 @@
+# Notes for Reviewers
+
+This is the entire codebase for replicating the evaluations / benchmarks of the paper. The scripts for retrieving and building the datasets are also included. However, we attached all datasets as well. Therefore, **there is no need to run the various scripts in the `corpora` directory**.
+
+The tools are not packaged here, but the exact steps for downloading and installing them are below (section "Installation of Requirements").
+
+We included the XLM-RoBERTa model that was evaluated in the paper. In our case its ID is `32872`, you can find it under `tools/xlmroberta/models/32872`. You could re-run the entire hyperparameter optimization scripts as well as fine-tuning scripts. But please note that this would take a very long time.  
+
+Overview of Directories:
+
+
+- analyse_results: Helper Scripts for making plots and tables
+- corpora: All datasets / corpora are in here alongside mini documentations and citation information
+- plots: Plots as shown in the paper
+- results: Raw evaluation results in csv format
+- tools: All tools in this directory alongside documentation
+- utils: Collection of helpers that are shared in the codebase
+
+
 # Installation of Requirements
 
 Make sure to install all required packages (Python & R) before proceeding.
 
-1. Create a virtual environment
-    - python3 -m venv .venv
-    - source .venv/bin/activate
-2. Execute the script `install_prerequisites.sh`
+Everything is conveniently handled by the script `install_prerequisites.sh`
 
 ## Manual Installation
+
+**Every script should be run from the root directory:** For example, if you want to automatically get and install CoreNLP run the following `python tools/corenlp/get_corenlp.py`
 
 ### Install Python Dependencies
 
@@ -24,14 +42,19 @@ curl https://huggingface.co/datasets/conll2003/raw/main/conll2003.py -o utils/co
 Then, get spaCy models
 
 ```
-python -m spacy download zh_core_web_lg
-python -m spacy download zh_core_web_trf
-python -m spacy download nl_core_news_lg
-python -m spacy download en_core_web_lg
-python -m spacy download fr_core_news_lg
-python -m spacy download de_core_news_lg
-python -m spacy download es_core_news_lg
-python -m spacy download xx_ent_wiki_sm
+python3 -m spacy download zh_core_web_lg-3.3.0 --direct
+python3 -m spacy download zh_core_web_trf-3.3.0 --direct
+python3 -m spacy download nl_core_news_lg-3.3.0 --direct
+python3 -m spacy download en_core_web_lg-3.3.0 --direct
+python3 -m spacy download en_core_web_trf-3.3.0 --direct
+python3 -m spacy download fr_core_news_lg-3.3.0 --direct
+python3 -m spacy download de_core_news_lg-3.3.0 --direct
+python3 -m spacy download es_core_news_lg-3.3.0 --direct
+python3 -m spacy download xx_ent_wiki_sm-3.3.0 --direct
+python3 -m spacy download pt_core_news_lg-3.3.0 --direct
+python3 -m spacy download fi_core_news_lg-3.3.0 --direct
+python3 -m spacy download ca_core_news_lg-3.3.0 --direct
+python3 -m spacy download it_core_news_lg-3.3.0 --direct
 ```
 
 ### Install R Packages
@@ -52,14 +75,22 @@ python3 tools/opennlp/get_opennlp.py
 
 The datasets for evaluation are the following:
 
+- AnCora (Spanish &  Catalan)
+- AQMAR (Arabic)
+- CNEC 2.0 (Czech)
 - CoNLL 2002 (Dutch & Spanish)
 - CoNLL 2003 (English & German*)
 - Europeana (German, French, Dutch)
+- FiNER (Finnish)
 - GermEval2014 (German)
-- WNUT Emerging Entities (English)
+- HIPE (German, English, French)
+- KIND (Italian)
+- LÂMPADA - Second HAREM Resource Package
+- NYTK NerKor (Hungarian)
 - OntoNotes* (English, Chinese, Arabic)
+- SoNaR* (Dutch)
 - WikiANN* (many)
-- CNEC 2.0 (Czech)
+- WNUT Emerging Entities (English)
 
 Alomst every dataset can be downloaded automatically with the supplied scripts. The datasets marked with an asterisk (*) require user intervention. Please refer to the `readme.md` files in the corresponding sub-directories for instructions.
 
@@ -97,62 +128,6 @@ Each corpus is in tokenized long format (one row = one token) and contains the f
 ## Automatically Getting & Installing Tools
 
 **Every script should be run from the root directory:** For example, if you want to automatically get the CoreNLP  run the following `python tools/corenlp/get_corenlp.py`
-
-# Other Tools
-
-- https://sites.google.com/site/rmyeid/projects/polylgot-ner
-- Stanza
-- Flair
-- NERF (Polish): http://nkjp.pl/index.php?page=14&lang=1
-
-# More Corpora
-
-## English
-
-- [Ultra-Fine Entity Typing (ACL 2018)](https://www.cs.utexas.edu/~eunsol/html_pages/open_entity.html) (Open-ended entity recognition)
-- [Few-NERD](https://ningding97.github.io/fewnerd/)
-
-## French
-
-License for Quaero corpus prohibits to train a model with the data and to redistribute the resulting model. Hence corpus only for validation purposes.
-
-- [Quaero Broadcast News Extended Named Entity corpus Corpus](http://catalog.elra.info/en-us/repository/browse/ELRA-S0349/)
-- [Quaero Old Press Extended Named Entity corpus Corpus](http://catalog.elra.info/en-us/repository/browse/ELRA-W0073/)
-
-
-## Polish
-
-- [NJKP](http://nkjp.pl/index.php?page=14&lang=1): 1-million-word subcorpus. The manually annotated 1-million word subcorpus of the NJKP, available on CC-BY 4.0.
-
-## Russian
-
-- bsnlp-2019: http://bsnlp.cs.helsinki.fi/bsnlp-2019/shared_task.html (Russian, Czech, Polish, Bulgarian)
-- https://www.dialog-21.ru/evaluation/2016/ner/
-- NERUS: https://github.com/natasha/nerus
-
-## Hungarian
-
-- "Hungarian Named Entity Corpora": György Szarvas, Richárd Farkas, László Felföldi, András Kocsor, János Csirik: Highly accurate Named Entity corpus for Hungarian. International Conference on Language Resources and Evaluation 2006, Genova (Italy).
-    - Website: https://rgai.inf.u-szeged.hu/node/130 (download link broken)
-    - Paper: http://www.inf.u-szeged.hu/projectdirs/hlt/papers/lrec_ne-corpus.pdf
-
-## Japanese
-
-- Megagon Labs Tokyo NE Extension: https://github.com/megagonlabs/UD_Japanese-GSD
-
-## Italian
-
-- Italian Content Annotation Bank (I-CAB) https://ontotext.fbk.eu/icab.html
-    - Foundation for other tasks
-    - Requires licence agreement
-- EVALITA 2011: Named Entity Recognition on Transcribed Broadcast News (https://www.evalita.it/campaigns/evalita-2011/tasks/named-entities/)
-- EVALITA 2016: Named Entity rEcognition and Linking in Italian Tweets Task (http://neel-it.github.io/)
-    - Data shared in protected GDrive
-
-## Collections of more corpora (other domains)
-
-- https://github.com/juand-r/entity-recognition-datasets
-- https://github.com/davidsbatista/NER-datasets
 
 # Difficult Examples
 
