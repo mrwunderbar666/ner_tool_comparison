@@ -14,13 +14,13 @@ df$`precision` <- df$`results.eval_precision`
 df$`recall` <- df$`results.eval_recall`
 
 p <- df %>% ggplot(aes(x=`Training Samples`, y=`F1`)) +
-  geom_line(size=1) +
-  geom_point(size=3) +
-  # scale_x_continuous(minor_breaks=seq(500, 6500, 500), breaks = seq(0, 7000, 1000), limits = c(0, 49000)) +
-  scale_x_log10() +
+  geom_line(size=0.5) +
+  geom_point(size=2) +
+  scale_x_continuous(minor_breaks=seq(500, 30000, 500), breaks = seq(0, 30000, 5000), limits = c(0, 30000)) +
   scale_y_continuous(breaks = seq(0, 1, 0.2), limits = c(0, 1.0)) +
+  geom_vline(xintercept = 7672, linetype = 'dashed') +
   theme_minimal(base_family = "source", base_size = 18) +
-  ggtitle("XLM-RoBERTa multilingual training", subtitle = "logarithmic scaled x-axis.")
+  ggtitle("XLM-RoBERTa multilingual training")
 
 p
 

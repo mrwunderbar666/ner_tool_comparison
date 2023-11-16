@@ -89,7 +89,7 @@ if not model_dir.exists():
 
 registry = load_registry()
 df_corpora = registry.loc[registry.language.isin(languages)]
-
+df_corpora = df_corpora.loc[df_corpora.corpus != 'wikiann', :]
 datasets = {'train': [], 'test': [], 'validation': []}
 
 # Load and prepare data

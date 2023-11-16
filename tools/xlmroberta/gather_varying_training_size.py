@@ -6,7 +6,7 @@ p = Path.cwd()
 
 infos = []
 
-for j in p.glob('tools/xlmroberta/models_varying_b/*/model_infos.json'):
+for j in p.glob('tools/xlmroberta/models_varying/*/model_infos.json'):
     with open(j) as f:
         infos.append(json.load(f))
 
