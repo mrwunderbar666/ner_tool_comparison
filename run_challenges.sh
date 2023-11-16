@@ -5,11 +5,6 @@ echo "CoreNLP..."
 python3 tools/corenlp/challenges.py
 echo "------------------------------------------------------------"
 
-# frog
-echo "Frog..."
-python3 tools/frog/challenges.py
-echo "------------------------------------------------------------"
-
 # icews
 echo "ICEWS..."
 Rscript tools/icews/challenges.r
