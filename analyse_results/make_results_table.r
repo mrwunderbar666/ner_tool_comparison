@@ -75,7 +75,6 @@ results[filt, 'tool'] <- paste(results[filt, 'tool'], results[filt, 'model_kind'
 source("analyse_results/utils.r")
 
 # Make Corpora Pretty
-
 results$corpus <- str_replace_all(results$corpus, pretty_corpora)
 results$corpus <- factor(results$corpus, 
   levels = c("CoNLL", "AnCora", "HAREM", "AQMAR", 
