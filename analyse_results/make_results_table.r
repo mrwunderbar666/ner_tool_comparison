@@ -91,12 +91,6 @@ langs <- levels(as.factor(results$language))
 # Make Tools pretty
 results$tool <- str_replace_all(results$tool, tools_pretty)
 
-tasks_pretty <- c("PER" = "Persons",
-                  "ORG" = "Organizations",
-                  "LOC" = "Locations",
-                  "MISC" = "Misc",
-                  "overall" = "Overall")
-
 results$Task <- str_replace_all(results$task, tasks_pretty)
 
 results$Task <- factor(results$Task, 

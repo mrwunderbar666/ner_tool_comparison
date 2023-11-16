@@ -32,6 +32,16 @@ pretty_corpora <- c("conll" = "CoNLL",
                     "harem" = "HAREM")
 
 
+tools_pretty <-   c("xlmroberta" = "XLM-RoBERTa",
+                    "spacy_trf" = "spaCy (transformers)",
+                    "spacy_lg" = "spaCy",
+                    "opennlp" = "OpenNLP",
+                    "nltk" = "NLTK",
+                    "nametagger" = "Nametagger",
+                    "jrc" = "JRC Names",
+                    "icews" = "ICEWS", 
+                    "frog" = "Frog",
+                    "corenlp" = "CoreNLP")
 
 language_codes <- c("ar" = "Arabic",
                     "ca" = "Catalan",
@@ -47,3 +57,9 @@ language_codes <- c("ar" = "Arabic",
                     "pt" = "Portuguese",
                     "zh" = "Chinese")
 
+
+tasks_pretty <- c("PER" = "Persons",
+                  "ORG" = "Organizations",
+                  "LOC" = "Locations",
+                  "MISC" = "Misc",
+                  "overall" = "Overall")
