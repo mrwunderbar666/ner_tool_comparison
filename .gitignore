@@ -176,3 +176,5 @@ tools/xlmroberta/models*/
 
 tools/*/tmp/
 tmp_trainer
+
+.RData
