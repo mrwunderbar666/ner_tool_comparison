@@ -214,14 +214,20 @@ corenlp2conll = {'B-ORGANIZATION': 'B-ORG', 'I-ORGANIZATION': 'I-ORG',
 # Uses SoNaR scheme (above)
 
 # Nametagger (Czech model)
-# uses annotation scheme of CNEC, but *in practice* cannot distinguish B-PER/I-PER, B-ORG/I-ORG, etc
-# give model the benefit of the doubt
+# uses annotation scheme of CNEC
 
-nametagger2conll = {'[BI]-P': 'B-PER', '[BI]-p.*': 'B-PER', 
-                    '[BI]-i.*': 'B-ORG', 
-                    '[BI]-g.*': 'B-LOC', 
+nametagger2conll = {
+                    'B-P': 'B-PER',
+                    'I-P': 'I-PER', 
+                    'B-p.*': 'B-PER', 
+                    'I-p.*': 'I-PER', 
+                    'B-i.*': 'B-ORG', 
+                    'I-i.*': 'I-ORG', 
+                    'B-g.*': 'B-LOC', 
+                    'I-g.*': 'I-LOC', 
                     # everything that is not Person, institution, time, numbers, or addresses
-                    '[BI]-[^OPigTtna].*': 'B-MISC',
+                    'B-[^OPigTtna].*': 'B-MISC',
+                    'I-[^OPigTtna].*': 'I-MISC',
                     # drop numerical expressions
                     '[BI]-T': 'O', '[BI]-n.*': 'O', '[BI]-t.*': 'O', '[BI]-a.*': 'O'} 
 
