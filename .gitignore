@@ -179,3 +179,4 @@ tmp_trainer
 
 .RData
 *.Rproj
+.vscode
