@@ -47,3 +47,21 @@ language_codes <- c("ar" = "Arabic",
                     "pt" = "Portuguese",
                     "zh" = "Chinese")
 
+
+tools_pretty <-   c("xlmroberta" = "XLM-RoBERTa",
+                    "spacy_trf" = "spaCy (transformers)",
+                    "spacy_lg" = "spaCy",
+                    "opennlp" = "OpenNLP",
+                    "nltk" = "NLTK",
+                    "nametagger" = "Nametagger",
+                    "jrc" = "JRC Names",
+                    "icews" = "ICEWS", 
+                    "frog" = "Frog",
+                    "corenlp" = "CoreNLP")
+
+
+tasks_pretty <- c("PER" = "Persons",
+                  "ORG" = "Organizations",
+                  "LOC" = "Locations",
+                  "MISC" = "Misc",
+                  "overall" = "Overall")

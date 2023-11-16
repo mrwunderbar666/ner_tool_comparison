@@ -64,12 +64,13 @@ Rscript r_packages.r
 
 ### Install Tools
 
+```
 python3 tools/corenlp/get_corenlp.py
 Rscript tools/icews/get_icews.r
 python3 tools/jrcnames/get_jrc.py
 python3 tools/nltk/get_dependencies.py
 python3 tools/opennlp/get_opennlp.py
-
+```
 
 # Data
 
@@ -113,6 +114,12 @@ Each corpus is in tokenized long format (one row = one token) and contains the f
 - `token_id`: id (actually position) of token within the sentence. Always starts at 1.
 - `token`: actual token in its original form.
 - `CoNLL_IOB2`: Named entity tag according to *Inside-Outside-Beginning* scheme as defined by CoNLL. Named entities are limited to Persons, Organizations, Location, and Misc. 
+
+## Corpus Summary Statistics
+
+the script `corpora/corpus_analytics.py` performs a simple summary statistic of each corpus' token distribution. It also measures the number of female and male names found in person named entities.
+
+To generate the summary tables in the appendix, use the script `analyse_results/corpora_statistics.r`
 
 # NER Tools
 
