@@ -146,7 +146,6 @@ corpora/conll/deu*
 corpora/conll/ner/
 corpora/europeana/enp_DE.sbb.bio.fixed
 corpora/ontonotes/ontonotes5_parsed.json
-results/
 corpora/*/tmp
 corpora/ancora/ancora-es-2.0.0_2
 
@@ -177,7 +176,3 @@ tools/xlmroberta/models*/
 
 tools/*/tmp/
 tmp_trainer
-
-# plots
-
-plots/
