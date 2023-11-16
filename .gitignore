@@ -178,3 +178,4 @@ tools/*/tmp/
 tmp_trainer
 
 .RData
+*.Rproj
