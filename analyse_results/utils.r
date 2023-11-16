@@ -56,7 +56,6 @@ tools_pretty <-   c("xlmroberta" = "XLM-RoBERTa",
                     "nametagger" = "Nametagger",
                     "jrc" = "JRC Names",
                     "icews" = "ICEWS", 
-                    "frog" = "Frog",
                     "corenlp" = "CoreNLP")
 
 
