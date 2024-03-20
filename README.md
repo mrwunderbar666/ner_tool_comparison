@@ -1,3 +1,10 @@
+# Repository for Systematically Comparing Multilingual NER Tools
+
+This repository contains the replication materials for the article "Automatically Finding Actors in Texts: A Performance Review of Multilingual Named Entity Recognition Tools." Communication Methods and Measures 2024. doi: https://doi.org/10.1080/19312458.2024.2324789. For the exact version used in the paper, please go to the branch with the corresponding DOI: https://github.com/mrwunderbar666/ner_tool_comparison/tree/10.1080/19312458.2024.2324789
+
+The repository's main branch is intended to be updated with new corpora and NER tools. Contributions are welcome! You can either create an issue with your suggestion, or make a pull request.
+
+
 # Installation of Requirements
 
 Make sure to install all required packages (Python & R) before proceeding.
