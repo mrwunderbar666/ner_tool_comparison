@@ -1,0 +1,120 @@
+--- corpora/europeana/tmp/ner-corpora-master/enp_DE.onb.bio/enp_DE.onb.bio	2022-04-20 16:08:30.065211403 +0200
++++ corpora/europeana/tmp/ner-corpora-master/enp_DE.onb.bio/enp_DE.onb.bio.fixed	2024-08-05 20:33:54.401620306 +0200
+@@ -9959,7 +9959,7 @@
+ vom O
+ Ottochaner O
+ Grenz-Jnf. O
+-Graf I-PER
++Graf B-PER
+ Coronini-Cronberg I-PER
+ von O
+ E.H. O
+@@ -10173,8 +10173,7 @@
+ Zedtwitz, I-PER
+ von O
+ Kaiser O
+-Ferdi O
+-nand O
++Ferdinand O
+ Uhlanen-Reg. O
+ I, O
+ in O
+@@ -10183,7 +10182,7 @@
+ Emanuel B-PER
+ Lober, I-PER
+ von O
+-E. O
++E. B-PER
+ Kropfreiter, I-PER
+ vom O
+ I., O
+@@ -10346,18 +10345,18 @@
+ eine O
+ Botschaft O
+ des O
+-Reichsverwe O
+-sers, O
++Reichsverwesers, O
+ darin O
+ von O
+ heute O
+ und O
+ contrasignirt O
+-von B-PER
+-Schmer I-PER
+-ling, I-PER
+-verlesen. O
+-Schmerling I-PER
++von O
++Schmerling B-PER
++, O
++verlesen O
++. O
++Schmerling B-PER
+ zum O
+ Reichsminister O
+ des O
+@@ -10854,7 +10853,7 @@
+ Leidl B-PER
+ des O
+ Pionnircorps. O
+-Maria I-LOC
++Maria B-LOC
+ Maddalena I-LOC
+ eingerichter, O
+ und O
+@@ -11062,17 +11061,17 @@
+ aus O
+ sind O
+ 2—4. O
+-Robinson I-PER
++Robinson B-PER
+ Esq., I-PER
+ dermaliger O
+ Vorsaß O
+ der O
+-Lloyd- O
+-Gesellschaft, O
++Lloyd- B-ORG
++Gesellschaft, I-ORG
+ beim O
+-Ministerium O
+-des O
+-Auswärtigen O
++Ministerium B-ORG
++des I-ORG
++Auswärtigen I-ORG
+ dar O
+ über O
+ an, O
+@@ -11080,9 +11079,8 @@
+ empfing O
+ folgende O
+ Antwort: O
+-"Auswärti O
+-ges O
+-Amt, O
++"Auswärtiges B-ORG
++Amt, I-ORG
+ 12. O
+ Auf O
+ Ihren O
+@@ -11344,8 +11342,7 @@
+ im O
+ Besitze O
+ der O
+-India O
+-nerhäuptlinge O
++Indianerhäuptlinge O
+ Path B-PER
+ und O
+ Chi B-PER
+@@ -11367,7 +11364,7 @@
+ Stadtxfarrer O
+ in O
+ St. B-LOC
+-Srrehl I-PER
++Srrehl I-LOC
+ in O
+ Feldkirchen B-LOC
+ . O

@@ -38,8 +38,13 @@ print('ok')
 # Provided dataset does not comply with CoNLL specifications
 # To reduce the noise, some patching is necessary
 print('Applying fixes to "enp_DE.sbb"...')
-fixes = patch.fromfile(p / 'enp_DE.sbb.patch')
-fixes.apply()
+enp_DE_sbb_patch = patch.fromfile(p / 'enp_DE.sbb.patch')
+enp_DE_sbb_patch.apply()
+print('ok')
+
+print('Applying fixes to "enp_DE.onb"...')
+enp_DE_onb_patch = patch.fromfile(p / 'enp_DE.onb.patch')
+enp_DE_onb_patch.apply()
 print('ok')
 
 print('Preprocessing...')
@@ -66,7 +71,7 @@ corps = {}
 
 for corpus in tmp.glob('*.txt'):
     df = parse_conll(corpus, columns=['token', 'CoNLL_IOB2'])
-    df['dataset'] = 'europeana'
+    df['corpus'] = 'europeana'
     df['subset'] = corpus.name.replace('.conll', '')
     language = ''
     if 'de' in corpus.name.lower():
