@@ -35,7 +35,7 @@ if __name__ == '__main__':
                         separator='\t')
 
         df['CoNLL_IOB2'] = df.ner_tag.replace(finer2conll)
-        df['dataset'] = 'finer'
+        df['corpus'] = 'finer'
         df['subset'] = corpus.name.replace('.txt', '')
         df['language'] = 'fi'
         df.sentence_id = df.doc_id.astype(str).str.zfill(4) + '_' + df.sentence_id.astype(str).str.zfill(4)

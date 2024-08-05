@@ -140,11 +140,11 @@ for treex in tmp.glob('cnec2.0/data/treex/*.treex'):
         if col.startswith('position_NER'):
             df[col.replace('NER', 'lvl')] = df[col]
         
-    df['dataset'] = 'cnec2.0'
+    df['corpus'] = 'cnec2.0'
     df['subset'] = treex.name.replace('.treex', '')
     df['language'] = 'cs'
 
-    cols = ["dataset", "language", "subset", "sentence_id", "token_id", "token", "CoNLL_IOB2", 'cnec_token_id', "position", "CNEC_lvl_0", "position_lvl_0", "CNEC_lvl_1",  
+    cols = ["corpus", "language", "subset", "sentence_id", "token_id", "token", "CoNLL_IOB2", 'cnec_token_id', "position", "CNEC_lvl_0", "position_lvl_0", "CNEC_lvl_1",  
             "position_lvl_1", "CNEC_lvl_2", "position_lvl_2", "CNEC_lvl_3", "position_lvl_3"]
 
     df = df.loc[:, cols]

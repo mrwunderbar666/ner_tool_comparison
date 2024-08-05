@@ -39,7 +39,7 @@ downloader(test_with_tags, tmp / 'emerging.test.annotated.conll')
 print('Processing...')
 for corpus in tmp.glob('*.conll'):
     df = parse_conll(corpus, columns=['token', 'IOB2'], encoding='utf-8-sig', separator='\t')
-    df['dataset'] = 'emerging'
+    df['corpus'] = 'emerging'
     df['subset'] = corpus.name.replace('.conll', '')
     df['language'] = 'en'
     df = df.drop(columns=['doc_id'])

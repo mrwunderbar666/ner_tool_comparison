@@ -35,11 +35,11 @@ for split in conll.keys():
     df['token_id'] = df.groupby('sentence_id').cumcount()
     df['token_id'] = df['token_id'] + 1
     df['token'] = df.tokens
-    df['dataset'] = 'conll2003'
+    df['corpus'] = 'conll2003'
     df['language'] = 'en'
     df['subset'] = split
 
-    df = df.loc[:, ['dataset', 'language', 'subset', 'sentence_id', 'token_id', 'token', 'CoNLL_IOB2']]
+    df = df.loc[:, ['corpus', 'language', 'subset', 'sentence_id', 'token_id', 'token', 'CoNLL_IOB2']]
     df = df.loc[~df.token.isna(), ]
     df = df.reset_index(drop=True)
     corpus_destination = p / f'conll2003_en_{split}_iob.feather'

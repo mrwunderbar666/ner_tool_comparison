@@ -36,7 +36,7 @@ for corpus in raw_data:
 
     df.loc[filt, 'CoNLL_IOB2'] = df.loc[filt, 'CoNLL_IOB2'].str.replace('I-', 'B-', regex=False)
 
-    df['dataset'] = 'conll2003'
+    df['corpus'] = 'conll2003'
     df['subset'] = corpus.name
     df['language'] = 'de'
     df.sentence_id = df.sentence_id.astype(str).str.zfill(7)

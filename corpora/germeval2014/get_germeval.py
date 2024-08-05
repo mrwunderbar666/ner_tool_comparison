@@ -44,7 +44,7 @@ for tsv in tmp.glob('*.tsv'):
                 continue
             if line[0].startswith('\n'):
                 continue
-            corp.append({'dataset': 'germeval2014', 'language': 'de', 
+            corp.append({'corpus': 'germeval2014', 'language': 'de', 
                             'subset': corp_id, 
                             'sentence_source': sentence_source,
                             'sentence_date': sentence_date,

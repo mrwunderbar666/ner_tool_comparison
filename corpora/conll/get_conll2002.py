@@ -60,7 +60,7 @@ for corpus in spanish_corpora:
     assert corpus.exists()
     print('Converting', corpus)
     df = parse_conll(corpus, columns=['token', 'CoNLL_IOB2'], encoding='latin-1')
-    df['dataset'] = 'conll2003'
+    df['corpus'] = 'conll2003'
     df['subset'] = corpus.name
     df['language'] = 'es'
     df = df.drop(columns=['doc_id'])
@@ -95,7 +95,7 @@ for corpus in dutch_corpora:
     assert corpus.exists()
     print('Converting', corpus)
     df = parse_conll(corpus, columns=['token', 'POS', 'CoNLL_IOB2'], encoding='latin-1')
-    df['dataset'] = 'conll2003'
+    df['corpus'] = 'conll2003'
     df['subset'] = corpus.name
     df['language'] = 'nl'
     df.sentence_id = df.sentence_id.astype(str).str.zfill(7)
