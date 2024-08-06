@@ -48,12 +48,13 @@ Rscript r_packages.r
 
 ### Install Tools
 
+```
 python3 tools/corenlp/get_corenlp.py
 Rscript tools/icews/get_icews.r
 python3 tools/jrcnames/get_jrc.py
 python3 tools/nltk/get_dependencies.py
 python3 tools/opennlp/get_opennlp.py
-
+```
 
 # Data
 
@@ -96,6 +97,7 @@ Each corpus is in tokenized long format (one row = one token) and contains the f
 - NLTK
 - ICEWS
 - JRC Names
+- mLUKE (**new!**)
 - Nametagger
 - OpenNLP
 - spaCy
