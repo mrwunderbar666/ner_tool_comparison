@@ -242,8 +242,6 @@ def main():
         df["new_sentence_id"] = (
             df["corpus"]
             + "_"
-            + df["subset"]
-            + "_"
             + df["language"]
             + "_"
             + df["sentence_id"]
