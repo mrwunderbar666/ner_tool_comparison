@@ -239,6 +239,7 @@ def main():
             continue
         df = pd.read_feather(row["path"])
         df = df.loc[~df.token.isna(), :]
+        df = df.loc[df.token.str.len() > 0, :]
         df["new_sentence_id"] = (
             df["corpus"]
             + "_"
