@@ -66,7 +66,10 @@ else:
 
 model_path = p / 'tools' / 'xlmroberta' / 'models' / str(model_id) 
 model_infos = model_path / 'model_infos.json'
-results_destination = p / 'results' / 'xlmroberta.csv'
+if args.model_id:
+    results_destination = p / 'results' / f'xlmroberta_{model_id}.csv'
+else:
+    results_destination = p / 'results' / 'xlmroberta.csv'
 
 assert model_infos.exists(), f'MODEL INFO DOES NOT EXIST: {model_infos}'
 

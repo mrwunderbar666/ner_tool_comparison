@@ -22,70 +22,16 @@ label_list = conll_features['labels'].feature.names
 tokenizer = AutoTokenizer.from_pretrained("xlm-roberta-base")
 data_collator = DataCollatorForTokenClassification(tokenizer=tokenizer)
 
-def generate_tokenize_function(model, labels_dict: dict, 
-                               text_col="text", 
-                               label_col="labels",
-                               max_length=128) -> typing.Callable:
-    """
-        This function loads the tokenizer for the BERT model and 
-        aligns the NE labels to match the BERT-subtokens
-        It returns a tokenize function that can be applied to the dataset
-    """
-    tokenizer = get_tokenizer(model)
-    tokenizer.add_prefix_space = isinstance(tokenizer, RobertaTokenizerFast)
-
-    # 'B-PER' => 'I-PER'`
-    b_to_i_label = {k: "" for k in labels_dict if k.startswith('B')}
-    for k in labels_dict:
-        if k.startswith('I-'):
-            b_to_i_label['B-' + k.replace('I-', '')] = k
-
-    b_to_i_label = {labels_dict[k]: labels_dict[v] for k,v in b_to_i_label.items()}
-    b_to_i_label[0] = 0
-
-    def _tokenize_func(examples, truncation=True, 
-                       is_split_into_words=True,
-                       padding="max_length"):
-        tokenized_inputs = tokenizer(
-            examples[text_col],
-            padding=padding,
-            truncation=truncation,
-            is_split_into_words=is_split_into_words,
-            max_length=max_length)
-        labels = []
-        for i, label in enumerate(examples[label_col]):
-            # Map tokens to their respective word.
-            word_ids = tokenized_inputs.word_ids(batch_index=i)
-            previous_word_idx = None
-            label_ids = []
-            for word_idx in word_ids:
-                # Special tokens have a word id that is None. We set the label to -100 so they are automatically
-                # ignored in the loss function.
-                if word_idx is None:
-                    label_ids.append(-100)
-                # We set the label for the first token of each word.
-                elif word_idx != previous_word_idx:
-                    label_ids.append(label[word_idx])
-                # For the other tokens in a word, we set the label to either the current label
-                else:
-                    label_ids.append(b_to_i_label[label[word_idx]])
-            previous_word_idx = word_idx
-            labels.append(label_ids)
-        tokenized_inputs[label_col] = labels
-        return tokenized_inputs
-    return _tokenize_func
-
-
 def get_tokenizer(model: str):
     return AutoTokenizer.from_pretrained(model)
 
-def generate_tokenize_function(model: str, 
-                               labels_dict: dict, 
-                               text_col="text", 
+def generate_tokenize_function(model: str,
+                               labels_dict: dict,
+                               text_col="text",
                                label_col="labels",
                                max_length=512):
     """
-        This function loads the tokenizer for the BERT model and 
+        This function loads the tokenizer for the BERT model and
         aligns the NE labels to match the BERT-subtokens
         It returns a tokenize function that can be applied to the dataset
     """
@@ -101,7 +47,7 @@ def generate_tokenize_function(model: str,
     b_to_i_label = {labels_dict[k]: labels_dict[v] for k,v in b_to_i_label.items()}
     b_to_i_label[0] = 0
 
-    def _tokenize_func(examples, truncation=True, 
+    def _tokenize_func(examples, truncation=True,
                        is_split_into_words=True,
                        padding="max_length"):
         tokenized_inputs = tokenizer(
@@ -140,9 +86,9 @@ def generate_combinations() -> pd.DataFrame:
         # every language individually
         ['ar'], ['ca'], ['cs'], ['de'], ['en'], ['es'], ['fi'], ['fr'], ['hu'], ['it'], ['nl'], ['pt'], ['zh'],
         # all languages together
-        ['ar', 'ca', 'cs', 'de', 'en', 'es', 'fi', 'fr', 'hu', 'it', 'nl', 'pt', 'zh'], 
+        ['ar', 'ca', 'cs', 'de', 'en', 'es', 'fi', 'fr', 'hu', 'it', 'nl', 'pt', 'zh'],
         # only using latin scripts
-        ['ca', 'cs', 'de', 'en', 'es', 'fi', 'fr', 'hu', 'it', 'nl', 'pt'] 
+        ['ca', 'cs', 'de', 'en', 'es', 'fi', 'fr', 'hu', 'it', 'nl', 'pt']
     ]
 
     registry = load_registry()
@@ -172,7 +118,7 @@ def get_combination(number):
         df.to_feather(combinations_path)
     else:
         df = pd.read_feather(combinations_path)
-    
+
     language, corpus = df.loc[number, ['languages', 'corpora']]
 
     return list(language), list(corpus)
@@ -191,7 +137,7 @@ def get_model_id_with_full_trainingdata():
     df = df[~filt]
 
     filt = (df.languages.apply(len) == max(df.languages.apply(len))) & (df.corpora.apply(len) == max(df.corpora.apply(len)))
-    
+
     return df[filt].index[0]
 
 

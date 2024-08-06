@@ -2,8 +2,8 @@ from typing import Optional, List
 from seqeval.metrics import classification_report, accuracy_score
 
 def compute_metrics(
-        predictions: list,
-        references: list,
+        predictions: List[List[str]],
+        references: List[List[str]],
         suffix: bool = False,
         sample_weight: Optional[List[int]] = None) -> dict:
     
@@ -15,8 +15,8 @@ def compute_metrics(
         sample_weight=sample_weight,
         zero_division=0
     )
-    report.pop("macro avg")
-    report.pop("weighted avg")
+    _ = report.pop("macro avg")
+    _ = report.pop("weighted avg")
     overall_score = report.pop("micro avg")
 
     scores = {
